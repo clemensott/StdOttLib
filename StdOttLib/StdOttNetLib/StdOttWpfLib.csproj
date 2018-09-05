@@ -7,8 +7,8 @@
     <ProjectGuid>{D1334524-78A5-4D16-93BF-27A57C6DBE56}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StdOttNetLib</RootNamespace>
-    <AssemblyName>StdOttNetLib</AssemblyName>
+    <RootNamespace>StdOttWpfLib</RootNamespace>
+    <AssemblyName>StdOttWpfLib</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -42,12 +42,34 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters\IsNotNullConverter.cs" />
-    <Compile Include="Converters\ToStringTwoWayConverter.cs" />
-    <Compile Include="Converters\IsNullConverter.cs" />
+    <Compile Include="Converters\EnumConverterT.cs" />
+    <Compile Include="Converters\EnumConverter.cs" />
+    <Compile Include="Converters\AddConverter.cs" />
+    <Compile Include="Converters\ToString\ULongConverter.cs" />
+    <Compile Include="Converters\ToString\UIntConverter.cs" />
+    <Compile Include="Converters\ToString\ByteConverter.cs" />
+    <Compile Include="Converters\ToString\FloatConverter.cs" />
+    <Compile Include="Converters\ToString\LongConverter.cs" />
+    <Compile Include="Converters\ToString\DoubleConverter.cs" />
+    <Compile Include="Converters\ToString\IntConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\IsNotNullConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\IsNullToValueConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\IsFalseToValueConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\IsTrueToValueConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\IsValueToTwoValueConverter.cs" />
+    <Compile Include="Converters\ToString\ToStringTwoWayConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\IsNullConverter.cs" />
+    <Compile Include="DistinctCollection.cs" />
+    <Compile Include="Hotkey\HotKey.cs" />
+    <Compile Include="Hotkey\HotKeyService.cs" />
+    <Compile Include="Hotkey\HotKeySource.cs" />
+    <Compile Include="Hotkey\KeyPressedEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
