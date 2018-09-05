@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Input;
+using System.Windows.Interop;
 
 namespace StdOttWpfLib.Hotkey
 {
@@ -25,9 +29,22 @@ namespace StdOttWpfLib.Hotkey
             KeyModifiers = keyModifiers;
         }
 
-        public void Raise()
+        private void Raise(ref bool handled)
         {
-            Pressed?.Invoke(this, new KeyPressedEventArgs(Key));
+            KeyPressedEventArgs args = new KeyPressedEventArgs(Key, handled);
+            Pressed?.Invoke(this, args);
+
+            handled = args.Handled;
+        }
+
+        public bool Register()
+        {
+            return Service.Register(this);
+        }
+
+        public void Unregister()
+        {
+            Service.Unregister(this);
         }
 
         // Implement IDisposable.
@@ -61,24 +78,110 @@ namespace StdOttWpfLib.Hotkey
                 if (disposing)
                 {
                     // Dispose managed resources.
-                    HotKeyService.Unregister(this);
+                    Unregister();
                 }
 
                 // Note disposing has been done.
                 _disposed = true;
             }
         }
-    }
 
-    // ******************************************************************
-    [Flags]
-    public enum KeyModifier
-    {
-        None = 0x0000,
-        Alt = 0x0001,
-        Ctrl = 0x0002,
-        NoRepeat = 0x4000,
-        Shift = 0x0004,
-        Win = 0x0008
+        private static class Service
+        {
+            public const int WmHotKey = 0x0312;
+
+            private static Dictionary<int, HotKey> dictHotKeyToCalBackProc;
+
+            [DllImport("user32.dll")]
+            private static extern bool RegisterHotKey(IntPtr hWnd, int id, UInt32 fsModifiers, UInt32 vlc);
+
+            [DllImport("user32.dll")]
+            private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
+            public static bool Register(HotKey hk)
+            {
+                if (hk == null) return false;
+                if (dictHotKeyToCalBackProc != null && dictHotKeyToCalBackProc.ContainsKey(hk.Id)) return false;
+
+                int virtualKeyCode = KeyInterop.VirtualKeyFromKey(hk.Key);
+                hk.Id = virtualKeyCode + ((int)hk.KeyModifiers * 0x10000);
+                hk.RegistrationSucessful = RegisterHotKey(IntPtr.Zero, hk.Id, (uint)hk.KeyModifiers, (uint)virtualKeyCode);
+
+                if (dictHotKeyToCalBackProc == null)
+                {
+                    dictHotKeyToCalBackProc = new Dictionary<int, HotKey>();
+                    ComponentDispatcher.ThreadFilterMessage += new ThreadMessageEventHandler(ComponentDispatcherThreadFilterMessage);
+                }
+
+                dictHotKeyToCalBackProc.Add(hk.Id, hk);
+
+                return hk.RegistrationSucessful;
+            }
+
+            public static void Unregister(HotKey hk)
+            {
+                if (hk == null || dictHotKeyToCalBackProc == null) return;
+                if (!dictHotKeyToCalBackProc.ContainsKey(hk.Id)) return;
+
+                UnregisterHotKey(IntPtr.Zero, hk.Id);
+                dictHotKeyToCalBackProc.Remove(hk.Id);
+            }
+
+            private static void ComponentDispatcherThreadFilterMessage(ref MSG msg, ref bool handled)
+            {
+                if (handled || msg.message != WmHotKey) return;
+
+                HotKey hotKey;
+                if (!dictHotKeyToCalBackProc.TryGetValue((int)msg.wParam, out hotKey)) return;
+
+                hotKey.Raise(ref handled);
+            }
+
+            public static IEnumerable<HotKey> GetRegisteredHotKeys(string[] allKeyProperties, IEnumerable<HotKeySource> keySources)
+            {
+                foreach (HotKeySource source in keySources)
+                {
+                    HotKey hk = GetHotKey(allKeyProperties, source.SearchKey);
+
+                    if (hk == null) continue;
+
+                    hk.Pressed += source.Target;
+                    Register(hk);
+
+                    yield return hk;
+                }
+            }
+
+            private static HotKey GetHotKey(string[] hotKeyLines, string keyKey)
+            {
+                string hotKeyLine = hotKeyLines.FirstOrDefault(l => l.StartsWith(keyKey));
+
+                if (hotKeyLine == null) return null;
+
+                string[] parameter = hotKeyLine.Remove(0, keyKey.Length).Split(',');
+
+                try
+                {
+                    Key key;
+                    string keyString = parameter[0].Trim();
+                    int allModifier = 0;
+
+                    if (!Enum.TryParse(keyString, true, out key)) return null;
+
+                    for (int i = 1; i < parameter.Length; i++)
+                    {
+                        KeyModifier modifier;
+                        string modifierString = parameter[i].Trim().ToLower();
+
+                        if (Enum.TryParse(modifierString, true, out modifier)) allModifier += (int)modifier;
+                    }
+
+                    return new HotKey(key, (KeyModifier)allModifier);
+                }
+                catch { }
+
+                return null;
+            }
+        }
     }
 }
