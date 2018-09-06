@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="Converters\EnumConverterT.cs" />
     <Compile Include="Converters\EnumConverter.cs" />
-    <Compile Include="Converters\AddConverter.cs" />
+    <Compile Include="Converters\AddDoubleConverter.cs" />
     <Compile Include="Converters\ToString\ULongConverter.cs" />
     <Compile Include="Converters\ToString\UIntConverter.cs" />
     <Compile Include="Converters\ToString\ByteConverter.cs" />

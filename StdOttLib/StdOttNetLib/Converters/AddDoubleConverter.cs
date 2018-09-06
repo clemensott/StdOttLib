@@ -9,15 +9,15 @@ using System.Windows.Data;
 
 namespace StdOttWpfLib.Converters
 {
-    public class AddConverter : DependencyObject, IValueConverter
+    public class AddDoubleConverter : DependencyObject, IValueConverter
     {
         public static readonly DependencyProperty AddProperty =
-            DependencyProperty.Register("Add", typeof(double?), typeof(AddConverter),
+            DependencyProperty.Register("Add", typeof(double?), typeof(AddDoubleConverter),
                 new PropertyMetadata(null, new PropertyChangedCallback(OnAddPropertyChanged)));
 
         private static void OnAddPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            var s = (AddConverter)sender;
+            var s = (AddDoubleConverter)sender;
             var value = (double?)e.NewValue;
         }
 
