@@ -86,6 +86,52 @@ namespace StdOttWpfLib.Hotkey
             }
         }
 
+        public static IEnumerable<HotKey> GetRegisteredHotKeys(string[] allKeyProperties, IEnumerable<HotKeySource> keySources)
+        {
+            foreach (HotKeySource source in keySources)
+            {
+                HotKey hk = GetHotKey(allKeyProperties, source.SearchKey);
+
+                if (hk == null) continue;
+
+                hk.Pressed += source.Target;
+                hk.Register();
+
+                yield return hk;
+            }
+        }
+
+        private static HotKey GetHotKey(string[] hotKeyLines, string keyKey)
+        {
+            string hotKeyLine = hotKeyLines.FirstOrDefault(l => l.StartsWith(keyKey));
+
+            if (hotKeyLine == null) return null;
+
+            string[] parameter = hotKeyLine.Remove(0, keyKey.Length).Split(',');
+
+            try
+            {
+                Key key;
+                string keyString = parameter[0].Trim();
+                int allModifier = 0;
+
+                if (!Enum.TryParse(keyString, true, out key)) return null;
+
+                for (int i = 1; i < parameter.Length; i++)
+                {
+                    KeyModifier modifier;
+                    string modifierString = parameter[i].Trim().ToLower();
+
+                    if (Enum.TryParse(modifierString, true, out modifier)) allModifier += (int)modifier;
+                }
+
+                return new HotKey(key, (KeyModifier)allModifier);
+            }
+            catch { }
+
+            return null;
+        }
+
         private static class Service
         {
             public const int WmHotKey = 0x0312;
@@ -135,52 +181,6 @@ namespace StdOttWpfLib.Hotkey
                 if (!dictHotKeyToCalBackProc.TryGetValue((int)msg.wParam, out hotKey)) return;
 
                 hotKey.Raise(ref handled);
-            }
-
-            public static IEnumerable<HotKey> GetRegisteredHotKeys(string[] allKeyProperties, IEnumerable<HotKeySource> keySources)
-            {
-                foreach (HotKeySource source in keySources)
-                {
-                    HotKey hk = GetHotKey(allKeyProperties, source.SearchKey);
-
-                    if (hk == null) continue;
-
-                    hk.Pressed += source.Target;
-                    Register(hk);
-
-                    yield return hk;
-                }
-            }
-
-            private static HotKey GetHotKey(string[] hotKeyLines, string keyKey)
-            {
-                string hotKeyLine = hotKeyLines.FirstOrDefault(l => l.StartsWith(keyKey));
-
-                if (hotKeyLine == null) return null;
-
-                string[] parameter = hotKeyLine.Remove(0, keyKey.Length).Split(',');
-
-                try
-                {
-                    Key key;
-                    string keyString = parameter[0].Trim();
-                    int allModifier = 0;
-
-                    if (!Enum.TryParse(keyString, true, out key)) return null;
-
-                    for (int i = 1; i < parameter.Length; i++)
-                    {
-                        KeyModifier modifier;
-                        string modifierString = parameter[i].Trim().ToLower();
-
-                        if (Enum.TryParse(modifierString, true, out modifier)) allModifier += (int)modifier;
-                    }
-
-                    return new HotKey(key, (KeyModifier)allModifier);
-                }
-                catch { }
-
-                return null;
             }
         }
     }
