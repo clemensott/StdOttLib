@@ -46,7 +46,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AClass.cs" />
+    <Compile Include="AClass1.cs" />
     <Compile Include="Converters\EnumConverterT.cs" />
     <Compile Include="Converters\EnumConverter.cs" />
     <Compile Include="Converters\AddDoubleConverter.cs" />

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StdOttWpfLib
 {
-    class AClass
+    class AClass1
     {
     }
 }
