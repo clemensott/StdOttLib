@@ -31,7 +31,7 @@ namespace StdOttWpfLib.Hotkey
 
         private void Raise(ref bool handled)
         {
-            KeyPressedEventArgs args = new KeyPressedEventArgs(Key, handled);
+            KeyPressedEventArgs args = new KeyPressedEventArgs(handled);
             Pressed?.Invoke(this, args);
 
             handled = args.Handled;

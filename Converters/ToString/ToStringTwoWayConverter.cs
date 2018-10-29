@@ -8,27 +8,16 @@ namespace StdOttWpfLib.Converters
     public abstract class ToStringTwoWayConverter<T> : DependencyObject, IValueConverter
     {
         public static readonly DependencyProperty AutoParseNullOrWhiteSpaceProperty =
-            DependencyProperty.Register("AutoParseNullOrWhiteSpace", typeof(bool), typeof(ToStringTwoWayConverter<T>),
-                new PropertyMetadata(null, new PropertyChangedCallback(OnAutoParseNullOrWhiteSpacePropertyChanged)));
-
-        private static void OnAutoParseNullOrWhiteSpacePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            var s = (ToStringTwoWayConverter<T>)sender;
-            var value = (T)e.NewValue;
-        }
+            DependencyProperty.Register("AutoParseNullOrWhiteSpace", typeof(bool), typeof(ToStringTwoWayConverter<T>));
 
         public static readonly DependencyProperty NullOrWhiteSpaceValueProperty =
-            DependencyProperty.Register("NullOrWhiteSpaceValue", typeof(T), typeof(ToStringTwoWayConverter<T>),
-                new PropertyMetadata(null, new PropertyChangedCallback(OnNullOrWhiteSpaceValuePropertyChanged)));
+            DependencyProperty.Register("NullOrWhiteSpaceValue", typeof(object), typeof(ToStringTwoWayConverter<T>));
 
-        private static void OnNullOrWhiteSpaceValuePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            var s = (ToStringTwoWayConverter<T>)sender;
-            var value = (T)e.NewValue;
-        }
+        public static readonly DependencyProperty CurrentValueProperty =
+            DependencyProperty.Register("CurrentValue", typeof(object), typeof(ToStringTwoWayConverter<T>));
 
-        protected T sourceValue;
-        private string text;
+        public static readonly DependencyProperty TextProperty =
+            DependencyProperty.Register("Text", typeof(string), typeof(ToStringTwoWayConverter<T>));
 
         public bool AutoParseNullOrWhiteSpace
         {
@@ -42,21 +31,45 @@ namespace StdOttWpfLib.Converters
             set { SetValue(NullOrWhiteSpaceValueProperty, value); }
         }
 
+        public T CurrentValue
+        {
+            get { return (T)GetValue(CurrentValueProperty); }
+            set { SetValue(CurrentValueProperty, value); }
+        }
+
+        public string Text
+        {
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
+        }
+
+        public string Convert(T value, object parameter = null)
+        {
+            return (string)Convert(value, typeof(string), parameter, CultureInfo.CurrentCulture);
+        }
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (ValueChanged((T)value, targetType, parameter, culture)) return text;
+            if (ValueChanged((T)value, targetType, parameter, culture)) return Text;
 
             SetSourceValue((T)value, targetType, parameter, culture);
 
-            return text = ToString(sourceValue, targetType, parameter, culture);
+            return Text = ToString(CurrentValue, targetType, parameter, culture);
+        }
+
+        public T ConvertBack(string value, object parameter = null)
+        {
+            return (T)ConvertBack(value, typeof(T), parameter, CultureInfo.CurrentCulture);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             T newValue;
 
+            Text = (string)value;
+
             if (AutoParseNullOrWhiteSpace && string.IsNullOrWhiteSpace((string)value)) newValue = NullOrWhiteSpaceValue;
-            else if (!TryParse((string)value, targetType, parameter, culture, out newValue)) return sourceValue;
+            else if (!TryParse(Text, targetType, parameter, culture, out newValue)) return CurrentValue;
 
             SetSourceValue(newValue, targetType, parameter, culture);
 
@@ -65,16 +78,16 @@ namespace StdOttWpfLib.Converters
 
         protected virtual bool ValueChanged(T newValue, Type targetType, object parameter, CultureInfo culture)
         {
-            if (ReferenceEquals(sourceValue, newValue)) return true;
-            if (ReferenceEquals(sourceValue, null)) return false;
+            if (ReferenceEquals(CurrentValue, newValue)) return true;
+            if (ReferenceEquals(CurrentValue, null)) return false;
             if (ReferenceEquals(newValue, null)) return false;
 
-            return sourceValue.Equals(newValue);
+            return CurrentValue.Equals(newValue);
         }
 
         protected virtual void SetSourceValue(T value, Type targetType, object parameter, CultureInfo culture)
         {
-            sourceValue = value;
+            CurrentValue = value;
         }
 
         protected virtual string ToString(T value, Type targetType, object parameter, CultureInfo culture)

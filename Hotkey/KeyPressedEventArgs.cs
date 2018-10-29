@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Input;
 
 namespace StdOttWpfLib.Hotkey
 {
@@ -7,12 +6,9 @@ namespace StdOttWpfLib.Hotkey
     {
         public bool Handled { get; set; }
 
-        public Key Key { get; private set; }
-
-        public KeyPressedEventArgs(Key key, bool handled)
+        public KeyPressedEventArgs(bool handled)
         {
             Handled = handled;
-            Key = key;
         }
     }
 }
