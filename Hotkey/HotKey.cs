@@ -15,13 +15,13 @@ namespace StdOttWpfLib.Hotkey
 
         public event KeyPressedEventHandler Pressed;
 
-        public bool RegistrationSucessful { get; set; }
+        public bool RegistrationSucessful { get; private set; }
 
         public Key Key { get; private set; }
 
         public KeyModifier KeyModifiers { get; private set; }
 
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
         public HotKey(Key k, KeyModifier keyModifiers)
         {
