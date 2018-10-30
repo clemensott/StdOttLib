@@ -43,7 +43,9 @@ namespace StdOttWpfLib
 
         public static string Convert(Exception exception)
         {
-            return string.Join("\r\n", ToEnumerable(exception).Select(e => e.GetType().Name + ":\r\n" + e.Message));
+            IEnumerable<string> exceptions = ToEnumerable(exception).Select(e => e.GetType().Name + ":\r\n" + e.Message);
+
+            return string.Join("\r\n\r\n", exceptions) + "\r\n\r\n" + exception.StackTrace;
         }
 
         public static IEnumerable<Exception> ToEnumerable(Exception e)
