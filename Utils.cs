@@ -7,12 +7,12 @@ namespace StdOttWpfLib
 {
     public static class Utils
     {
-        public static NotImplementedException GetNotImplementedExeption(this object obj, string methodName)
+        public static NotImplementedException GetNotImplementedExeption(object obj, string methodName)
         {
             return GetNotImplementedExeption(obj.GetType(), methodName);
         }
 
-        public static NotImplementedException GetNotImplementedExeption(this Type classType, string methodName)
+        public static NotImplementedException GetNotImplementedExeption(Type classType, string methodName)
         {
             return new NotImplementedException(classType.FullName + "." + methodName + " is not implemented");
         }
@@ -27,7 +27,7 @@ namespace StdOttWpfLib
             return Dispatcher.CurrentDispatcher.Invoke(func);
         }
 
-        public static string Convert(TimeSpan span, bool includeMillis = false)
+        public static string ToString(TimeSpan span, bool includeMillis = false)
         {
             string text = string.Empty;
             int hours = (int)Math.Floor(span.TotalHours);
@@ -41,7 +41,7 @@ namespace StdOttWpfLib
             return text.Replace(' ', '0');
         }
 
-        public static string Convert(Exception exception)
+        public static string GetTypeMessageAndStack(this Exception exception)
         {
             IEnumerable<string> exceptions = ToEnumerable(exception).Select(e => e.GetType().Name + ":\r\n" + e.Message);
 
@@ -58,7 +58,7 @@ namespace StdOttWpfLib
             }
         }
 
-        public static bool NullOrSequenceEqual<T>(this IEnumerable<T> enum1, IEnumerable<T> enum2)
+        public static bool BothNullOrSequenceEqual<T>(this IEnumerable<T> enum1, IEnumerable<T> enum2)
         {
             if (enum1 == enum2) return true;
             if (enum1 == null || enum2 == null) return false;

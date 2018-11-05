@@ -8,7 +8,7 @@ namespace StdOttWpfLib.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return Utils.Convert((TimeSpan)value);
+            return Utils.ToString((TimeSpan)value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

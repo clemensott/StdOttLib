@@ -13,8 +13,8 @@ namespace StdOttWpfLib.Converters
         public static readonly DependencyProperty NullOrWhiteSpaceValueProperty =
             DependencyProperty.Register("NullOrWhiteSpaceValue", typeof(object), typeof(ToStringTwoWayConverter<T>));
 
-        public static readonly DependencyProperty CurrentValueProperty =
-            DependencyProperty.Register("CurrentValue", typeof(object), typeof(ToStringTwoWayConverter<T>));
+        public static readonly DependencyProperty ValueProperty =
+            DependencyProperty.Register("Value", typeof(object), typeof(ToStringTwoWayConverter<T>));
 
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register("Text", typeof(string), typeof(ToStringTwoWayConverter<T>));
@@ -31,10 +31,10 @@ namespace StdOttWpfLib.Converters
             set { SetValue(NullOrWhiteSpaceValueProperty, value); }
         }
 
-        public T CurrentValue
+        public T Value
         {
-            get { return (T)GetValue(CurrentValueProperty); }
-            set { SetValue(CurrentValueProperty, value); }
+            get { return (T)(GetValue(ValueProperty) ?? default(T)); }
+            set { SetValue(ValueProperty, value); }
         }
 
         public string Text
@@ -54,7 +54,7 @@ namespace StdOttWpfLib.Converters
 
             SetSourceValue((T)value, targetType, parameter, culture);
 
-            return Text = ToString(CurrentValue, targetType, parameter, culture);
+            return Text = ToString(Value, targetType, parameter, culture);
         }
 
         public T ConvertBack(string value, object parameter = null)
@@ -69,7 +69,7 @@ namespace StdOttWpfLib.Converters
             Text = (string)value;
 
             if (AutoParseNullOrWhiteSpace && string.IsNullOrWhiteSpace((string)value)) newValue = NullOrWhiteSpaceValue;
-            else if (!TryParse(Text, targetType, parameter, culture, out newValue)) return CurrentValue;
+            else if (!TryParse(Text, targetType, parameter, culture, out newValue)) return Value;
 
             SetSourceValue(newValue, targetType, parameter, culture);
 
@@ -78,16 +78,16 @@ namespace StdOttWpfLib.Converters
 
         protected virtual bool ValueChanged(T newValue, Type targetType, object parameter, CultureInfo culture)
         {
-            if (ReferenceEquals(CurrentValue, newValue)) return true;
-            if (ReferenceEquals(CurrentValue, null)) return false;
+            if (ReferenceEquals(Value, newValue)) return true;
+            if (ReferenceEquals(Value, null)) return false;
             if (ReferenceEquals(newValue, null)) return false;
 
-            return CurrentValue.Equals(newValue);
+            return Value.Equals(newValue);
         }
 
         protected virtual void SetSourceValue(T value, Type targetType, object parameter, CultureInfo culture)
         {
-            CurrentValue = value;
+            Value = value;
         }
 
         protected virtual string ToString(T value, Type targetType, object parameter, CultureInfo culture)
