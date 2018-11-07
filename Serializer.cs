@@ -24,10 +24,13 @@ namespace StdOttWpfLib
 
         public static string GetUntil(ref StringBuilder text, char seperator, char addChar = DefaultAddChar)
         {
-            int index;
+            int index = 0;
             StringBuilder part = new StringBuilder(text.Length);
 
-            for (index = 0; index < text.Length; index++)
+            while (index < text.Length && text[index] == addChar) index++;
+            index /= 2;
+
+            for (; index < text.Length; index++)
             {
                 char c = text[index];
 
