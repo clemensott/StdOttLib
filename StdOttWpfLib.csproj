@@ -57,6 +57,7 @@
     <Compile Include="Converters\TimeSpanToStringConverter.cs" />
     <Compile Include="Converters\ToString\ByteNullableConverter.cs" />
     <Compile Include="Converters\ToString\DoubleNullableConverter.cs" />
+    <Compile Include="Converters\ToString\EnumToStringConverter.cs" />
     <Compile Include="Converters\ToString\FloatNullableConverter.cs" />
     <Compile Include="Converters\ToString\IntNullableConverter.cs" />
     <Compile Include="Converters\ToString\LongNullableConverter.cs" />

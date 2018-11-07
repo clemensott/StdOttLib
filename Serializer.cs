@@ -24,26 +24,26 @@ namespace StdOttWpfLib
 
         public static string GetUntil(ref StringBuilder text, char seperator, char addChar = DefaultAddChar)
         {
-            int length;
+            int index;
             StringBuilder part = new StringBuilder(text.Length);
 
-            for (length = 0; length < text.Length; length++)
+            for (index = 0; index < text.Length; index++)
             {
-                char c = text[length];
+                char c = text[index];
 
-                if (text[length] == seperator)
-                {
-                    length++;
-
-                    if (length >= text.Length || text[length] != addChar) break;
-                }
+                if (c == seperator && IsSeperator(text.ToString(), index++, addChar)) break;
 
                 part.Append(c);
             }
 
-            text.Remove(0, length);
+            text.Remove(0, index);
 
             return part.ToString();
+        }
+
+        private static bool IsSeperator(string text, int index, char addChar)
+        {
+            return text.Skip(index + 1).TakeWhile(c => c == addChar).Count() % 2 == 0;
         }
 
         public static string Serialize(IEnumerable items, char seperator, char addChar = DefaultAddChar)
@@ -55,7 +55,21 @@ namespace StdOttWpfLib
         {
             string spt = seperator.ToString();
 
-            return string.Join(spt, items.Select(i => i.Replace(spt, spt + addChar)));
+            return string.Join(spt, items.Select(i => AddAddChar(i, seperator, addChar)));
+        }
+
+        private static string AddAddChar(string item, char seperator, char addChar)
+        {
+            int addCharsAtBeginning = item.TakeWhile(c => c == addChar).Count();
+
+            item = string.Concat(Enumerable.Repeat(addChar, addCharsAtBeginning)) + item;
+
+            for (int i = item.Length - 1; i >= 0; i--)
+            {
+                if (item[i] == seperator) item = item.Insert(i, addChar.ToString());
+            }
+
+            return item;
         }
     }
 }
