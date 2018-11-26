@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D1334524-78A5-4D16-93BF-27A57C6DBE56}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>StdOtt</RootNamespace>
+    <AssemblyName>StdOttFrameworkLib</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Converters\EnumConverterT.cs" />
+    <Compile Include="Converters\EnumConverter.cs" />
+    <Compile Include="Converters\AddDoubleConverter.cs" />
+    <Compile Include="Converters\InvertConverter.cs" />
+    <Compile Include="Converters\TimeSpanToStringConverter.cs" />
+    <Compile Include="Converters\ToString\ByteNullableConverter.cs" />
+    <Compile Include="Converters\ToString\DoubleNullableConverter.cs" />
+    <Compile Include="Converters\ToString\EnumToStringConverter.cs" />
+    <Compile Include="Converters\ToString\FloatNullableConverter.cs" />
+    <Compile Include="Converters\ToString\IntNullableConverter.cs" />
+    <Compile Include="Converters\ToString\LongNullableConverter.cs" />
+    <Compile Include="Converters\ToString\UIntNullableConverter.cs" />
+    <Compile Include="Converters\ToString\ULongNullableConverter.cs" />
+    <Compile Include="Converters\ToString\ULongConverter.cs" />
+    <Compile Include="Converters\ToString\UIntConverter.cs" />
+    <Compile Include="Converters\ToString\ByteConverter.cs" />
+    <Compile Include="Converters\ToString\FloatConverter.cs" />
+    <Compile Include="Converters\ToString\LongConverter.cs" />
+    <Compile Include="Converters\ToString\DoubleConverter.cs" />
+    <Compile Include="Converters\ToString\IntConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\IsNotNullConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\IsNullToValueConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\IsFalseToValueConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\IsTrueToValueConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\IsValueToTwoValueConverter.cs" />
+    <Compile Include="Converters\ToString\ToStringTwoWayConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\IsNullConverter.cs" />
+    <Compile Include="Hotkey\HotKey.cs" />
+    <Compile Include="Hotkey\HotKeySource.cs" />
+    <Compile Include="Hotkey\KeyModifier.cs" />
+    <Compile Include="Hotkey\KeyPressedEventArgs.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\StdOttStandardLib\StdOttStandardLib.csproj">
+      <Project>{91c7bef9-eda0-4026-b7db-06099f797df7}</Project>
+      <Name>StdOttStandardLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
