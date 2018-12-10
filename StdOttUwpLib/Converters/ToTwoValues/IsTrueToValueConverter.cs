@@ -1,6 +1,6 @@
 ﻿namespace StdOttUwp.Converters
 {
-    class IsTrueToValueConverter : IsValueToTwoValueConverter
+    public class IsTrueToValueConverter : IsValueToTwoValueConverter
     {
         public IsTrueToValueConverter()
         {

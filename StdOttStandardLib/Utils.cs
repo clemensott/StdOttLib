@@ -49,5 +49,50 @@ namespace StdOttStandard
         {
             return enumerable ?? Enumerable.Empty<T>();
         }
+
+        public static int IndexOf<T>(this IEnumerable<T> enumerable, T searchItem)
+        {
+            int i = 0;
+
+            foreach (T item in enumerable)
+            {
+                if (ReferenzEqualOrEqual(item, searchItem)) return i;
+
+                i++;
+            }
+
+            return -1;
+        }
+
+        public static bool ReferenzEqualOrEqual(object obj1, object obj2)
+        {
+            if (ReferenceEquals(obj1, obj2)) return true;
+            if (!ReferenceEquals(obj1, null)) return obj1.Equals(obj2);
+            if (!ReferenceEquals(obj2, null)) return obj2.Equals(obj2);
+
+            throw new NotImplementedException();
+        }
+
+        public static IEnumerable<Type> GetBaseTypes(this Type type)
+        {
+            while (true)
+            {
+                foreach (Type baseInterface in type.GetInterfaces())
+                {
+                    yield return baseInterface;
+
+                    foreach (Type baseBaseType in GetBaseTypes(baseInterface))
+                    {
+                        yield return baseBaseType;
+                    }
+                }
+
+                type = type.BaseType;
+
+                if (type == null) yield break;
+
+                yield return type;
+            }
+        }
     }
 }

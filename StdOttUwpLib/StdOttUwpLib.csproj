@@ -127,6 +127,8 @@
     <Compile Include="Converters\ToString\UIntNullableConverter.cs" />
     <Compile Include="Converters\ToString\ULongConverter.cs" />
     <Compile Include="Converters\ToString\ULongNullableConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\IsTypeToValueConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\IsEnumToValueConverter.cs" />
     <Compile Include="Converters\ToTwoValues\IsFalseToValueConverter.cs" />
     <Compile Include="Converters\ToTwoValues\IsNotNullConverter.cs" />
     <Compile Include="Converters\ToTwoValues\IsNullConverter.cs" />

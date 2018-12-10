@@ -66,6 +66,7 @@
     <Compile Include="Converters\ToString\LongConverter.cs" />
     <Compile Include="Converters\ToString\DoubleConverter.cs" />
     <Compile Include="Converters\ToString\IntConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\IsEnumToValueConverter.cs" />
     <Compile Include="Converters\ToTwoValues\IsNotNullConverter.cs" />
     <Compile Include="Converters\ToTwoValues\IsNullToValueConverter.cs" />
     <Compile Include="Converters\ToTwoValues\IsFalseToValueConverter.cs" />
