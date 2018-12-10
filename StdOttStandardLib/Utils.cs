@@ -77,17 +77,17 @@ namespace StdOttStandard
         {
             while (true)
             {
-                foreach (Type baseInterface in type.GetInterfaces())
-                {
-                    yield return baseInterface;
+                //foreach (Type baseInterface in type.GetInterfaces())
+                //{
+                //    yield return baseInterface;
 
-                    foreach (Type baseBaseType in GetBaseTypes(baseInterface))
-                    {
-                        yield return baseBaseType;
-                    }
-                }
+                //    foreach (Type baseBaseType in GetBaseTypes(baseInterface))
+                //    {
+                //        yield return baseBaseType;
+                //    }
+                //}
 
-                type = type.BaseType;
+                //type = type.BaseType;
 
                 if (type == null) yield break;
 

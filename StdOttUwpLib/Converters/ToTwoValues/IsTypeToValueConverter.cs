@@ -7,6 +7,7 @@ namespace StdOttUwp.Converters
     {
         protected override bool IsValue(object input, Type targetType, object parameter, string language)
         {
+            return true;
             Type inputType = input.GetType();
 
             if (Equal(inputType, CompareValue)) return true;
