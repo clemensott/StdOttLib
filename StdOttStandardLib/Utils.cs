@@ -72,27 +72,5 @@ namespace StdOttStandard
 
             throw new NotImplementedException();
         }
-
-        public static IEnumerable<Type> GetBaseTypes(this Type type)
-        {
-            while (true)
-            {
-                //foreach (Type baseInterface in type.GetInterfaces())
-                //{
-                //    yield return baseInterface;
-
-                //    foreach (Type baseBaseType in GetBaseTypes(baseInterface))
-                //    {
-                //        yield return baseBaseType;
-                //    }
-                //}
-
-                //type = type.BaseType;
-
-                if (type == null) yield break;
-
-                yield return type;
-            }
-        }
     }
 }
