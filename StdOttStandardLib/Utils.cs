@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace StdOttStandard
 {
@@ -71,6 +73,25 @@ namespace StdOttStandard
             if (!ReferenceEquals(obj2, null)) return obj2.Equals(obj2);
 
             throw new NotImplementedException();
+        }
+
+        public async static Task WaitAsync(object lockObj)
+        {
+            await Task.Run(() =>
+            {
+                lock (lockObj) Monitor.Wait(lockObj);
+            });
+        }
+
+        public async static Task WaitAsync(object lockObj, Func<bool> whileFunc)
+        {
+            await Task.Run(() =>
+            {
+                lock (lockObj)
+                {
+                    while (whileFunc()) Monitor.Wait(lockObj);
+                }
+            });
         }
     }
 }
