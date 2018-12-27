@@ -54,6 +54,8 @@ namespace StdOttStandard
 
         public static int IndexOf<T>(this IEnumerable<T> enumerable, T searchItem)
         {
+            if (enumerable is IList<T> list) return list.IndexOf(searchItem);
+
             int i = 0;
 
             foreach (T item in enumerable)
@@ -64,6 +66,86 @@ namespace StdOttStandard
             }
 
             return -1;
+        }
+
+        public static (T next, bool overflow) Next<T>(this IEnumerable<T> items, T refItem)
+        {
+            (T next, bool overflow, _) = OffsetElement(items, refItem, 1);
+
+            return (next, overflow);
+        }
+
+        public static (T next, bool overflow) NextOrDefault<T>(this IEnumerable<T> items, T refItem)
+        {
+            (T next, bool overflow, _) = OffsetElementOrDefault(items, refItem, 1);
+
+            return (next, overflow);
+        }
+
+        public static (T next, bool overflow) Previous<T>(this IEnumerable<T> items, T refItem)
+        {
+            (T next, _, bool underflow) = OffsetElement(items, refItem, -1);
+
+            return (next, underflow);
+        }
+
+        public static (T next, bool overflow) PreviousOrDefault<T>(this IEnumerable<T> items, T refItem)
+        {
+            (T next, _, bool underflow) = OffsetElementOrDefault(items, refItem, -1);
+
+            return (next, underflow);
+        }
+
+        public static (T item, bool overflow, bool underflow) OffsetElementOrDefault<T>(this IEnumerable<T> items, T refItem, int offset)
+        {
+            IList<T> list = items as IList<T> ?? items.ToArray();
+
+            int refIndex = list.IndexOf(refItem);
+
+            try
+            {
+                (int index, bool overflow, bool underflow) = OffsetIndex(refIndex, list.Count, offset);
+
+                return (list[index], overflow, underflow);
+            }
+            catch
+            {
+                return (default(T), false, false);
+            }
+        }
+
+        public static (T item, bool overflow, bool underflow) OffsetElement<T>(this IEnumerable<T> items, T refItem, int offset)
+        {
+            IList<T> list = items as IList<T> ?? items.ToArray();
+
+            int refIndex = list.IndexOf(refItem);
+
+            if (refIndex == -1) throw new ArgumentException("The refItem has to be in items");
+
+            (int index, bool overflow, bool underflow) = OffsetIndex(refIndex, list.Count, offset);
+
+            return (list[index], overflow, underflow);
+        }
+
+        public static (int index, bool overflow, bool underflow) OffsetIndex(int index, int count, int offset)
+        {
+            if (count <= 0) throw new ArgumentException("The count has to be greater than zero");
+
+            bool overflow = false, underflow = false;
+            index += offset % count;
+
+            if (index < 0)
+            {
+                underflow = true;
+                index += count;
+            }
+            else if (index >= count)
+            {
+                overflow = true;
+                index -= count;
+            }
+
+            return (index, overflow, underflow);
         }
 
         public static bool ReferenzEqualOrEqual(object obj1, object obj2)
