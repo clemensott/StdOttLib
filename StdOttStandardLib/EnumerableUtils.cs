@@ -36,6 +36,74 @@ namespace StdOttStandard
             return -1;
         }
 
+        public static bool TryFirst<T>(this IEnumerable<T> source, out T first)
+        {
+            return TryFirst(source, out first, i => true);
+        }
+
+
+        public static bool TryFirst<T>(this IEnumerable<T> source, out T first, Func<T, bool> predicate)
+        {
+            foreach (T item in source)
+            {
+                if (!predicate(item)) continue;
+
+                first = item;
+                return true;
+            }
+
+            first = default(T);
+            return false;
+        }
+
+        public static bool TryLast<T>(this IEnumerable<T> source, out T last)
+        {
+            return TryLast(source, out last, i => true);
+        }
+
+        public static bool TryLast<T>(this IEnumerable<T> source, out T last, Func<T, bool> predicate)
+        {
+            bool findElement = false;
+            last = default(T);
+
+            foreach (T item in source)
+            {
+                if (!predicate(item)) continue;
+
+                last = item;
+                findElement = true;
+            }
+
+            return findElement;
+        }
+
+        public static bool TrySingle<T>(this IEnumerable<T> source, out T single)
+        {
+            return TrySingle(source, out single, i => true);
+        }
+
+        public static bool TrySingle<T>(this IEnumerable<T> source, out T single, Func<T, bool> predicate)
+        {
+            bool findElement = false;
+            single = default(T);
+
+            foreach (T item in source)
+            {
+                if (!predicate(item)) continue;
+
+                if (findElement)
+                {
+                    single = default(T);
+                    return false;
+                }
+
+                single = item;
+                findElement = true;
+            }
+
+            return findElement;
+        }
+
         public static IEnumerable<T> Concat<T>(this IEnumerable<T> items, params T[] concat)
         {
             return items.Concat(concat);
