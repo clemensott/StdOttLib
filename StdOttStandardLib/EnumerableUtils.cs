@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace StdOttStandard
 {
@@ -106,7 +105,7 @@ namespace StdOttStandard
 
         public static IEnumerable<T> Concat<T>(this IEnumerable<T> items, params T[] concat)
         {
-            return items.Concat(concat);
+            return Enumerable.Concat(items, concat);
         }
 
         public static (T next, bool overflow) Next<T>(this IEnumerable<T> items, T refItem)
