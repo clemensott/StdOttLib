@@ -26,15 +26,7 @@ namespace StdOttStandard.CommendlinePaser
 
             foreach (string arg in args)
             {
-                if (arg.StartsWith(ShortOptStart))
-                {
-                    string optString = arg.Substring(ShortOptStart.Length);
-                    Option opt = GetOptionWithShort(optString);
-
-                    last = new OptionParsed(opt, optString, true, false);
-                    result.Add(last);
-                }
-                else if (arg.StartsWith(LongOptStart))
+                if (arg.StartsWith(LongOptStart))
                 {
                     string optString = arg.Substring(LongOptStart.Length);
                     Option opt = GetOptionWithLong(optString);
@@ -42,7 +34,15 @@ namespace StdOttStandard.CommendlinePaser
                     last = new OptionParsed(opt, optString, false, true);
                     result.Add(last);
                 }
-                else
+                else if (arg.StartsWith(ShortOptStart))
+                {
+                    string optString = arg.Substring(ShortOptStart.Length);
+                    Option opt = GetOptionWithShort(optString);
+
+                    last = new OptionParsed(opt, optString, true, false);
+                    result.Add(last);
+                }
+                else 
                 {
                     if (last == null || last.Opt == null || 
                         (last.Opt.MaxValuesCount > 0 && last.Values.Count >= last.Opt.MaxValuesCount))
