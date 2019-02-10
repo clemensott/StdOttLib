@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Threading;
 
 namespace StdOttFramework
@@ -15,5 +16,9 @@ namespace StdOttFramework
             return Dispatcher.CurrentDispatcher.Invoke(func);
         }
 
+        public static string GetFullPath(string fileName)
+        {
+            return Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), fileName);
+        }
     }
 }
