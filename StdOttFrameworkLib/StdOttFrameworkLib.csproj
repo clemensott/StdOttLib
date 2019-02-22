@@ -7,7 +7,7 @@
     <ProjectGuid>{D1334524-78A5-4D16-93BF-27A57C6DBE56}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StdOtt</RootNamespace>
+    <RootNamespace>StdOttFramework</RootNamespace>
     <AssemblyName>StdOttFrameworkLib</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -50,6 +50,10 @@
     <Compile Include="Converters\EnumConverter.cs" />
     <Compile Include="Converters\AddDoubleConverter.cs" />
     <Compile Include="Converters\InvertConverter.cs" />
+    <Compile Include="Converters\Specialized\VisableCollapsedConverter.cs" />
+    <Compile Include="Converters\Specialized\HiddenVisableConverter.cs" />
+    <Compile Include="Converters\Specialized\CollapsedVisableConverter.cs" />
+    <Compile Include="Converters\Specialized\VisableHiddenConverter.cs" />
     <Compile Include="Converters\TimeSpanToStringConverter.cs" />
     <Compile Include="Converters\ToString\ByteNullableConverter.cs" />
     <Compile Include="Converters\ToString\DoubleNullableConverter.cs" />
