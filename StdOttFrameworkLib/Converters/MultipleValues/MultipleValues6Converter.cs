@@ -2,8 +2,10 @@
 
 namespace StdOttFramework.Converters
 {
-    public delegate object ConvertInputs6EventHandler(object input0, object input1, object input2, object input3, object input4, object input5);
-    public delegate object ConvertInputs6RefEventHandler(ref object input0, ref object input1, ref object input2, ref object input3, ref object input4, ref object input5);
+    public delegate object ConvertInputs6EventHandler(object input0, 
+        object input1, object input2, object input3, object input4, object input5);
+    public delegate object ConvertInputs6RefEventHandler(ref object input0, ref object input1, 
+        ref object input2, ref object input3, ref object input4, ref object input5);
 
     public class MultipleInputs6Converter : FrameworkElement
     {

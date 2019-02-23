@@ -2,8 +2,10 @@
 
 namespace StdOttFramework.Converters
 {
-    public delegate object ConvertInputs9EventHandler(object input0, object input1, object input2, object input3, object input4, object input5, object input6, object input7, object input8);
-    public delegate object ConvertInputs9RefEventHandler(ref object input0, ref object input1, ref object input2, ref object input3, ref object input4, ref object input5, ref object input6, ref object input7, ref object input8);
+    public delegate object ConvertInputs9EventHandler(object input0, object input1, object input2,
+        object input3, object input4, object input5, object input6, object input7, object input8);
+    public delegate object ConvertInputs9RefEventHandler(ref object input0, ref object input1, ref object input2,
+        ref object input3, ref object input4, ref object input5, ref object input6, ref object input7, ref object input8);
 
     public class MultipleInputs9Converter : FrameworkElement
     {
@@ -165,9 +167,11 @@ namespace StdOttFramework.Converters
             if (isUpdating) return;
             isUpdating = true;
 
-            object input0 = Input0, input1 = Input1, input2 = Input2, input3 = Input3, input4 = Input4, input5 = Input5, input6 = Input6, input7 = Input7, input8 = Input8;
+            object input0 = Input0, input1 = Input1, input2 = Input2, input3 = Input3,
+                input4 = Input4, input5 = Input5, input6 = Input6, input7 = Input7, input8 = Input8;
 
-            Output = ConvertRef(ref input0, ref input1, ref input2, ref input3, ref input4, ref input5, ref input6, ref input7, ref input8);
+            Output = ConvertRef(ref input0, ref input1, ref input2, ref input3, 
+                ref input4, ref input5, ref input6, ref input7, ref input8);
 
             Input0 = input0;
             Input1 = input1;

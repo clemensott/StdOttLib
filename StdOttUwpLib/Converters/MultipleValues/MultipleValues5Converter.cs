@@ -3,7 +3,8 @@
 namespace StdOttUwp.Converters
 {
     public delegate object ConvertInputs5EventHandler(object input0, object input1, object input2, object input3, object input4);
-    public delegate object ConvertInputs5RefEventHandler(ref object input0, ref object input1, ref object input2, ref object input3, ref object input4);
+    public delegate object ConvertInputs5RefEventHandler(ref object input0,
+        ref object input1, ref object input2, ref object input3, ref object input4);
 
     public class MultipleInputs5Converter : FrameworkElement
     {
