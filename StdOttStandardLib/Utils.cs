@@ -22,6 +22,45 @@ namespace StdOttStandard
             return text.Replace(' ', '0');
         }
 
+        public static IEnumerable<string> Split(this string text, params string[] seperators)
+        {
+            string value = string.Empty;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                bool matched = false;
+
+                foreach (string seperator in seperators)
+                {
+                    if (!ContinuesWith(text, i, seperator)) continue;
+
+                    matched = true;
+                    yield return value;
+
+                    value = string.Empty;
+                    i += seperator.Length - 1;
+
+                    break;
+                }
+
+                if (!matched) value += text[i];
+            }
+
+            yield return value;
+        }
+
+        public static bool ContinuesWith(string text, int startIndex, string with)
+        {
+            if (text.Length < startIndex + with.Length) return false;
+
+            for (int i = 0; i < with.Length; i++)
+            {
+                if (text[startIndex + i] != with[i]) return false;
+            }
+
+            return true;
+        }
+
         public static (int index, bool overflow, bool underflow) OffsetIndex(int index, int count, int offset)
         {
             if (count <= 0) throw new ArgumentException("The count has to be greater than zero");
