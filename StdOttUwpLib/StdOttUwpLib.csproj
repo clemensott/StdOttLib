@@ -110,9 +110,6 @@
     <Compile Include="Converters\EnumConverter.cs" />
     <Compile Include="Converters\EnumConverterT.cs" />
     <Compile Include="Converters\InvertConverter.cs" />
-    <Compile Include="Converters\MultipleValues\MultipleValues10Converter.cs" />
-    <Compile Include="Converters\MultipleValues\MultipleValues11Converter.cs" />
-    <Compile Include="Converters\MultipleValues\MultipleValues12Converter.cs" />
     <Compile Include="Converters\MultipleValues\MultipleValues2Converter.cs" />
     <Compile Include="Converters\MultipleValues\MultipleValues3Converter.cs" />
     <Compile Include="Converters\MultipleValues\MultipleValues4Converter.cs" />

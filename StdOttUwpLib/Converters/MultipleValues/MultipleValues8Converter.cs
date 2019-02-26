@@ -1,16 +1,16 @@
-﻿using Windows.UI.Xaml;
+using System.Collections.Generic;
+using System.Linq;
+using Windows.UI.Xaml;
 
 namespace StdOttUwp.Converters
 {
-    public delegate object ConvertInputs8EventHandler(object input0, object input1,
-        object input2, object input3, object input4, object input5, object input6, object input7);
-    public delegate object ConvertInputs8RefEventHandler(ref object input0, ref object input1, ref object input2, 
-        ref object input3, ref object input4, ref object input5, ref object input6, ref object input7);
+    public delegate object ConvertInputs8EventHandler(object input0, object input1, object input2, object input3, object input4, object input5, object input6, object input7);
+    public delegate object ConvertInputs8RefEventHandler(ref object input0, ref object input1, ref object input2, ref object input3, ref object input4, ref object input5, ref object input6, ref object input7);
 
     public class MultipleInputs8Converter : FrameworkElement
     {
         public static readonly DependencyProperty OutputProperty = DependencyProperty.Register("Output",
-            typeof(object), typeof(MultipleInputs10Converter), new PropertyMetadata(null));
+            typeof(object), typeof(MultipleInputs8Converter), new PropertyMetadata(null));
 
         public static readonly DependencyProperty Input0Property =
             DependencyProperty.Register("Input0", typeof(object), typeof(MultipleInputs8Converter),
@@ -58,29 +58,33 @@ namespace StdOttUwp.Converters
         }
 
         private bool isUpdating;
-        private ConvertInputs8EventHandler convert;
-        private ConvertInputs8RefEventHandler convertRef;
+        private List<ConvertInputs8EventHandler> converts = new List<ConvertInputs8EventHandler>();
+        private List<ConvertInputs8RefEventHandler> convertRefs = new List<ConvertInputs8RefEventHandler>();
 
-        public ConvertInputs8EventHandler Convert
+        public event ConvertInputs8EventHandler Convert
         {
-            get { return convert; }
-            set
+            add
             {
-                if (value == convert) return;
-
-                convert = value;
+                converts.Add(value);
+                SetOutput();
+            }
+            remove
+            {
+                converts.Remove(value);
                 SetOutput();
             }
         }
 
-        public ConvertInputs8RefEventHandler ConvertRef
+        public event ConvertInputs8RefEventHandler ConvertRef
         {
-            get { return convertRef; }
-            set
+            add
             {
-                if (value == convertRef) return;
-
-                convertRef = value;
+                convertRefs.Add(value);
+                SetOutput();
+            }
+            remove
+            {
+                convertRefs.Remove(value);
                 SetOutput();
             }
         }
@@ -141,14 +145,14 @@ namespace StdOttUwp.Converters
 
         private void SetOutput()
         {
-            if (Convert != null) SetOutputNonRef();
-            else if (ConvertRef != null) SetOutputRef();
+            if (converts.Count > 0) SetOutputNonRef();
+            else if (convertRefs.Count > 0) SetOutputRef();
             else Output = null;
         }
 
         private void SetOutputNonRef()
         {
-            Output = Convert(Input0, Input1, Input2, Input3, Input4, Input5, Input6, Input7);
+            Output = converts.Last()(Input0, Input1, Input2, Input3, Input4, Input5, Input6, Input7);
         }
 
         private void SetOutputRef()
@@ -156,11 +160,9 @@ namespace StdOttUwp.Converters
             if (isUpdating) return;
             isUpdating = true;
 
-            object input0 = Input0, input1 = Input1, input2 = Input2, input3 = Input3,
-                input4 = Input4, input5 = Input5, input6 = Input6, input7 = Input7;
+            object input0 = Input0, input1 = Input1, input2 = Input2, input3 = Input3, input4 = Input4, input5 = Input5, input6 = Input6, input7 = Input7;
 
-            Output = ConvertRef(ref input0, ref input1, ref input2, 
-                ref input3, ref input4, ref input5, ref input6, ref input7);
+            Output = convertRefs.Last()(ref input0, ref input1, ref input2, ref input3, ref input4, ref input5, ref input6, ref input7);
 
             Input0 = input0;
             Input1 = input1;

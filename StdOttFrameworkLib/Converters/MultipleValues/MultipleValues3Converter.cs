@@ -1,4 +1,6 @@
-﻿using System.Windows;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 
 namespace StdOttFramework.Converters
 {
@@ -8,7 +10,7 @@ namespace StdOttFramework.Converters
     public class MultipleInputs3Converter : FrameworkElement
     {
         public static readonly DependencyProperty OutputProperty = DependencyProperty.Register("Output",
-            typeof(object), typeof(MultipleInputs10Converter), new PropertyMetadata(null));
+            typeof(object), typeof(MultipleInputs3Converter), new PropertyMetadata(null));
 
         public static readonly DependencyProperty Input0Property =
             DependencyProperty.Register("Input0", typeof(object), typeof(MultipleInputs3Converter),
@@ -31,29 +33,33 @@ namespace StdOttFramework.Converters
         }
 
         private bool isUpdating;
-        private ConvertInputs3EventHandler convert;
-        private ConvertInputs3RefEventHandler convertRef;
+        private List<ConvertInputs3EventHandler> converts = new List<ConvertInputs3EventHandler>();
+        private List<ConvertInputs3RefEventHandler> convertRefs = new List<ConvertInputs3RefEventHandler>();
 
-        public ConvertInputs3EventHandler Convert
+        public event ConvertInputs3EventHandler Convert
         {
-            get { return convert; }
-            set
+            add
             {
-                if (value == convert) return;
-
-                convert = value;
+                converts.Add(value);
+                SetOutput();
+            }
+            remove
+            {
+                converts.Remove(value);
                 SetOutput();
             }
         }
 
-        public ConvertInputs3RefEventHandler ConvertRef
+        public event ConvertInputs3RefEventHandler ConvertRef
         {
-            get { return convertRef; }
-            set
+            add
             {
-                if (value == convertRef) return;
-
-                convertRef = value;
+                convertRefs.Add(value);
+                SetOutput();
+            }
+            remove
+            {
+                convertRefs.Remove(value);
                 SetOutput();
             }
         }
@@ -84,14 +90,14 @@ namespace StdOttFramework.Converters
 
         private void SetOutput()
         {
-            if (Convert != null) SetOutputNonRef();
-            else if (ConvertRef != null) SetOutputRef();
+            if (converts.Count > 0) SetOutputNonRef();
+            else if (convertRefs.Count > 0) SetOutputRef();
             else Output = null;
         }
 
         private void SetOutputNonRef()
         {
-            Output = Convert(Input0, Input1, Input2);
+            Output = converts.Last()(Input0, Input1, Input2);
         }
 
         private void SetOutputRef()
@@ -101,7 +107,7 @@ namespace StdOttFramework.Converters
 
             object input0 = Input0, input1 = Input1, input2 = Input2;
 
-            Output = ConvertRef(ref input0, ref input1, ref input2);
+            Output = convertRefs.Last()(ref input0, ref input1, ref input2);
 
             Input0 = input0;
             Input1 = input1;

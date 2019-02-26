@@ -1,4 +1,6 @@
-﻿using Windows.UI.Xaml;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Windows.UI.Xaml;
 
 namespace StdOttUwp.Converters
 {
@@ -20,29 +22,33 @@ namespace StdOttUwp.Converters
         }
 
         private bool isUpdating;
-        private ConvertInputEventHandler convert;
-        private ConvertInputRefEventHandler convertRef;
+        private List<ConvertInputEventHandler> converts = new List<ConvertInputEventHandler>();
+        private List<ConvertInputRefEventHandler> convertRefs = new List<ConvertInputRefEventHandler>();
 
-        public ConvertInputEventHandler Convert
+        public event ConvertInputEventHandler Convert
         {
-            get { return convert; }
-            set
+            add
             {
-                if (value == convert) return;
-
-                convert = value;
+                converts.Add(value);
                 SetOutput();
             }
+            remove
+            {
+                converts.Remove(value);
+                SetOutput();
+            }   
         }
 
-        public ConvertInputRefEventHandler ConvertRef
+        public event ConvertInputRefEventHandler ConvertRef
         {
-            get { return convertRef; }
-            set
+            add
             {
-                if (value == convertRef) return;
-
-                convertRef = value;
+                convertRefs.Add(value);
+                SetOutput();
+            }
+            remove
+            {
+                convertRefs.Remove(value);
                 SetOutput();
             }
         }
@@ -61,14 +67,14 @@ namespace StdOttUwp.Converters
 
         private void SetOutput()
         {
-            if (Convert != null) SetOutputNonRef();
-            else if (ConvertRef != null) SetOutputRef();
+            if (converts.Count > 0) SetOutputNonRef();
+            else if (convertRefs.Count > 0) SetOutputRef();
             else Output = null;
         }
 
         private void SetOutputNonRef()
         {
-            Output = Convert(Input);
+            Output = converts.Last()(Input);
         }
 
         private void SetOutputRef()
@@ -77,7 +83,7 @@ namespace StdOttUwp.Converters
             isUpdating = true;
 
             object input = Input;
-            Output = ConvertRef(ref input);
+            Output = convertRefs.Last()(ref input);
             Input = input;
             isUpdating = false;
         }
