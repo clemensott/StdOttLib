@@ -119,6 +119,8 @@
     <Compile Include="Converters\MultipleValues\MultipleValues8Converter.cs" />
     <Compile Include="Converters\MultipleValues\MultipleValues9Converter.cs" />
     <Compile Include="Converters\MultipleValues\SingleValueConverter.cs" />
+    <Compile Include="Converters\Specialized\CollapsedVisableConverter.cs" />
+    <Compile Include="Converters\Specialized\VisableCollapsedConverter.cs" />
     <Compile Include="Converters\TimeSpanToStringConverter.cs" />
     <Compile Include="Converters\ToString\ByteConverter.cs" />
     <Compile Include="Converters\ToString\ByteNullableConverter.cs" />
