@@ -103,9 +103,16 @@ namespace StdOttStandard
             return findElement;
         }
 
-        public static IEnumerable<T> Concat<T>(this IEnumerable<T> items, params T[] concat)
+        public static IEnumerable<T> Concat<T>(this IEnumerable<T> items, T item, params T[] more)
         {
-            return Enumerable.Concat(items, concat);
+            return Enumerable.Concat(items, Concat(item, more));
+        }
+
+        public static IEnumerable<T> Concat<T>(T first, params T[] more)
+        {
+            yield return first;
+
+            foreach (T item in more) yield return item;
         }
 
         public static (T next, bool overflow) Next<T>(this IEnumerable<T> items, T refItem)
