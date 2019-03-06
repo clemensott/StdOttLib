@@ -66,17 +66,17 @@ namespace StdOttStandard
             if (count <= 0) throw new ArgumentException("The count has to be greater than zero");
 
             bool overflow = false, underflow = false;
-            index += offset % count;
+            index += offset;
 
             if (index < 0)
             {
                 underflow = true;
-                index += count;
+                index = (index % count) + count;
             }
             else if (index >= count)
             {
                 overflow = true;
-                index -= count;
+                index = index % count;
             }
 
             return (index, overflow, underflow);
