@@ -136,62 +136,62 @@ namespace StdOttUwp.Converters
 
         public object Output
         {
-            get { return GetValue(OutputProperty); }
-            set { SetValue(OutputProperty, value); }
+            get => GetValue(OutputProperty);
+            set => SetValue(OutputProperty, value);
         }
 
         public object Input0
         {
-            get { return GetValue(Input0Property); }
-            set { SetValue(Input0Property, value); }
+            get => GetValue(Input0Property);
+            set => SetValue(Input0Property, value);
         }
 
         public object Input1
         {
-            get { return GetValue(Input1Property); }
-            set { SetValue(Input1Property, value); }
+            get => GetValue(Input1Property);
+            set => SetValue(Input1Property, value);
         }
 
         public object Input2
         {
-            get { return GetValue(Input2Property); }
-            set { SetValue(Input2Property, value); }
+            get => GetValue(Input2Property);
+            set => SetValue(Input2Property, value);
         }
 
         public object Input3
         {
-            get { return GetValue(Input3Property); }
-            set { SetValue(Input3Property, value); }
+            get => GetValue(Input3Property);
+            set => SetValue(Input3Property, value);
         }
 
         public object Input4
         {
-            get { return GetValue(Input4Property); }
-            set { SetValue(Input4Property, value); }
+            get => GetValue(Input4Property);
+            set => SetValue(Input4Property, value);
         }
 
         public object Input5
         {
-            get { return GetValue(Input5Property); }
-            set { SetValue(Input5Property, value); }
+            get => GetValue(Input5Property);
+            set => SetValue(Input5Property, value);
         }
 
         public object Input6
         {
-            get { return GetValue(Input6Property); }
-            set { SetValue(Input6Property, value); }
+            get => GetValue(Input6Property);
+            set => SetValue(Input6Property, value);
         }
 
         public object Input7
         {
-            get { return GetValue(Input7Property); }
-            set { SetValue(Input7Property, value); }
+            get => GetValue(Input7Property);
+            set => SetValue(Input7Property, value);
         }
 
         public object Input8
         {
-            get { return GetValue(Input8Property); }
-            set { SetValue(Input8Property, value); }
+            get => GetValue(Input8Property);
+            set => SetValue(Input8Property, value);
         }
 
         private void SetOutput(int changedIndex)

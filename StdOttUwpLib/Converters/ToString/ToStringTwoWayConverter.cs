@@ -25,26 +25,26 @@ namespace StdOttUwp.Converters
 
         public bool AutoParseNullOrWhiteSpace
         {
-            get { return (bool)GetValue(AutoParseNullOrWhiteSpaceProperty); }
-            set { SetValue(AutoParseNullOrWhiteSpaceProperty, value); }
+            get => (bool)GetValue(AutoParseNullOrWhiteSpaceProperty);
+            set => SetValue(AutoParseNullOrWhiteSpaceProperty, value);
         }
 
         public T NullOrWhiteSpaceValue
         {
-            get { return (T)GetValue(NullOrWhiteSpaceValueProperty); }
-            set { SetValue(NullOrWhiteSpaceValueProperty, value); }
+            get => (T)GetValue(NullOrWhiteSpaceValueProperty);
+            set => SetValue(NullOrWhiteSpaceValueProperty, value);
         }
 
         public T Value
         {
-            get { return (T)(GetValue(ValueProperty) ?? default(T)); }
-            set { SetValue(ValueProperty, value); }
+            get => (T)(GetValue(ValueProperty) ?? default(T));
+            set => SetValue(ValueProperty, value);
         }
 
         public string Text
         {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
+            get => (string)GetValue(TextProperty);
+            set => SetValue(TextProperty, value);
         }
 
         public string Convert(T value, object parameter = null)

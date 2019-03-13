@@ -7,19 +7,19 @@ namespace StdOttFramework.Converters
     public delegate object ConvertInputs1EventHandler(object input, int changedInput);
     public delegate object ConvertInputs1RefEventHandler(ref object input, int changedInput);
 
-    public class MultipleInputs1Converter : FrameworkElement
+    public class SingleInputConverter : FrameworkElement
     {
         public static readonly DependencyProperty OutputProperty = DependencyProperty.Register("Output",
-            typeof(object), typeof(MultipleInputs1Converter), new PropertyMetadata(null));
+            typeof(object), typeof(SingleInputConverter), new PropertyMetadata(null));
 
         public static readonly DependencyProperty InputProperty =
-            DependencyProperty.Register("Input", typeof(object), typeof(MultipleInputs1Converter),
+            DependencyProperty.Register("Input", typeof(object), typeof(SingleInputConverter),
                 new PropertyMetadata(null, new PropertyChangedCallback(OnInputPropertyChanged)));
 
 
         private static void OnInputPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((MultipleInputs1Converter)sender).SetOutput(0);
+            ((SingleInputConverter)sender).SetOutput(0);
         }
 
         private bool isUpdating;
@@ -56,14 +56,14 @@ namespace StdOttFramework.Converters
 
         public object Output
         {
-            get { return GetValue(OutputProperty); }
-            set { SetValue(OutputProperty, value); }
+            get => GetValue(OutputProperty);
+            set => SetValue(OutputProperty, value);
         }
 
         public object Input
         {
-            get { return GetValue(InputProperty); }
-            set { SetValue(InputProperty, value); }
+            get => GetValue(InputProperty);
+            set => SetValue(InputProperty, value);
         }
 
         private void SetOutput(int changedIndex)

@@ -11,8 +11,8 @@ namespace StdOttUwp.Converters
 
         public double? Add
         {
-            get { return (double?)GetValue(AddProperty); }
-            set { SetValue(AddProperty, value); }
+            get => (double?)GetValue(AddProperty);
+            set => SetValue(AddProperty, value);
         }
 
         public object Convert(object value, Type targetType, object parameter, string language)

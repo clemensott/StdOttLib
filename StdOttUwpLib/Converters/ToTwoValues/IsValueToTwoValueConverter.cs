@@ -20,20 +20,20 @@ namespace StdOttUwp.Converters
 
         public object CompareValue
         {
-            get { return GetValue(CompareValueProperty); }
-            set { SetValue(CompareValueProperty, value); }
+            get => GetValue(CompareValueProperty);
+            set => SetValue(CompareValueProperty, value);
         }
 
         public object EqualsValue
         {
-            get { return GetValue(EqualsValueProperty); }
-            set { SetValue(EqualsValueProperty, value); }
+            get => GetValue(EqualsValueProperty);
+            set => SetValue(EqualsValueProperty, value);
         }
 
         public object NotEqualsValue
         {
-            get { return GetValue(NotEqualsValueProperty); }
-            set { SetValue(NotEqualsValueProperty, value); }
+            get => GetValue(NotEqualsValueProperty);
+            set => SetValue(NotEqualsValueProperty, value);
         }
 
         public object Convert(object value, Type targetType, object parameter, string language)

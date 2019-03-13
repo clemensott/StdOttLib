@@ -24,14 +24,14 @@ namespace StdOttUwp.Converters
 
         public Type EnumType
         {
-            get { return (Type)GetValue(EnumTypeProperty); }
-            set { SetValue(EnumTypeProperty, value); }
+            get => (Type)GetValue(EnumTypeProperty);
+            set => SetValue(EnumTypeProperty, value);
         }
 
         public Enum Example
         {
-            get { return (Enum)GetValue(ExampleProperty); }
-            set { SetValue(ExampleProperty, value); }
+            get => (Enum)GetValue(ExampleProperty);
+            set => SetValue(ExampleProperty, value);
         }
 
         public object Convert(object value, Type targetType, object parameter, string language)

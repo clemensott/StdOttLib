@@ -86,32 +86,32 @@ namespace StdOttUwp.Converters
 
         public object Output
         {
-            get { return GetValue(OutputProperty); }
-            set { SetValue(OutputProperty, value); }
+            get => GetValue(OutputProperty);
+            set => SetValue(OutputProperty, value);
         }
 
         public object Input0
         {
-            get { return GetValue(Input0Property); }
-            set { SetValue(Input0Property, value); }
+            get => GetValue(Input0Property);
+            set => SetValue(Input0Property, value);
         }
 
         public object Input1
         {
-            get { return GetValue(Input1Property); }
-            set { SetValue(Input1Property, value); }
+            get => GetValue(Input1Property);
+            set => SetValue(Input1Property, value);
         }
 
         public object Input2
         {
-            get { return GetValue(Input2Property); }
-            set { SetValue(Input2Property, value); }
+            get => GetValue(Input2Property);
+            set => SetValue(Input2Property, value);
         }
 
         public object Input3
         {
-            get { return GetValue(Input3Property); }
-            set { SetValue(Input3Property, value); }
+            get => GetValue(Input3Property);
+            set => SetValue(Input3Property, value);
         }
 
         private void SetOutput(int changedIndex)
