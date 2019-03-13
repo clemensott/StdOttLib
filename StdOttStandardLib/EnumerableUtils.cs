@@ -174,5 +174,28 @@ namespace StdOttStandard
             return (list[index], overflow, underflow);
         }
 
+        public static IEnumerable<T> Remove<T>(this IEnumerable<T> items, T item, int max = 1)
+        {
+            if (max == -1) return RemoveAll(items, item);
+
+            int count = 0;
+            return items.Where(i =>
+            {
+                if (count >= max || Utils.ReferenzEqualOrEqual(i, item)) return true;
+
+                count++;
+                return false;
+            });
+        }
+
+        public static IEnumerable<T> RemoveAll<T>(this IEnumerable<T> items, T item)
+        {
+            return items.Where(i => !Utils.ReferenzEqualOrEqual(i, item));
+        }
+
+        public static IEnumerable<T> Insert<T>(this IEnumerable<T> items, int index, T item)
+        {
+            return items.Take(index).Concat(item).Concat(items.Skip(index));
+        }
     }
 }

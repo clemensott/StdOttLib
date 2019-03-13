@@ -4,8 +4,8 @@ using System.Windows;
 
 namespace StdOttFramework.Converters
 {
-    public delegate object ConvertInputs3EventHandler(object input0, object input1, object input2);
-    public delegate object ConvertInputs3RefEventHandler(ref object input0, ref object input1, ref object input2);
+    public delegate object ConvertInputs3EventHandler(object input0, object input1, object input2, int changedInput);
+    public delegate object ConvertInputs3RefEventHandler(ref object input0, ref object input1, ref object input2, int changedInput);
 
     public class MultipleInputs3Converter : FrameworkElement
     {
@@ -14,22 +14,32 @@ namespace StdOttFramework.Converters
 
         public static readonly DependencyProperty Input0Property =
             DependencyProperty.Register("Input0", typeof(object), typeof(MultipleInputs3Converter),
-                new PropertyMetadata(null, new PropertyChangedCallback(OnInputXPropertyChanged)));
+                new PropertyMetadata(null, new PropertyChangedCallback(OnInput0PropertyChanged)));
 
+
+        private static void OnInput0PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            ((MultipleInputs3Converter)sender).SetOutput(0);
+        }
 
         public static readonly DependencyProperty Input1Property =
             DependencyProperty.Register("Input1", typeof(object), typeof(MultipleInputs3Converter),
-                new PropertyMetadata(null, new PropertyChangedCallback(OnInputXPropertyChanged)));
+                new PropertyMetadata(null, new PropertyChangedCallback(OnInput1PropertyChanged)));
 
+
+        private static void OnInput1PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            ((MultipleInputs3Converter)sender).SetOutput(1);
+        }
 
         public static readonly DependencyProperty Input2Property =
             DependencyProperty.Register("Input2", typeof(object), typeof(MultipleInputs3Converter),
-                new PropertyMetadata(null, new PropertyChangedCallback(OnInputXPropertyChanged)));
+                new PropertyMetadata(null, new PropertyChangedCallback(OnInput2PropertyChanged)));
 
 
-        private static void OnInputXPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        private static void OnInput2PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((MultipleInputs3Converter)sender).SetOutput();
+            ((MultipleInputs3Converter)sender).SetOutput(2);
         }
 
         private bool isUpdating;
@@ -41,12 +51,12 @@ namespace StdOttFramework.Converters
             add
             {
                 converts.Add(value);
-                SetOutput();
+                SetOutput(-1);
             }
             remove
             {
                 converts.Remove(value);
-                SetOutput();
+                SetOutput(-1);
             }
         }
 
@@ -55,12 +65,12 @@ namespace StdOttFramework.Converters
             add
             {
                 convertRefs.Add(value);
-                SetOutput();
+                SetOutput(-1);
             }
             remove
             {
                 convertRefs.Remove(value);
-                SetOutput();
+                SetOutput(-1);
             }
         }
 
@@ -88,26 +98,26 @@ namespace StdOttFramework.Converters
             set { SetValue(Input2Property, value); }
         }
 
-        private void SetOutput()
+        private void SetOutput(int changedIndex)
         {
-            if (converts.Count > 0) SetOutputNonRef();
-            else if (convertRefs.Count > 0) SetOutputRef();
+            if (converts.Count > 0) SetOutputNonRef(changedIndex);
+            else if (convertRefs.Count > 0) SetOutputRef(changedIndex);
             else Output = null;
         }
 
-        private void SetOutputNonRef()
+        private void SetOutputNonRef(int changedIndex)
         {
-            Output = converts.Last()(Input0, Input1, Input2);
+            Output = converts.Last()(Input0, Input1, Input2, changedIndex);
         }
 
-        private void SetOutputRef()
+        private void SetOutputRef(int changedIndex)
         {
             if (isUpdating) return;
             isUpdating = true;
 
             object input0 = Input0, input1 = Input1, input2 = Input2;
 
-            Output = convertRefs.Last()(ref input0, ref input1, ref input2);
+            Output = convertRefs.Last()(ref input0, ref input1, ref input2, changedIndex);
 
             Input0 = input0;
             Input1 = input1;

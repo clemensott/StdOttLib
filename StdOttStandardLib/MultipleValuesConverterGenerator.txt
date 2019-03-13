@@ -1,15 +1,19 @@
-private static IEnumerable<string> GetMultipleValueConverter(int c)
+		private static IEnumerable<string> GetMultipleValueConverter(int c, bool uwp)
         {
             yield return "using System.Collections.Generic;";
             yield return "using System.Linq;";
-            yield return "using System.Windows;";
-            //yield return "using Windows.UI.Xaml;";
+
+            if (uwp) yield return "using Windows.UI.Xaml;";
+            else yield return "using System.Windows;";
+
             yield return "";
-            yield return "namespace StdOttFramework.Converters";
-            //yield return "namespace StdOttUwp.Converters";
+
+            if (uwp) yield return "namespace StdOttUwp.Converters";
+            else yield return "namespace StdOttFramework.Converters";
+
             yield return "{";
-            yield return string.Format("public delegate object ConvertInputs{0}EventHandler(", c) + Join(", ", "object input{0}", c) + ");";
-            yield return string.Format("public delegate object ConvertInputs{0}RefEventHandler(", c) + Join(", ", "ref object input{0}", c) + ");";
+            yield return string.Format("public delegate object ConvertInputs{0}EventHandler(", c) + Join(", ", "object input{0}", c) + ", int changedInput);";
+            yield return string.Format("public delegate object ConvertInputs{0}RefEventHandler(", c) + Join(", ", "ref object input{0}", c) + ", int changedInput);";
             yield return "";
             yield return string.Format("public class MultipleInputs{0}Converter : FrameworkElement", c);
             yield return "{";
@@ -21,14 +25,14 @@ private static IEnumerable<string> GetMultipleValueConverter(int c)
                 yield return "";
                 yield return string.Format("public static readonly DependencyProperty Input{0}Property =", i);
                 yield return string.Format("    DependencyProperty.Register(\"Input{0}\", typeof(object), typeof(MultipleInputs{1}Converter),", i, c);
-                yield return string.Format("        new PropertyMetadata(null, new PropertyChangedCallback(OnInputXPropertyChanged)));\r\n", c);
+                yield return string.Format("        new PropertyMetadata(null, new PropertyChangedCallback(OnInput{0}PropertyChanged)));\r\n", i);
+                yield return "";
+                yield return string.Format("private static void OnInput{0}PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)", i);
+                yield return "{";
+                yield return string.Format("((MultipleInputs{0}Converter)sender).SetOutput({1});", c, i);
+                yield return "}";
             }
 
-            yield return "";
-            yield return "private static void OnInputXPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)";
-            yield return "{";
-            yield return string.Format("((MultipleInputs{0}Converter)sender).SetOutput();", c);
-            yield return "}";
             yield return "";
             yield return "private bool isUpdating;";
             yield return string.Format("private List<ConvertInputs{0}EventHandler> converts = new List<ConvertInputs{0}EventHandler>();", c);
@@ -39,12 +43,12 @@ private static IEnumerable<string> GetMultipleValueConverter(int c)
             yield return "add";
             yield return "{";
             yield return "converts.Add(value);";
-            yield return "SetOutput();";
+            yield return "SetOutput(-1);";
             yield return "}";
             yield return "remove";
             yield return "{";
             yield return "converts.Remove(value);";
-            yield return "SetOutput();";
+            yield return "SetOutput(-1);";
             yield return "}";
             yield return "}";
             yield return "";
@@ -53,12 +57,12 @@ private static IEnumerable<string> GetMultipleValueConverter(int c)
             yield return "add";
             yield return "{";
             yield return "convertRefs.Add(value);";
-            yield return "SetOutput();";
+            yield return "SetOutput(-1);";
             yield return "}";
             yield return "remove";
             yield return "{";
             yield return "convertRefs.Remove(value);";
-            yield return "SetOutput();";
+            yield return "SetOutput(-1);";
             yield return "}";
             yield return "}";
             yield return "";
@@ -79,26 +83,26 @@ private static IEnumerable<string> GetMultipleValueConverter(int c)
             }
 
             yield return "";
-            yield return "private void SetOutput()";
+            yield return "private void SetOutput(int changedIndex)";
             yield return "{";
-            yield return "if (converts.Count > 0) SetOutputNonRef();";
-            yield return "else if (convertRefs.Count > 0) SetOutputRef();";
+            yield return "if (converts.Count > 0) SetOutputNonRef(changedIndex);";
+            yield return "else if (convertRefs.Count > 0) SetOutputRef(changedIndex);";
             yield return "else Output = null;";
             yield return "}";
             yield return "";
-            yield return "private void SetOutputNonRef()";
+            yield return "private void SetOutputNonRef(int changedIndex)";
             yield return "{";
-            yield return "Output = converts.Last()(" + Join(", ", "Input{0}", c) + ");";
+            yield return "Output = converts.Last()(" + Join(", ", "Input{0}", c) + ", changedIndex);";
             yield return "}";
             yield return "";
-            yield return "private void SetOutputRef()";
+            yield return "private void SetOutputRef(int changedIndex)";
             yield return "{";
             yield return "if (isUpdating) return;";
             yield return "isUpdating = true;";
             yield return "";
             yield return "object " + Join(", ", "input{0} = Input{0}", c) + ";";
             yield return "";
-            yield return "Output = convertRefs.Last()(" + Join(", ", "ref input{0}", c) + ");";
+            yield return "Output = convertRefs.Last()(" + Join(", ", "ref input{0}", c) + ", changedIndex);";
             yield return "";
 
             for (int i = 0; i < c; i++)
@@ -111,14 +115,4 @@ private static IEnumerable<string> GetMultipleValueConverter(int c)
             yield return "}";
             yield return "}";
             yield return "}";
-        }
-
-        private static string Join(string format, int count)
-        {
-            return string.Join("", Enumerable.Range(0, count).Select(i => string.Format(format, i)));
-        }
-
-        private static string Join(string seperator, string format, int count)
-        {
-            return string.Join(seperator, Enumerable.Range(0, count).Select(i => string.Format(format, i)));
         }
