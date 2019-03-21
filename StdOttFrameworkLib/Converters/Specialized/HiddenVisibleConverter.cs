@@ -2,9 +2,9 @@
 
 namespace StdOttFramework.Converters.Specialized
 {
-    public class HiddenVisableConverter : IsTrueToValueConverter
+    public class HiddenVisibleConverter : IsTrueToValueConverter
     {
-        public HiddenVisableConverter()
+        public HiddenVisibleConverter()
         {
             EqualsValue = Visibility.Hidden;
             NotEqualsValue = Visibility.Visible;

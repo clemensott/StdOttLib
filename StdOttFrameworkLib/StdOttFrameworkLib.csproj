@@ -60,8 +60,8 @@
     <Compile Include="Converters\MultipleValues\MultipleInputs8Converter.cs" />
     <Compile Include="Converters\MultipleValues\MultipleInputs9Converter.cs" />
     <Compile Include="Converters\Specialized\VisableCollapsedConverter.cs" />
-    <Compile Include="Converters\Specialized\HiddenVisableConverter.cs" />
-    <Compile Include="Converters\Specialized\CollapsedVisableConverter.cs" />
+    <Compile Include="Converters\Specialized\HiddenVisibleConverter.cs" />
+    <Compile Include="Converters\Specialized\CollapsedVisibleConverter.cs" />
     <Compile Include="Converters\Specialized\VisableHiddenConverter.cs" />
     <Compile Include="Converters\TimeSpanToStringConverter.cs" />
     <Compile Include="Converters\ToString\ByteNullableConverter.cs" />

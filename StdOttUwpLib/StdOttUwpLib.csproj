@@ -119,8 +119,8 @@
     <Compile Include="Converters\MultipleValues\MultipleInputs7Converter.cs" />
     <Compile Include="Converters\MultipleValues\MultipleInputs8Converter.cs" />
     <Compile Include="Converters\MultipleValues\MultipleInputs9Converter.cs" />
-    <Compile Include="Converters\Specialized\CollapsedVisableConverter.cs" />
-    <Compile Include="Converters\Specialized\VisableCollapsedConverter.cs" />
+    <Compile Include="Converters\Specialized\CollapsedVisibleConverter.cs" />
+    <Compile Include="Converters\Specialized\VisibleCollapsedConverter.cs" />
     <Compile Include="Converters\TimeSpanToStringConverter.cs" />
     <Compile Include="Converters\ToString\ByteConverter.cs" />
     <Compile Include="Converters\ToString\ByteNullableConverter.cs" />
@@ -151,7 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.1.7</Version>
+      <Version>6.2.8</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
