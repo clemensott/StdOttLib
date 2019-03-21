@@ -23,8 +23,8 @@ namespace StdOttUwp.Converters
         }
 
         private bool isUpdating;
-        private List<ConvertInputs1EventHandler> converts = new List<ConvertInputs1EventHandler>();
-        private List<ConvertInputs1RefEventHandler> convertRefs = new List<ConvertInputs1RefEventHandler>();
+        private readonly List<ConvertInputs1EventHandler> converts = new List<ConvertInputs1EventHandler>();
+        private readonly List<ConvertInputs1RefEventHandler> convertRefs = new List<ConvertInputs1RefEventHandler>();
 
         public event ConvertInputs1EventHandler Convert
         {
@@ -87,7 +87,7 @@ namespace StdOttUwp.Converters
 
             Output = convertRefs.Last()(ref input, changedIndex);
 
-            Input = input;
+            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input, input)) Input = input;
 
             isUpdating = false;
         }

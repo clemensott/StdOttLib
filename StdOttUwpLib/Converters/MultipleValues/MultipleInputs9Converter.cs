@@ -103,8 +103,8 @@ namespace StdOttUwp.Converters
         }
 
         private bool isUpdating;
-        private List<ConvertInputs9EventHandler> converts = new List<ConvertInputs9EventHandler>();
-        private List<ConvertInputs9RefEventHandler> convertRefs = new List<ConvertInputs9RefEventHandler>();
+        private readonly List<ConvertInputs9EventHandler> converts = new List<ConvertInputs9EventHandler>();
+        private readonly List<ConvertInputs9RefEventHandler> convertRefs = new List<ConvertInputs9RefEventHandler>();
 
         public event ConvertInputs9EventHandler Convert
         {
@@ -215,15 +215,15 @@ namespace StdOttUwp.Converters
 
             Output = convertRefs.Last()(ref input0, ref input1, ref input2, ref input3, ref input4, ref input5, ref input6, ref input7, ref input8, changedIndex);
 
-            Input0 = input0;
-            Input1 = input1;
-            Input2 = input2;
-            Input3 = input3;
-            Input4 = input4;
-            Input5 = input5;
-            Input6 = input6;
-            Input7 = input7;
-            Input8 = input8;
+            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input0, input0)) Input0 = input0;
+            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input1, input1)) Input1 = input1;
+            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input2, input2)) Input2 = input2;
+            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input3, input3)) Input3 = input3;
+            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input4, input4)) Input4 = input4;
+            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input5, input5)) Input5 = input5;
+            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input6, input6)) Input6 = input6;
+            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input7, input7)) Input7 = input7;
+            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input8, input8)) Input8 = input8;
 
             isUpdating = false;
         }

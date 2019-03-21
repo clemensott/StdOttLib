@@ -53,8 +53,8 @@ namespace StdOttFramework.Converters
         }
 
         private bool isUpdating;
-        private List<ConvertInputs4EventHandler> converts = new List<ConvertInputs4EventHandler>();
-        private List<ConvertInputs4RefEventHandler> convertRefs = new List<ConvertInputs4RefEventHandler>();
+        private readonly List<ConvertInputs4EventHandler> converts = new List<ConvertInputs4EventHandler>();
+        private readonly List<ConvertInputs4RefEventHandler> convertRefs = new List<ConvertInputs4RefEventHandler>();
 
         public event ConvertInputs4EventHandler Convert
         {
@@ -135,10 +135,10 @@ namespace StdOttFramework.Converters
 
             Output = convertRefs.Last()(ref input0, ref input1, ref input2, ref input3, changedIndex);
 
-            Input0 = input0;
-            Input1 = input1;
-            Input2 = input2;
-            Input3 = input3;
+            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input0, input0)) Input0 = input0;
+            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input1, input1)) Input1 = input1;
+            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input2, input2)) Input2 = input2;
+            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input3, input3)) Input3 = input3;
 
             isUpdating = false;
         }
