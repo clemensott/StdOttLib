@@ -27,7 +27,7 @@ namespace StdOttStandard
 
             foreach (T item in enumerable)
             {
-                if (Utils.ReferenzEqualOrEqual(item, searchItem)) return i;
+                if (Utils.ReferenceEqualsOrEquals(item, searchItem)) return i;
 
                 i++;
             }
@@ -181,7 +181,7 @@ namespace StdOttStandard
             int count = 0;
             return items.Where(i =>
             {
-                if (count >= max || Utils.ReferenzEqualOrEqual(i, item)) return true;
+                if (count >= max || Utils.ReferenceEqualsOrEquals(i, item)) return true;
 
                 count++;
                 return false;
@@ -190,7 +190,7 @@ namespace StdOttStandard
 
         public static IEnumerable<T> RemoveAll<T>(this IEnumerable<T> items, T item)
         {
-            return items.Where(i => !Utils.ReferenzEqualOrEqual(i, item));
+            return items.Where(i => !Utils.ReferenceEqualsOrEquals(i, item));
         }
 
         public static IEnumerable<T> Insert<T>(this IEnumerable<T> items, int index, T item)
