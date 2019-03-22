@@ -8,10 +8,25 @@ namespace StdOttStandard
     {
         public static bool BothNullOrSequenceEqual<T>(this IEnumerable<T> enum1, IEnumerable<T> enum2)
         {
-            if (enum1 == enum2) return true;
+            if (ReferenceEquals(enum1, enum2)) return true;
             if (enum1 == null || enum2 == null) return false;
 
             return enum1.SequenceEqual(enum2);
+        }
+
+        public static IEnumerable<T> ToBuffer<T>(this IEnumerable<T> source)
+        {
+            switch (source)
+            {
+                case IList<T> list:
+                    return list;
+
+                case OnRequestBufferEnumerable<T> buffer:
+                    return buffer;
+
+                default:
+                    return new OnRequestBufferEnumerable<T>(source);
+            }
         }
 
         public static IEnumerable<T> ToNotNull<T>(this IEnumerable<T> enumerable)
