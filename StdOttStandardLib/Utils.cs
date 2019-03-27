@@ -98,7 +98,7 @@ namespace StdOttStandard
             });
         }
 
-        public async static Task WaitAsync(object lockObj, Func<bool> whileFunc)
+        public static async Task WaitAsync(object lockObj, Func<bool> whileFunc)
         {
             await Task.Run(() =>
             {

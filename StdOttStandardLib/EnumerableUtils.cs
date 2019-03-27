@@ -14,13 +14,10 @@ namespace StdOttStandard
             return enum1.SequenceEqual(enum2);
         }
 
-        public static IEnumerable<T> ToBuffer<T>(this IEnumerable<T> source)
+        public static OnRequestBufferEnumerable<T> ToBuffer<T>(this IEnumerable<T> source)
         {
             switch (source)
             {
-                case IList<T> list:
-                    return list;
-
                 case OnRequestBufferEnumerable<T> buffer:
                     return buffer;
 
@@ -210,6 +207,8 @@ namespace StdOttStandard
 
         public static IEnumerable<T> Insert<T>(this IEnumerable<T> items, int index, T item)
         {
+            items = ToBuffer(items);
+
             return items.Take(index).Concat(item).Concat(items.Skip(index));
         }
     }
