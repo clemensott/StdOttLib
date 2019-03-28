@@ -2,9 +2,9 @@
 
 namespace StdOttFramework.Converters.Specialized
 {
-    public class VisableCollapsedConverter : IsTrueToValueConverter
+    public class VisibleCollapsedConverter : IsTrueToValueConverter
     {
-        public VisableCollapsedConverter()
+        public VisibleCollapsedConverter()
         {
             EqualsValue = Visibility.Visible;
             NotEqualsValue = Visibility.Collapsed;
