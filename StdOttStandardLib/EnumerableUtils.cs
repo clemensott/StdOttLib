@@ -14,15 +14,15 @@ namespace StdOttStandard
             return enum1.SequenceEqual(enum2);
         }
 
-        public static OnRequestBufferEnumerable<T> ToBuffer<T>(this IEnumerable<T> source)
+        public static OnRequestBuffer<T> ToBuffer<T>(this IEnumerable<T> source)
         {
             switch (source)
             {
-                case OnRequestBufferEnumerable<T> buffer:
+                case OnRequestBuffer<T> buffer:
                     return buffer;
 
                 default:
-                    return new OnRequestBufferEnumerable<T>(source);
+                    return new OnRequestBuffer<T>(source);
             }
         }
 
