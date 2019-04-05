@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -31,6 +32,22 @@ namespace StdOttStandard
             return enumerable ?? Enumerable.Empty<T>();
         }
 
+        public static int IndexOf(this IEnumerable enumerable, object searchItem)
+        {
+            if (enumerable is IList list) return list.IndexOf(searchItem);
+
+            int i = 0;
+
+            foreach (object item in enumerable)
+            {
+                if (Utils.ReferenceEqualsOrEquals(item, searchItem)) return i;
+
+                i++;
+            }
+
+            return -1;
+        }
+
         public static int IndexOf<T>(this IEnumerable<T> enumerable, T searchItem)
         {
             if (enumerable is IList<T> list) return list.IndexOf(searchItem);
@@ -49,11 +66,10 @@ namespace StdOttStandard
 
         public static bool TryFirst<T>(this IEnumerable<T> source, out T first)
         {
-            return TryFirst(source, out first, i => true);
+            return TryFirst(source, i => true, out first);
         }
 
-
-        public static bool TryFirst<T>(this IEnumerable<T> source, out T first, Func<T, bool> predicate)
+        public static bool TryFirst<T>(this IEnumerable<T> source, Func<T, bool> predicate, out T first)
         {
             foreach (T item in source)
             {
@@ -210,6 +226,109 @@ namespace StdOttStandard
             items = ToBuffer(items);
 
             return items.Take(index).Concat(item).Concat(items.Skip(index));
+        }
+
+        public static TSource KeyMin<TSource>(this IEnumerable<TSource> items, Func<TSource, IComparable> selector)
+        {
+            using (IEnumerator<TSource> enumerator = items.GetEnumerator())
+            {
+                if (!enumerator.MoveNext())
+                {
+                    throw new InvalidOperationException("Sequence does not contain any elements.");
+                }
+
+                TSource minItem = enumerator.Current;
+                IComparable minValue = selector(minItem);
+
+                while (enumerator.MoveNext())
+                {
+                    TSource item = enumerator.Current;
+                    IComparable value = selector(item);
+
+                    if (value?.CompareTo(minValue) != -1) continue;
+
+                    minItem = item;
+                    minValue = value;
+                }
+
+                return minItem;
+            }
+        }
+
+        public static TSource KeyMax<TSource>(this IEnumerable<TSource> items, Func<TSource, IComparable> selector)
+        {
+            using (IEnumerator<TSource> enumerator = items.GetEnumerator())
+            {
+                if (!enumerator.MoveNext())
+                {
+                    throw new InvalidOperationException("Sequence does not contain any elements.");
+                }
+
+                TSource maxItem = enumerator.Current;
+                IComparable maxValue = selector(maxItem);
+
+                while (enumerator.MoveNext())
+                {
+                    TSource item = enumerator.Current;
+                    IComparable value = selector(item);
+
+                    if (value?.CompareTo(maxValue) != 1) continue;
+
+                    maxItem = item;
+                    maxValue = value;
+                }
+
+                return maxItem;
+            }
+        }
+
+        public static IEnumerable<T> Extract<T>(this IEnumerable<T> items, out T first)
+        {
+            IEnumerator<T> enumerator = items.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                throw new InvalidOperationException("Sequence does not contain any elements.");
+            }
+
+            first = enumerator.Current;
+            return ToEnumerable();
+
+            IEnumerable<T> ToEnumerable()
+            {
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current;
+                }
+
+                enumerator.Dispose();
+            }
+        }
+
+        public static IEnumerable<T> ExtractOrDefault<T>(this IEnumerable<T> items, out T first)
+        {
+            IEnumerator<T> enumerator = items.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                enumerator.Dispose();
+                first = default(T);
+
+                return Enumerable.Empty<T>();
+            }
+
+            first = enumerator.Current;
+            return ToEnumerable();
+
+            IEnumerable<T> ToEnumerable()
+            {
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current;
+                }
+
+                enumerator.Dispose();
+            }
         }
     }
 }
