@@ -81,6 +81,13 @@ namespace StdOttStandard
             return (index, overflow, underflow);
         }
 
+        public static int CycleIndex(int index, int count, int begin = 0)
+        {
+            if (count == 0) return begin - 1;
+
+            return ((index - begin) % count + count) % count + begin;
+        }
+
         public static bool ReferenceEqualsOrEquals(object obj1, object obj2)
         {
             if (ReferenceEquals(obj1, obj2)) return true;
