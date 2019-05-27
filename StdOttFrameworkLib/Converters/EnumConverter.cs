@@ -5,9 +5,8 @@ using System.Windows.Data;
 
 namespace StdOttFramework.Converters
 {
-    public abstract class EnumConverter : DependencyObject, IValueConverter
+    public class EnumConverter : DependencyObject, IValueConverter
     {
-
         public static readonly DependencyProperty EnumTypeProperty =
             DependencyProperty.Register("EnumType", typeof(Type), typeof(EnumConverter));
 
@@ -41,7 +40,7 @@ namespace StdOttFramework.Converters
         {
             currentValue = (Enum)value;
 
-            return currentValue.Equals(GetValue(parameter.ToString()));
+            return currentValue.Equals(GetValue(parameter?.ToString()));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
