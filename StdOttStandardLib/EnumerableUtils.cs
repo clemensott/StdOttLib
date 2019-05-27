@@ -15,6 +15,14 @@ namespace StdOttStandard
             return enum1.SequenceEqual(enum2);
         }
 
+        public static bool BothNullOrSequenceEqual<T>(this IEnumerable<T> enum1, IEnumerable<T> enum2, IEqualityComparer<T> comparer)
+        {
+            if (ReferenceEquals(enum1, enum2)) return true;
+            if (enum1 == null || enum2 == null) return false;
+
+            return enum1.SequenceEqual(enum2, comparer);
+        }
+
         public static OnRequestBuffer<T> ToBuffer<T>(this IEnumerable<T> source)
         {
             switch (source)
@@ -62,6 +70,38 @@ namespace StdOttStandard
             }
 
             return -1;
+        }
+
+        public static int IndexOf<T>(this IEnumerable<T> enumerable, T searchItem, Func<T, T, bool> equalsFunc)
+        {
+            int i = 0;
+
+            foreach (T item in enumerable)
+            {
+                if (equalsFunc(item, searchItem)) return i;
+
+                i++;
+            }
+
+            return -1;
+        }
+
+        public static T ElementAtCycle<T>(this ICollection<T> source, int index)
+        {
+            index = Utils.CycleIndex(index, source.Count);
+
+            if (source is IList<T> list) return list[index];
+
+            return source.ElementAt(index);
+        }
+
+        public static T ElementAtCycle<T>(this IEnumerable<T> source, int index, int count)
+        {
+            index = Utils.CycleIndex(index, count);
+
+            if (source is IList<T> list) return list[index];
+
+            return source.ElementAt(index);
         }
 
         public static bool TryFirst<T>(this IEnumerable<T> source, out T first)
