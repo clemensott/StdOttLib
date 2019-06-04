@@ -197,11 +197,11 @@ namespace StdOttStandard
             return (next, overflow);
         }
 
-        public static (T next, bool overflow) Previous<T>(this IEnumerable<T> items, T refItem)
+        public static (T previous, bool overflow) Previous<T>(this IEnumerable<T> items, T refItem)
         {
-            (T next, _, bool underflow) = OffsetElement(items, refItem, -1);
+            (T previous, _, bool underflow) = OffsetElement(items, refItem, -1);
 
-            return (next, underflow);
+            return (previous, underflow);
         }
 
         public static (T next, bool overflow) PreviousOrDefault<T>(this IEnumerable<T> items, T refItem)
