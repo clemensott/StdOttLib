@@ -171,12 +171,12 @@ namespace StdOttStandard
             return findElement;
         }
 
-        public static IEnumerable<T> Concat<T>(this IEnumerable<T> items, T item, params T[] more)
+        public static IEnumerable<T> ConcatParams<T>(this IEnumerable<T> items, T item, params T[] more)
         {
-            return Enumerable.Concat(items, Concat(item, more));
+            return Enumerable.Concat(items, ConcatParams(item, more));
         }
 
-        public static IEnumerable<T> Concat<T>(T first, params T[] more)
+        public static IEnumerable<T> ConcatParams<T>(T first, params T[] more)
         {
             yield return first;
 
@@ -265,7 +265,7 @@ namespace StdOttStandard
         {
             items = ToBuffer(items);
 
-            return items.Take(index).Concat(item).Concat(items.Skip(index));
+            return items.Take(index).ConcatParams(item).Concat(items.Skip(index));
         }
 
         public static TSource KeyMin<TSource>(this IEnumerable<TSource> items, Func<TSource, IComparable> selector)
