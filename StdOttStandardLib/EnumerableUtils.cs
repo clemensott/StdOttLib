@@ -370,5 +370,24 @@ namespace StdOttStandard
                 enumerator.Dispose();
             }
         }
+
+        public static IEnumerable<T> SelectRecursive<T>(this T source, Func<T, IEnumerable<T>> selector)
+        {
+            Queue<T> queue = new Queue<T>();
+
+            queue.Enqueue(source);
+
+            while (queue.Count > 0)
+            {
+                source = queue.Dequeue();
+
+                yield return source;
+
+                foreach (T subItem in selector(source))
+                {
+                    queue.Enqueue(subItem);
+                }
+            }
+        }
     }
 }
