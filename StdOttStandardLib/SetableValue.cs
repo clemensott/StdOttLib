@@ -5,22 +5,22 @@ namespace StdOttStandard
 {
     public class SetableValue<T>
     {
-        private readonly object lockObj;
+        private readonly SemaphoreSlim sem;
         private T result;
 
         public Task<T> Task { get; }
 
-        public T Result { get { return Task.Result; } }
+        public T Result => Task.Result;
 
         public SetableValue()
         {
-            lockObj = new object();
+            sem = new SemaphoreSlim(0);
             Task = GetValue();
         }
 
         private async Task<T> GetValue()
         {
-            await Utils.WaitAsync(lockObj);
+            await sem.WaitAsync();
 
             return result;
         }
@@ -29,7 +29,7 @@ namespace StdOttStandard
         {
             result = value;
 
-            lock (lockObj) Monitor.Pulse(lockObj);
+            sem.Release();
         }
     }
 }
