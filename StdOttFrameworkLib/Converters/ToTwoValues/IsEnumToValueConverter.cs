@@ -7,13 +7,26 @@ namespace StdOttFramework.Converters
     {
         protected override bool IsValue(object input, Type targetType, object parameter, CultureInfo culture)
         {
-            Enum compareValue = CompareValue is Enum ? (Enum)CompareValue : (Enum)Enum.ToObject(input.GetType(), CompareValue);
+            if (ReferenceEquals(CompareValue, input)) return true;
+            if (ReferenceEquals(input, null) || ReferenceEquals(CompareValue, null)) return false;
 
-            if (ReferenceEquals(compareValue, input)) return true;
-            if (!ReferenceEquals(compareValue, null)) return compareValue.Equals(input);
-            if (!ReferenceEquals(input, null)) return input.Equals(compareValue);
+            Enum compareValue;
 
-            throw new NotImplementedException();
+            if (CompareValue is Enum) compareValue = (Enum)CompareValue;
+            else
+            {
+                try
+                {
+                    compareValue = (Enum)Enum.Parse(input.GetType(), CompareValue.ToString());
+                }
+                catch
+                {
+                    compareValue = (Enum)Enum.ToObject(input.GetType(), CompareValue);
+                }
+
+            }
+
+            return compareValue.Equals(input);
         }
     }
 }
