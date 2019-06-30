@@ -146,6 +146,8 @@
     <Compile Include="Converters\ToTwoValues\IsTrueToValueConverter.cs" />
     <Compile Include="Converters\ToTwoValues\IsTypeToValueConverter.cs" />
     <Compile Include="Converters\ToTwoValues\IsValueToTwoValueConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\ToFalseConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\ToTrueConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\StdOttUwpLib.rd.xml" />
   </ItemGroup>

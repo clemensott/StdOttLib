@@ -87,6 +87,8 @@
     <Compile Include="Converters\ToTwoValues\IsValueToTwoValueConverter.cs" />
     <Compile Include="Converters\ToString\ToStringTwoWayConverter.cs" />
     <Compile Include="Converters\ToTwoValues\IsNullConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\ToFalseConverter.cs" />
+    <Compile Include="Converters\ToTwoValues\ToTrueConverter.cs" />
     <Compile Include="Hotkey\HotKey.cs" />
     <Compile Include="Hotkey\HotKeySource.cs" />
     <Compile Include="Hotkey\KeyModifier.cs" />

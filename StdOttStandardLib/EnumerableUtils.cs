@@ -40,6 +40,11 @@ namespace StdOttStandard
             return enumerable ?? Enumerable.Empty<T>();
         }
 
+        public static IEnumerable ToNotNull(this IEnumerable enumerable)
+        {
+            return enumerable ?? Enumerable.Empty<object>();
+        }
+
         public static int IndexOf(this IEnumerable enumerable, object searchItem)
         {
             if (enumerable is IList list) return list.IndexOf(searchItem);
@@ -263,9 +268,24 @@ namespace StdOttStandard
 
         public static IEnumerable<T> Insert<T>(this IEnumerable<T> items, int index, T item)
         {
-            items = ToBuffer(items);
+            int i = 0;
 
-            return items.Take(index).ConcatParams(item).Concat(items.Skip(index));
+            using (IEnumerator<T> enumerator = items.GetEnumerator())
+            {
+                while (i++ < index)
+                {
+                    if (!enumerator.MoveNext()) yield break;
+
+                    yield return enumerator.Current;
+                }
+
+                yield return item;
+
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current;
+                }
+            }
         }
 
         public static TSource KeyMin<TSource>(this IEnumerable<TSource> items, Func<TSource, IComparable> selector)
