@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Media;
 
 namespace StdOttUwp.Converters
 {
-    class ColorToSolidColorBrushConverter : IValueConverter
+    public class ColorToSolidColorBrushConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
