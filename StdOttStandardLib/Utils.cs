@@ -97,13 +97,6 @@ namespace StdOttStandard
             throw new NotImplementedException();
         }
 
-        public static void Swap<T>(IList<T> items, int index1, int index2)
-        {
-            T tmp = items[index1];
-            items[index1] = items[index2];
-            items[index2] = tmp;
-        }
-
         public static async Task WaitAsync(object lockObj)
         {
             await Task.Run(() =>
