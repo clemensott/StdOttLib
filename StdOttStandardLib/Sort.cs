@@ -39,7 +39,7 @@ namespace StdOttStandard
                 {
                     if (comparer.Compare(items[j], items[j - 1]) < 0)
                     {
-                        Utils.Swap(items, j, j - 1);
+                        items.Swap(j, j - 1);
                     }
                     else break;
                 }
@@ -83,8 +83,8 @@ namespace StdOttStandard
                 {
                     if (comparer.Compare(keys[j], keys[j - 1]) < 0)
                     {
-                        Utils.Swap(items, j, j - 1);
-                        Utils.Swap(keys, j, j - 1);
+                        items.Swap(j, j - 1);
+                        keys.Swap(j, j - 1);
                     }
                     else break;
                 }
@@ -218,6 +218,226 @@ namespace StdOttStandard
                     indexB++;
                 }
             }
+        }
+
+        public static IEnumerable<TSource> HeapSort<TSource>(IEnumerable<TSource> items, Comparison<TSource> comparison = null)
+        {
+            return HeapSort(items.CastOrToArray(), CreateComparer(comparison));
+        }
+
+        public static IEnumerable<TSource> HeapSort<TSource>(IEnumerable<TSource> items, IComparer<TSource> comparer)
+        {
+            return HeapSort(items.CastOrToArray(), comparer);
+        }
+
+        public static IEnumerable<TSource> HeapSort<TSource>(IList<TSource> items, IComparer<TSource> comparer)
+        {
+            int count = items.Count;
+
+            for (int i = count / 2; i >= 0; i--)
+            {
+                Heapify(items, count, i, comparer);
+            }
+
+            if (count == 0) yield break;
+
+            while (true)
+            {
+                yield return items[0];
+
+                if (count == 1) yield break;
+
+                items.Swap(0, count - 1);
+                count--;
+
+                Heapify(items, count, 0, comparer);
+            }
+        }
+
+        private static void Heapify<TSource>(IList<TSource> items, int count, int i, IComparer<TSource> comparer)
+        {
+            int e = i;
+            int l = Left(i);
+            int r = Right(i);
+
+            if (l < count && comparer.Compare(items[e], items[l]) > 0) e = l;
+            if (r < count && comparer.Compare(items[e], items[r]) > 0) e = r;
+
+            if (e == i) return;
+
+            items.Swap(i, e);
+
+            Heapify(items, count, e, comparer);
+        }
+
+        public static IEnumerable<TSource> HeapSort<TSource, TKey>(IEnumerable<TSource> items, Func<TSource, TKey> keySelector, Comparison<TKey> comparison = null)
+        {
+            return HeapSort(items, keySelector, CreateComparer(comparison));
+        }
+
+        public static IEnumerable<TSource> HeapSort<TSource, TKey>(IEnumerable<TSource> items, Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
+        {
+            IList<TSource> array = items.CastOrToArray();
+            TKey[] keys = array.Select(keySelector).ToArray();
+
+            return HeapSort(array, keys, comparer);
+        }
+
+        private static IEnumerable<TSource> HeapSort<TSource, TKey>(IList<TSource> items, IList<TKey> keys, IComparer<TKey> comparer)
+        {
+            int count = items.Count;
+
+            for (int i = count / 2; i >= 0; i--)
+            {
+                Heapify(items, keys, count, i, comparer);
+            }
+
+            if (count == 0) yield break;
+
+            while (true)
+            {
+                yield return items[0];
+
+                if (count == 1) yield break;
+
+                items.Swap(0, count - 1);
+                keys.Swap(0, count - 1);
+                count--;
+
+                Heapify(items, keys, count, 0, comparer);
+            }
+        }
+
+        private static void Heapify<TSource, TKey>(IList<TSource> items, IList<TKey> keys, int count, int i, IComparer<TKey> comparer)
+        {
+            int e = i;
+            int l = Left(i);
+            int r = Right(i);
+
+            if (l < count && comparer.Compare(keys[e], keys[l]) > 0) e = l;
+            if (r < count && comparer.Compare(keys[e], keys[r]) > 0) e = r;
+
+            if (e == i) return;
+
+            items.Swap(i, e);
+            keys.Swap(i, e);
+
+            Heapify(items, keys, count, e, comparer);
+        }
+
+        public static IEnumerable<TSource> HeapSortDesc<TSource>(IEnumerable<TSource> items, Comparison<TSource> comparison = null)
+        {
+            return HeapSortDesc(items.CastOrToArray(), CreateComparer(comparison));
+        }
+
+        public static IEnumerable<TSource> HeapSortDesc<TSource>(IEnumerable<TSource> items, IComparer<TSource> comparer)
+        {
+            return HeapSortDesc(items.CastOrToArray(), comparer);
+        }
+
+        public static IEnumerable<TSource> HeapSortDesc<TSource>(IList<TSource> items, IComparer<TSource> comparer)
+        {
+            int count = items.Count;
+
+            for (int i = count / 2; i >= 0; i--)
+            {
+                HeapifyDesc(items, count, i, comparer);
+            }
+
+            if (count == 0) yield break;
+
+            while (true)
+            {
+                yield return items[0];
+
+                if (count == 1) yield break;
+
+                items.Swap(0, count - 1);
+                count--;
+
+                HeapifyDesc(items, count, 0, comparer);
+            }
+        }
+
+        private static void HeapifyDesc<TSource>(IList<TSource> items, int count, int i, IComparer<TSource> comparer)
+        {
+            int e = i;
+            int l = Left(i);
+            int r = Right(i);
+
+            if (l < count && comparer.Compare(items[e], items[l]) <= 0) e = l;
+            if (r < count && comparer.Compare(items[e], items[r]) <= 0) e = r;
+
+            if (e == i) return;
+
+            items.Swap(i, e);
+
+            HeapifyDesc(items, count, e, comparer);
+        }
+
+        public static IEnumerable<TSource> HeapSortDesc<TSource, TKey>(IEnumerable<TSource> items, Func<TSource, TKey> keySelector, Comparison<TKey> comparison = null)
+        {
+            return HeapSortDesc(items, keySelector, CreateComparer(comparison));
+        }
+
+        public static IEnumerable<TSource> HeapSortDesc<TSource, TKey>(IEnumerable<TSource> items, Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
+        {
+            IList<TSource> array = items.CastOrToArray();
+            TKey[] keys = array.Select(keySelector).ToArray();
+
+            return HeapSortDesc(array, keys, comparer);
+        }
+
+        private static IEnumerable<TSource> HeapSortDesc<TSource, TKey>(IList<TSource> items, IList<TKey> keys, IComparer<TKey> comparer)
+        {
+            int count = items.Count;
+
+            for (int i = count / 2; i >= 0; i--)
+            {
+                HeapifyDesc(items, keys, count, i, comparer);
+            }
+
+            if (count == 0) yield break;
+
+            while (true)
+            {
+                yield return items[0];
+
+                if (count == 1) yield break;
+
+                items.Swap(0, count - 1);
+                keys.Swap(0, count - 1);
+                count--;
+
+                HeapifyDesc(items, keys, count, 0, comparer);
+            }
+        }
+
+        private static void HeapifyDesc<TSource, TKey>(IList<TSource> items, IList<TKey> keys, int count, int i, IComparer<TKey> comparer)
+        {
+            int e = i;
+            int l = Left(i);
+            int r = Right(i);
+
+            if (l < count && comparer.Compare(keys[e], keys[l]) <= 0) e = l;
+            if (r < count && comparer.Compare(keys[e], keys[r]) <= 0) e = r;
+
+            if (e == i) return;
+
+            items.Swap(i, e);
+            keys.Swap(i, e);
+
+            HeapifyDesc(items, keys, count, e, comparer);
+        }
+
+        private static int Left(int i)
+        {
+            return 2 * i + 1;
+        }
+
+        private static int Right(int i)
+        {
+            return 2 * i + 2;
         }
     }
 }
