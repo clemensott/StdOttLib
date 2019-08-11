@@ -23,6 +23,11 @@ namespace StdOttStandard
             return enum1.SequenceEqual(enum2, comparer);
         }
 
+        public static IList<T> CastOrToArray<T>(this IEnumerable<T> source)
+        {
+            return source as IList<T> ?? source?.ToArray();
+        }
+
         public static OnRequestBuffer<T> ToBuffer<T>(this IEnumerable<T> source)
         {
             switch (source)
@@ -408,6 +413,13 @@ namespace StdOttStandard
                     queue.Enqueue(subItem);
                 }
             }
+        }
+
+        public static void Swap<T>(this IList<T> items, int index1, int index2)
+        {
+            T tmp = items[index1];
+            items[index1] = items[index2];
+            items[index2] = tmp;
         }
     }
 }
