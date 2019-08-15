@@ -11,22 +11,48 @@ namespace StdOttFramework.Hotkey
 
     public class HotKey : IDisposable
     {
+        private static Dictionary<int, HotKey> dictHotKeys;
+
+        public static HotKey GetInstance(Key key, KeyModifier keyModifiers)
+        {
+            HotKey hk;
+            int virtualKeyCode = KeyInterop.VirtualKeyFromKey(key);
+            int id = virtualKeyCode + ((int)keyModifiers * 0x10000);
+
+            if (dictHotKeys == null)
+            {
+                dictHotKeys = new Dictionary<int, HotKey>();
+            }
+
+            if (!dictHotKeys.TryGetValue(id, out hk))
+            {
+                hk = new HotKey(key, keyModifiers, id, virtualKeyCode);
+                dictHotKeys.Add(id, hk);
+            }
+
+            return hk;
+        }
+
         public bool _disposed = false;
 
         public event KeyPressedEventHandler Pressed;
 
         public bool RegistrationSucessful { get; private set; }
 
-        public Key Key { get; private set; }
+        public Key Key { get; }
 
-        public KeyModifier KeyModifiers { get; private set; }
+        public KeyModifier KeyModifiers { get; }
 
-        public int Id { get; private set; }
+        public int Id { get; }
 
-        public HotKey(Key k, KeyModifier keyModifiers)
+        public int VirtualKeyCode { get; }
+
+        private HotKey(Key k, KeyModifier keyModifiers, int id, int virtualKeyCode)
         {
             Key = k;
             KeyModifiers = keyModifiers;
+            Id = id;
+            VirtualKeyCode = virtualKeyCode;
         }
 
         private void Raise(ref bool handled)
@@ -125,7 +151,7 @@ namespace StdOttFramework.Hotkey
                     if (Enum.TryParse(modifierString, true, out modifier)) allModifier += (int)modifier;
                 }
 
-                return new HotKey(key, (KeyModifier)allModifier);
+                return GetInstance(key, (KeyModifier)allModifier);
             }
             catch { }
 
@@ -136,7 +162,7 @@ namespace StdOttFramework.Hotkey
         {
             public const int WmHotKey = 0x0312;
 
-            private static Dictionary<int, HotKey> dictHotKeyToCalBackProc;
+            private static int registerCount = 0;
 
             [DllImport("user32.dll")]
             private static extern bool RegisterHotKey(IntPtr hWnd, int id, UInt32 fsModifiers, UInt32 vlc);
@@ -147,30 +173,25 @@ namespace StdOttFramework.Hotkey
             public static bool Register(HotKey hk)
             {
                 if (hk == null) return false;
-                if (dictHotKeyToCalBackProc != null && dictHotKeyToCalBackProc.ContainsKey(hk.Id)) return false;
 
-                int virtualKeyCode = KeyInterop.VirtualKeyFromKey(hk.Key);
-                hk.Id = virtualKeyCode + ((int)hk.KeyModifiers * 0x10000);
-                hk.RegistrationSucessful = RegisterHotKey(IntPtr.Zero, hk.Id, (uint)hk.KeyModifiers, (uint)virtualKeyCode);
+                hk.RegistrationSucessful = RegisterHotKey(IntPtr.Zero, hk.Id, (uint)hk.KeyModifiers, (uint)hk.VirtualKeyCode);
 
-                if (dictHotKeyToCalBackProc == null)
-                {
-                    dictHotKeyToCalBackProc = new Dictionary<int, HotKey>();
-                    ComponentDispatcher.ThreadFilterMessage += new ThreadMessageEventHandler(ComponentDispatcherThreadFilterMessage);
-                }
+                if (!hk.RegistrationSucessful) return false;
 
-                dictHotKeyToCalBackProc.Add(hk.Id, hk);
+                if (registerCount == 0) ComponentDispatcher.ThreadFilterMessage += ComponentDispatcherThreadFilterMessage;
+                registerCount++;
 
-                return hk.RegistrationSucessful;
+                return true;
             }
 
             public static void Unregister(HotKey hk)
             {
-                if (hk == null || dictHotKeyToCalBackProc == null) return;
-                if (!dictHotKeyToCalBackProc.ContainsKey(hk.Id)) return;
+                if (hk == null || !hk.RegistrationSucessful || dictHotKeys == null) return;
 
                 UnregisterHotKey(IntPtr.Zero, hk.Id);
-                dictHotKeyToCalBackProc.Remove(hk.Id);
+
+                registerCount--;
+                if (registerCount == 0) ComponentDispatcher.ThreadFilterMessage -= ComponentDispatcherThreadFilterMessage;
             }
 
             private static void ComponentDispatcherThreadFilterMessage(ref MSG msg, ref bool handled)
@@ -178,7 +199,7 @@ namespace StdOttFramework.Hotkey
                 if (handled || msg.message != WmHotKey) return;
 
                 HotKey hotKey;
-                if (!dictHotKeyToCalBackProc.TryGetValue((int)msg.wParam, out hotKey)) return;
+                if (!dictHotKeys.TryGetValue((int)msg.wParam, out hotKey)) return;
 
                 hotKey.Raise(ref handled);
             }
