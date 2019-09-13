@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace StdOttStandard
 {
@@ -114,6 +116,48 @@ namespace StdOttStandard
                     while (whileFunc()) Monitor.Wait(lockObj);
                 }
             });
+        }
+
+        public static string XmlSerialize(object obj)
+        {
+            XmlSerializer serializer = new XmlSerializer(obj.GetType());
+            StringWriter writer = new StringWriter();
+            serializer.Serialize(writer, obj);
+
+            return writer.ToString();
+        }
+
+        public static void XmlSerialize(string destFilePath, object obj)
+        {
+            File.WriteAllText(destFilePath, XmlSerialize(obj));
+        }
+
+        public static T XmlDeserializeText<T>(string xmlText)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(T));
+
+            return (T)serializer.Deserialize(new StringReader(xmlText));
+        }
+
+        public static T XmlDeserializeFile<T>(string srcFilePath)
+        {
+            string xmlText = File.ReadAllText(srcFilePath);
+
+            return XmlDeserializeText<T>(xmlText);
+        }
+
+        public static T DeserializeFile<T>( string srcFilePath, T defaultValue)
+        {
+            try
+            {
+                string xmlText = File.ReadAllText(srcFilePath);
+
+                return XmlDeserializeText<T>(xmlText);
+            }
+            catch
+            {
+                return defaultValue;
+            }
         }
     }
 }
