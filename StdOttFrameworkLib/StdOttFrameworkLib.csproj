@@ -92,6 +92,7 @@
     <Compile Include="Converters\ToTwoValues\IsNullConverter.cs" />
     <Compile Include="Converters\ToTwoValues\ToFalseConverter.cs" />
     <Compile Include="Converters\ToTwoValues\ToTrueConverter.cs" />
+    <Compile Include="Converters\ValueConverter.cs" />
     <Compile Include="Hotkey\HotKey.cs" />
     <Compile Include="Hotkey\HotKeySource.cs" />
     <Compile Include="Hotkey\KeyModifier.cs" />
