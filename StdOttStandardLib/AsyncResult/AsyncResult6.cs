@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace StdOttStandard
+namespace StdOttStandard.AsyncResult
 {
     public class AsyncResult<TOut, TIn0, TIn1, TIn2, TIn3, TIn4, TIn5>
     {

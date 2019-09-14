@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace StdOttStandard
+namespace StdOttStandard.AsyncResult
 {
-    public class SetableValue<T>
+    public class AsyncResult<T>
     {
         private readonly SemaphoreSlim sem;
         private T result;
@@ -12,7 +12,7 @@ namespace StdOttStandard
 
         public T Result => Task.Result;
 
-        public SetableValue()
+        public AsyncResult()
         {
             sem = new SemaphoreSlim(0);
             Task = GetValue();
