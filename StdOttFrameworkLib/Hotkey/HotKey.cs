@@ -37,7 +37,7 @@ namespace StdOttFramework.Hotkey
 
         public event KeyPressedEventHandler Pressed;
 
-        public bool RegistrationSucessful { get; private set; }
+        public bool IsRegistrated { get; private set; }
 
         public Key Key { get; }
 
@@ -174,9 +174,9 @@ namespace StdOttFramework.Hotkey
             {
                 if (hk == null) return false;
 
-                hk.RegistrationSucessful = RegisterHotKey(IntPtr.Zero, hk.Id, (uint)hk.KeyModifiers, (uint)hk.VirtualKeyCode);
+                hk.IsRegistrated = RegisterHotKey(IntPtr.Zero, hk.Id, (uint)hk.KeyModifiers, (uint)hk.VirtualKeyCode);
 
-                if (!hk.RegistrationSucessful) return false;
+                if (!hk.IsRegistrated) return false;
 
                 if (registerCount == 0) ComponentDispatcher.ThreadFilterMessage += ComponentDispatcherThreadFilterMessage;
                 registerCount++;
@@ -186,9 +186,10 @@ namespace StdOttFramework.Hotkey
 
             public static void Unregister(HotKey hk)
             {
-                if (hk == null || !hk.RegistrationSucessful || dictHotKeys == null) return;
+                if (hk == null || !hk.IsRegistrated || dictHotKeys == null) return;
 
                 UnregisterHotKey(IntPtr.Zero, hk.Id);
+                hk.IsRegistrated = false;
 
                 registerCount--;
                 if (registerCount == 0) ComponentDispatcher.ThreadFilterMessage -= ComponentDispatcherThreadFilterMessage;
