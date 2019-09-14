@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 
 namespace StdOttStandard.AsyncResult
 {
-    public class AsyncResult<T>
+    public class AsyncResult<TOut>
     {
         private readonly SemaphoreSlim sem;
-        private T result;
+        private TOut result;
 
-        public Task<T> Task { get; }
+        public Task<TOut> Task { get; }
 
-        public T Result => Task.Result;
+        public TOut Result => Task.Result;
 
         public AsyncResult()
         {
@@ -18,14 +18,14 @@ namespace StdOttStandard.AsyncResult
             Task = GetValue();
         }
 
-        private async Task<T> GetValue()
+        private async Task<TOut> GetValue()
         {
             await sem.WaitAsync();
 
             return result;
         }
 
-        public void SetValue(T value)
+        public void SetValue(TOut value)
         {
             result = value;
 

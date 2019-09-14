@@ -1,15 +1,7 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace StdOttStandard.AsyncResult
+﻿namespace StdOttStandard.AsyncResult
 {
-    public class AsyncResult<TOut, TIn0, TIn1, TIn2, TIn3, TIn4, TIn5, TIn6, TIn7>
+    public class AsyncResult<TOut, TIn0, TIn1, TIn2, TIn3, TIn4, TIn5, TIn6, TIn7> : AsyncResult<TOut>
     {
-        private readonly SemaphoreSlim sem;
-        private TOut result;
-
-        public Task<TOut> Task { get; }
-
         public TIn0 Input0 { get; }
 
         public TIn1 Input1 { get; }
@@ -26,8 +18,6 @@ namespace StdOttStandard.AsyncResult
 
         public TIn7 Input7 { get; }
 
-        public TOut Result => Task.Result;
-
         public AsyncResult(TIn0 input0, TIn1 input1, TIn2 input2, TIn3 input3,
             TIn4 input4, TIn5 input5, TIn6 input6, TIn7 input7)
         {
@@ -39,23 +29,6 @@ namespace StdOttStandard.AsyncResult
             Input5 = input5;
             Input6 = input6;
             Input7 = input7;
-
-            sem = new SemaphoreSlim(0);
-            Task = GetValue();
-        }
-
-        private async Task<TOut> GetValue()
-        {
-            await sem.WaitAsync();
-
-            return result;
-        }
-
-        public void SetValue(TOut value)
-        {
-            result = value;
-
-            sem.Release();
         }
     }
 }
