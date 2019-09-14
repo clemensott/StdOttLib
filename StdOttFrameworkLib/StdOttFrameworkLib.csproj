@@ -71,6 +71,8 @@
     <Compile Include="Converters\ToString\FloatNullableConverter.cs" />
     <Compile Include="Converters\ToString\IntNullableConverter.cs" />
     <Compile Include="Converters\ToString\LongNullableConverter.cs" />
+    <Compile Include="Converters\ToString\TimeSpanConverter.cs" />
+    <Compile Include="Converters\ToString\TimeSpanNullableConverter.cs" />
     <Compile Include="Converters\ToString\UIntNullableConverter.cs" />
     <Compile Include="Converters\ToString\ULongNullableConverter.cs" />
     <Compile Include="Converters\ToString\ULongConverter.cs" />
