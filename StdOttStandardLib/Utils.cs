@@ -146,7 +146,7 @@ namespace StdOttStandard
             return XmlDeserializeText<T>(xmlText);
         }
 
-        public static T DeserializeFile<T>( string srcFilePath, T defaultValue)
+        public static T DeserializeFileOrDefault<T>(string srcFilePath)
         {
             try
             {
@@ -156,7 +156,7 @@ namespace StdOttStandard
             }
             catch
             {
-                return defaultValue;
+                return default(T);
             }
         }
     }
