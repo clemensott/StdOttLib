@@ -82,18 +82,31 @@ namespace StdOttStandard
             return -1;
         }
 
-        public static int IndexOf<T>(this IEnumerable<T> enumerable, T searchItem, Func<T, T, bool> equalsFunc)
+        public static int IndexOf<T>(this IEnumerable<T> enumerable, Func<T, bool> equalsFunc)
         {
             int i = 0;
 
             foreach (T item in enumerable)
             {
-                if (equalsFunc(item, searchItem)) return i;
+                if (equalsFunc(item)) return i;
 
                 i++;
             }
 
             return -1;
+        }
+
+        public static bool TryIndexOf<T>(this IEnumerable<T> enumerable, Func<T, bool> equalsFunc, out int index)
+        {
+            index = 0;
+
+            foreach (T item in enumerable)
+            {
+                if (equalsFunc(item)) return true;
+            }
+
+            index = -1;
+            return false;
         }
 
         public static T ElementAtCycle<T>(this ICollection<T> source, int index)
