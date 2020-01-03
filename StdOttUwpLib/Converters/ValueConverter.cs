@@ -9,7 +9,7 @@ namespace StdOttUwp.Converters
     public class ValueConverter : IValueConverter
     {
         public event ConvertEventHandler ConvertEvent;
-        public event ConvertBackEventHandler ConvertEventHandler;
+        public event ConvertBackEventHandler ConvertBackEvent;
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -18,7 +18,7 @@ namespace StdOttUwp.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            return ConvertBack(value, targetType, parameter, language);
+            return ConvertBackEvent(value, targetType, parameter, language);
         }
     }
 }
