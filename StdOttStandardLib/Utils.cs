@@ -159,5 +159,24 @@ namespace StdOttStandard
                 return default(T);
             }
         }
+
+        public static void Crop(uint srcWidth, uint srcHeight, uint destWidth, uint destHeight,
+            out uint destX, out uint destY, out uint wouldWidth, out uint wouldHeight)
+        {
+            if (srcHeight * destHeight < destWidth * srcHeight)
+            {
+                wouldWidth = destWidth;
+                wouldHeight = srcHeight * destWidth / srcWidth;
+                destX = 0;
+                destY = (wouldHeight - destHeight) / 2;
+            }
+            else
+            {
+                wouldWidth = srcWidth * destHeight / srcHeight;
+                wouldHeight = destHeight;
+                destX = (wouldWidth - destWidth) / 2;
+                destY = 0;
+            }
+        }
     }
 }
