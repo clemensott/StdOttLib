@@ -115,11 +115,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ApplicationDataObjects\AppDataContainerEnumerable.cs" />
-    <Compile Include="ApplicationDataObjects\AppDataContainerCollection.cs" />
     <Compile Include="ApplicationDataObjects\AppDataContainerList.cs" />
     <Compile Include="ApplicationDataObjects\AppDataContainerObject.cs" />
-    <Compile Include="ApplicationDataObjects\AppDataObjectExtensions.cs" />
-    <Compile Include="ApplicationDataObjects\DataContainer.cs" />
     <Compile Include="Controls\ColorPicker.xaml.cs">
       <DependentUpon>ColorPicker.xaml</DependentUpon>
     </Compile>
