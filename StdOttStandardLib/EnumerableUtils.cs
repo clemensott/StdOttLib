@@ -81,7 +81,7 @@ namespace StdOttStandard
 
             return -1;
         }
-
+        
         public static int IndexOf<T>(this IEnumerable<T> enumerable, Func<T, bool> equalsFunc)
         {
             int i = 0;
@@ -192,6 +192,27 @@ namespace StdOttStandard
             }
 
             return findElement;
+        }
+
+        public static bool TryElementAt<T>(this IEnumerable<T> source, int index, out T element)
+        {
+            if (index < 0)
+            {
+                element = default(T);
+                return false;
+            }
+
+            int i = 0;
+            foreach (T item in source)
+            {
+                if (i++ < index) continue;
+
+                element = item;
+                return true;
+            }
+
+            element = default(T);
+            return false;
         }
 
         public static IEnumerable<T> ConcatParams<T>(this IEnumerable<T> items, T item, params T[] more)
@@ -433,6 +454,11 @@ namespace StdOttStandard
             T tmp = items[index1];
             items[index1] = items[index2];
             items[index2] = tmp;
+        }
+
+        public static IEnumerable<(TKey key, TValue value)> ToTuples<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> pairs)
+        {
+            return pairs.Select(p => (p.Key, p.Value));
         }
     }
 }
