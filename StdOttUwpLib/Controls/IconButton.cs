@@ -1,7 +1,5 @@
-﻿using Windows.UI;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 
 namespace StdOttUwp.Controls
 {
@@ -29,7 +27,6 @@ namespace StdOttUwp.Controls
         public IconButton()
         {
             Content = iconControl = new SymbolIcon();
-            Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
         }
     }
 }
