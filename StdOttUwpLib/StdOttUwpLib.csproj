@@ -114,12 +114,11 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ApplicationDataObjects\AppDataContainerEnumerable.cs" />
-    <Compile Include="ApplicationDataObjects\AppDataContainerList.cs" />
     <Compile Include="ApplicationDataObjects\AppDataContainerObject.cs" />
     <Compile Include="Controls\ColorPicker.xaml.cs">
       <DependentUpon>ColorPicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\IconButton.cs" />
     <Compile Include="Converters\AddDoubleConverter.cs" />
     <Compile Include="Converters\ColorToSolidColorBrushConverter.cs" />
     <Compile Include="Converters\EnumConverter.cs" />
