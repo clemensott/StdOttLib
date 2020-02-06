@@ -81,7 +81,7 @@ namespace StdOttStandard
 
             return -1;
         }
-        
+
         public static int IndexOf<T>(this IEnumerable<T> enumerable, Func<T, bool> equalsFunc)
         {
             int i = 0;
@@ -459,6 +459,38 @@ namespace StdOttStandard
         public static IEnumerable<(TKey key, TValue value)> ToTuples<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> pairs)
         {
             return pairs.Select(p => (p.Key, p.Value));
+        }
+
+        public static void RemoveLast(this IList list, int count = 1)
+        {
+            for (int i = 0; i < count && list.Count > 0; i++)
+            {
+                list.RemoveAt(list.Count - 1);
+            }
+        }
+
+        public static void RemoveLast<T>(this IList<T> list, int count = 1)
+        {
+            for (int i = 0; i < count && list.Count > 0; i++)
+            {
+                list.RemoveAt(list.Count - 1);
+            }
+        }
+
+        public static void RemoveLastWhile(this IList list, Func<IList, bool> predicate)
+        {
+            while (predicate(list))
+            {
+                list.RemoveAt(list.Count - 1);
+            }
+        }
+
+        public static void RemoveLastWhile<T>(this IList<T> list, Func<IList<T>, bool> predicate)
+        {
+            while (predicate(list))
+            {
+                list.RemoveAt(list.Count - 1);
+            }
         }
     }
 }
