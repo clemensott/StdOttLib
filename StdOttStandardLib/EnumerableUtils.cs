@@ -383,54 +383,26 @@ namespace StdOttStandard
 
         public static IEnumerable<T> Extract<T>(this IEnumerable<T> items, out T first)
         {
-            IEnumerator<T> enumerator = items.GetEnumerator();
+            IList<T> list = CastOrToArray(items);
 
-            if (!enumerator.MoveNext())
+            if (list.Count == 0)
             {
                 throw new InvalidOperationException("Sequence does not contain any elements.");
             }
 
-            first = enumerator.Current;
-            return ToEnumerable();
-
-            IEnumerable<T> ToEnumerable()
-            {
-                while (enumerator.MoveNext())
-                {
-                    yield return enumerator.Current;
-                }
-
-                enumerator.Dispose();
-            }
+            first = list[0];
+            return list.Skip(1);
         }
 
         public static IEnumerable<T> ExtractOrDefault<T>(this IEnumerable<T> items, out T first)
         {
-            IEnumerator<T> enumerator = items.GetEnumerator();
+            IList<T> list = CastOrToArray(items);
 
-            if (!enumerator.MoveNext())
-            {
-                enumerator.Dispose();
-                first = default(T);
-
-                return Enumerable.Empty<T>();
-            }
-
-            first = enumerator.Current;
-            return ToEnumerable();
-
-            IEnumerable<T> ToEnumerable()
-            {
-                while (enumerator.MoveNext())
-                {
-                    yield return enumerator.Current;
-                }
-
-                enumerator.Dispose();
-            }
+            first = list.FirstOrDefault();
+            return list.Skip(1);
         }
 
-        public static IEnumerable<T> SelectRecursive<T>(this T source, Func<T, IEnumerable<T>> selector)
+        public static IEnumerable<T> SelectRecursive<T>(T source, Func<T, IEnumerable<T>> selector)
         {
             Queue<T> queue = new Queue<T>();
 
@@ -491,6 +463,12 @@ namespace StdOttStandard
             {
                 list.RemoveAt(list.Count - 1);
             }
+        }
+
+        public static IEnumerable<(int index, T item)> WithIndex<T>(this IEnumerable<T> source)
+        {
+            int index = 0;
+            return source.Select(item => (index++, item));
         }
     }
 }
