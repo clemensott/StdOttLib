@@ -7,7 +7,7 @@ namespace StdOttUwp.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return StdOttStandard.Utils.ToString((TimeSpan)value);
+            return StdOttStandard.StdUtils.ToString((TimeSpan)value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

@@ -1,3 +1,4 @@
+using StdOttStandard;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -119,9 +120,9 @@ namespace StdOttFramework.Converters
 
             Output = convertRefs.Last()(ref input0, ref input1, ref input2, changedIndex);
 
-            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input0, input0)) Input0 = input0;
-            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input1, input1)) Input1 = input1;
-            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input2, input2)) Input2 = input2;
+            if (!StdUtils.ReferenceEqualsOrEquals(Input0, input0)) Input0 = input0;
+            if (!StdUtils.ReferenceEqualsOrEquals(Input1, input1)) Input1 = input1;
+            if (!StdUtils.ReferenceEqualsOrEquals(Input2, input2)) Input2 = input2;
 
             isUpdating = false;
         }

@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace StdOttStandard
 {
-    public static class Utils
+    public static class StdUtils
     {
         public static string ToString(TimeSpan span, bool includeMillis = false)
         {
@@ -146,7 +146,7 @@ namespace StdOttStandard
             return XmlDeserializeText<T>(xmlText);
         }
 
-        public static T DeserializeFileOrDefault<T>(string srcFilePath)
+        public static T XmlDeserializeFileOrDefault<T>(string srcFilePath, T defaultValue = default(T))
         {
             try
             {
@@ -156,7 +156,7 @@ namespace StdOttStandard
             }
             catch
             {
-                return default(T);
+                return defaultValue;
             }
         }
 

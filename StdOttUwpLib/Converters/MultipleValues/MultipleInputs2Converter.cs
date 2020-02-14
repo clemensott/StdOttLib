@@ -1,3 +1,4 @@
+using StdOttStandard;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
@@ -103,8 +104,8 @@ namespace StdOttUwp.Converters
 
             Output = convertRefs.Last()(ref input0, ref input1, changedIndex);
 
-            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input0, input0)) Input0 = input0;
-            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input1, input1)) Input1 = input1;
+            if (!StdUtils.ReferenceEqualsOrEquals(Input0, input0)) Input0 = input0;
+            if (!StdUtils.ReferenceEqualsOrEquals(Input1, input1)) Input1 = input1;
 
             isUpdating = false;
         }

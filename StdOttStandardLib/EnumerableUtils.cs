@@ -58,7 +58,7 @@ namespace StdOttStandard
 
             foreach (object item in enumerable)
             {
-                if (Utils.ReferenceEqualsOrEquals(item, searchItem)) return i;
+                if (StdUtils.ReferenceEqualsOrEquals(item, searchItem)) return i;
 
                 i++;
             }
@@ -74,7 +74,7 @@ namespace StdOttStandard
 
             foreach (T item in enumerable)
             {
-                if (Utils.ReferenceEqualsOrEquals(item, searchItem)) return i;
+                if (StdUtils.ReferenceEqualsOrEquals(item, searchItem)) return i;
 
                 i++;
             }
@@ -111,7 +111,7 @@ namespace StdOttStandard
 
         public static T ElementAtCycle<T>(this ICollection<T> source, int index)
         {
-            index = Utils.CycleIndex(index, source.Count);
+            index = StdUtils.CycleIndex(index, source.Count);
 
             if (source is IList<T> list) return list[index];
 
@@ -120,7 +120,7 @@ namespace StdOttStandard
 
         public static T ElementAtCycle<T>(this IEnumerable<T> source, int index, int count)
         {
-            index = Utils.CycleIndex(index, count);
+            index = StdUtils.CycleIndex(index, count);
 
             if (source is IList<T> list) return list[index];
 
@@ -263,7 +263,7 @@ namespace StdOttStandard
 
             try
             {
-                (int index, bool overflow, bool underflow) = Utils.OffsetIndex(refIndex, list.Count, offset);
+                (int index, bool overflow, bool underflow) = StdUtils.OffsetIndex(refIndex, list.Count, offset);
 
                 return (list[index], overflow, underflow);
             }
@@ -281,7 +281,7 @@ namespace StdOttStandard
 
             if (refIndex == -1) throw new ArgumentException("The refItem has to be in items");
 
-            (int index, bool overflow, bool underflow) = Utils.OffsetIndex(refIndex, list.Count, offset);
+            (int index, bool overflow, bool underflow) = StdUtils.OffsetIndex(refIndex, list.Count, offset);
 
             return (list[index], overflow, underflow);
         }
@@ -293,7 +293,7 @@ namespace StdOttStandard
             int count = 0;
             return items.Where(i =>
             {
-                if (count >= max || Utils.ReferenceEqualsOrEquals(i, item)) return true;
+                if (count >= max || StdUtils.ReferenceEqualsOrEquals(i, item)) return true;
 
                 count++;
                 return false;
@@ -302,7 +302,7 @@ namespace StdOttStandard
 
         public static IEnumerable<T> RemoveAll<T>(this IEnumerable<T> items, T item)
         {
-            return items.Where(i => !Utils.ReferenceEqualsOrEquals(i, item));
+            return items.Where(i => !StdUtils.ReferenceEqualsOrEquals(i, item));
         }
 
         public static IEnumerable<T> Insert<T>(this IEnumerable<T> items, int index, T item)

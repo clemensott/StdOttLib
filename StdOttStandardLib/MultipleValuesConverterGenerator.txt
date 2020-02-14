@@ -1,5 +1,6 @@
         private static IEnumerable<string> GetMultipleValueConverter(int c, bool uwp)
         {
+            yield return "using StdOttStandard;";
             yield return "using System.Collections.Generic;";
             yield return "using System.Linq;";
 
@@ -107,7 +108,7 @@
 
             for (int i = 0; i < c; i++)
             {
-                yield return string.Format("\t\t\tif (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input{0}, input{0})) Input{0} = input{0};", i);
+                yield return string.Format("\t\t\tif (!StdUtils.ReferenceEqualsOrEquals(Input{0}, input{0})) Input{0} = input{0};", i);
             }
 
             yield return "";

@@ -1,3 +1,4 @@
+using StdOttStandard;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
@@ -215,15 +216,15 @@ namespace StdOttUwp.Converters
 
             Output = convertRefs.Last()(ref input0, ref input1, ref input2, ref input3, ref input4, ref input5, ref input6, ref input7, ref input8, changedIndex);
 
-            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input0, input0)) Input0 = input0;
-            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input1, input1)) Input1 = input1;
-            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input2, input2)) Input2 = input2;
-            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input3, input3)) Input3 = input3;
-            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input4, input4)) Input4 = input4;
-            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input5, input5)) Input5 = input5;
-            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input6, input6)) Input6 = input6;
-            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input7, input7)) Input7 = input7;
-            if (!StdOttStandard.Utils.ReferenceEqualsOrEquals(Input8, input8)) Input8 = input8;
+            if (!StdUtils.ReferenceEqualsOrEquals(Input0, input0)) Input0 = input0;
+            if (!StdUtils.ReferenceEqualsOrEquals(Input1, input1)) Input1 = input1;
+            if (!StdUtils.ReferenceEqualsOrEquals(Input2, input2)) Input2 = input2;
+            if (!StdUtils.ReferenceEqualsOrEquals(Input3, input3)) Input3 = input3;
+            if (!StdUtils.ReferenceEqualsOrEquals(Input4, input4)) Input4 = input4;
+            if (!StdUtils.ReferenceEqualsOrEquals(Input5, input5)) Input5 = input5;
+            if (!StdUtils.ReferenceEqualsOrEquals(Input6, input6)) Input6 = input6;
+            if (!StdUtils.ReferenceEqualsOrEquals(Input7, input7)) Input7 = input7;
+            if (!StdUtils.ReferenceEqualsOrEquals(Input8, input8)) Input8 = input8;
 
             isUpdating = false;
         }
