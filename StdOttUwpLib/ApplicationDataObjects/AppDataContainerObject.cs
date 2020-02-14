@@ -14,7 +14,7 @@ namespace StdOttUwp.ApplicationDataObjects
             Container = container ?? throw new ArgumentNullException(nameof(container));
         }
 
-        protected bool TryGetValue<T>(string propertyName, out T value)
+        protected virtual bool TryGetValue<T>(string propertyName, out T value)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace StdOttUwp.ApplicationDataObjects
             return TryGetValue(propertyName, out value) ? value : defaultValue;
         }
 
-        protected bool SetValue(string propertyName, object value)
+        protected virtual bool SetValue(string propertyName, object value)
         {
             try
             {
