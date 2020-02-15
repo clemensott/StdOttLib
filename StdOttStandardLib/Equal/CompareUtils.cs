@@ -20,6 +20,9 @@ namespace StdOttStandard.Equal
                 case TwoValueDecideType.Falsy:
                     return Falsy(value);
 
+                case TwoValueDecideType.IsNull:
+                    return ReferenceEquals(value, null);
+
                 case TwoValueDecideType.Enum:
                     return EqualsEnum(compareValue, value);
 

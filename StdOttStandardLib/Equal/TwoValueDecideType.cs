@@ -6,6 +6,7 @@
         Reference,
         Truthy,
         Falsy,
+        IsNull,
         Enum,
         Bool,
         Int,
