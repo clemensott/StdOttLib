@@ -41,8 +41,8 @@ namespace StdOttFramework.Converters
 
         public TwoValueDecideType DecideType
         {
-            get => (TwoValueDecideType)GetValue(NotEqualsValueProperty);
-            set => SetValue(NotEqualsValueProperty, value);
+            get => (TwoValueDecideType)GetValue(DecideTypeProperty);
+            set => SetValue(DecideTypeProperty, value);
         }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

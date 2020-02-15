@@ -5,14 +5,14 @@
     xmlns:local="using:StdOttUwp.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:spi="using:StdOttUwp.Converters.Specialized"
+    xmlns:con="using:StdOttUwp.Converters"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400"
     Name="control">
 
     <UserControl.Resources>
-        <spi:VisibleCollapsedConverter x:Key="visCon"/>
+        <con:VisibleCollapsedConverter x:Key="visCon"/>
     </UserControl.Resources>
 
     <Grid>
