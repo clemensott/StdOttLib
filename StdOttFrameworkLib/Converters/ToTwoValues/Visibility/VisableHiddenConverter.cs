@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 
-namespace StdOttFramework.Converters.Specialized
+namespace StdOttFramework.Converters
 {
-    public class VisibleHiddenConverter : IsTrueToValueConverter
+    public class VisibleHiddenConverter : TruthyConverter
     {
         public VisibleHiddenConverter()
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StdOttStandard.Equal;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -15,6 +16,10 @@ namespace StdOttFramework.Converters
 
         public static readonly DependencyProperty NotEqualsValueProperty =
             DependencyProperty.Register("NotEqualsValue", typeof(object), typeof(IsValueToTwoValueConverter));
+
+        public static readonly DependencyProperty DecideTypeProperty =
+            DependencyProperty.Register("DecideType", typeof(TwoValueDecideType),
+                typeof(IsValueToTwoValueConverter), new PropertyMetadata(TwoValueDecideType.Equal));
 
         public object CompareValue
         {
@@ -34,6 +39,12 @@ namespace StdOttFramework.Converters
             set => SetValue(NotEqualsValueProperty, value);
         }
 
+        public TwoValueDecideType DecideType
+        {
+            get => (TwoValueDecideType)GetValue(NotEqualsValueProperty);
+            set => SetValue(NotEqualsValueProperty, value);
+        }
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return IsValue(value, targetType, parameter, culture) ? EqualsValue : NotEqualsValue;
@@ -46,11 +57,7 @@ namespace StdOttFramework.Converters
 
         protected virtual bool IsValue(object input, Type targetType, object parameter, CultureInfo culture)
         {
-            if (ReferenceEquals(CompareValue, input)) return true;
-            if (!ReferenceEquals(CompareValue, null)) return CompareValue.Equals(input);
-            if (!ReferenceEquals(input, null)) return input.Equals(CompareValue);
-
-            throw new NotImplementedException();
+            return CompareUtils.Compare(input, CompareValue, DecideType);
         }
     }
 }

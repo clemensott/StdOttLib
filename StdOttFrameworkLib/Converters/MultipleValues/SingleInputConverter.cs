@@ -1,4 +1,4 @@
-using StdOttStandard;
+using StdOttStandard.Equal;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -88,7 +88,7 @@ namespace StdOttFramework.Converters
 
             Output = convertRefs.Last()(ref input, changedIndex);
 
-            if (!StdUtils.ReferenceEqualsOrEquals(Input, input)) Input = input;
+            if (!CompareUtils.ReferenceEqualsOrEquals(Input, input)) Input = input;
 
             isUpdating = false;
         }

@@ -1,8 +1,8 @@
-﻿using Windows.UI.Xaml;
+﻿using System.Windows;
 
-namespace StdOttUwp.Converters.Specialized
+namespace StdOttFramework.Converters
 {
-    public class VisibleCollapsedConverter : IsTrueToValueConverter
+    public class VisibleCollapsedConverter : TruthyConverter
     {
         public VisibleCollapsedConverter()
         {

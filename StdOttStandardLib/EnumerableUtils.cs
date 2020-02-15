@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StdOttStandard.Equal;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,7 +59,7 @@ namespace StdOttStandard
 
             foreach (object item in enumerable)
             {
-                if (StdUtils.ReferenceEqualsOrEquals(item, searchItem)) return i;
+                if (CompareUtils.ReferenceEqualsOrEquals(item, searchItem)) return i;
 
                 i++;
             }
@@ -74,7 +75,7 @@ namespace StdOttStandard
 
             foreach (T item in enumerable)
             {
-                if (StdUtils.ReferenceEqualsOrEquals(item, searchItem)) return i;
+                if (CompareUtils.ReferenceEqualsOrEquals(item, searchItem)) return i;
 
                 i++;
             }
@@ -293,7 +294,7 @@ namespace StdOttStandard
             int count = 0;
             return items.Where(i =>
             {
-                if (count >= max || StdUtils.ReferenceEqualsOrEquals(i, item)) return true;
+                if (count >= max || CompareUtils.ReferenceEqualsOrEquals(i, item)) return true;
 
                 count++;
                 return false;
@@ -302,7 +303,7 @@ namespace StdOttStandard
 
         public static IEnumerable<T> RemoveAll<T>(this IEnumerable<T> items, T item)
         {
-            return items.Where(i => !StdUtils.ReferenceEqualsOrEquals(i, item));
+            return items.Where(i => !CompareUtils.ReferenceEqualsOrEquals(i, item));
         }
 
         public static IEnumerable<T> Insert<T>(this IEnumerable<T> items, int index, T item)

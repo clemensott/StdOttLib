@@ -90,15 +90,6 @@ namespace StdOttStandard
             return ((index - begin) % count + count) % count + begin;
         }
 
-        public static bool ReferenceEqualsOrEquals(object obj1, object obj2)
-        {
-            if (ReferenceEquals(obj1, obj2)) return true;
-            if (!ReferenceEquals(obj1, null)) return obj1.Equals(obj2);
-            if (!ReferenceEquals(obj2, null)) return obj2.Equals(obj1);
-
-            throw new NotImplementedException();
-        }
-
         public static async Task WaitAsync(object lockObj)
         {
             await Task.Run(() =>

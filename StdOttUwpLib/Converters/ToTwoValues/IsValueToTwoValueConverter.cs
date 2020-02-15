@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StdOttStandard.Equal;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
@@ -11,12 +12,16 @@ namespace StdOttUwp.Converters
                 typeof(IsValueToTwoValueConverter), new PropertyMetadata(null));
 
         public static readonly DependencyProperty EqualsValueProperty =
-            DependencyProperty.Register("EqualsValue", typeof(object), 
+            DependencyProperty.Register("EqualsValue", typeof(object),
                 typeof(IsValueToTwoValueConverter), new PropertyMetadata(null));
 
         public static readonly DependencyProperty NotEqualsValueProperty =
             DependencyProperty.Register("NotEqualsValue", typeof(object),
                 typeof(IsValueToTwoValueConverter), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty DecideTypeProperty =
+            DependencyProperty.Register("DecideType", typeof(TwoValueDecideType),
+                typeof(IsValueToTwoValueConverter), new PropertyMetadata(TwoValueDecideType.Equal));
 
         public object CompareValue
         {
@@ -36,6 +41,12 @@ namespace StdOttUwp.Converters
             set => SetValue(NotEqualsValueProperty, value);
         }
 
+        public TwoValueDecideType DecideType
+        {
+            get => (TwoValueDecideType)GetValue(NotEqualsValueProperty);
+            set => SetValue(NotEqualsValueProperty, value);
+        }
+
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             return IsValue(value, targetType, parameter, language) ? EqualsValue : NotEqualsValue;
@@ -48,11 +59,7 @@ namespace StdOttUwp.Converters
 
         protected virtual bool IsValue(object input, Type targetType, object parameter, string language)
         {
-            if (ReferenceEquals(CompareValue, input)) return true;
-            if (!ReferenceEquals(CompareValue, null)) return CompareValue.Equals(input);
-            if (!ReferenceEquals(input, null)) return input.Equals(CompareValue);
-
-            throw new NotImplementedException();
+            return CompareUtils.Compare(input, CompareValue, DecideType);
         }
     }
 }

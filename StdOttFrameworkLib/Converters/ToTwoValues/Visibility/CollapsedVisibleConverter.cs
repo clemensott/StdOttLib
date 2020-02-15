@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 
-namespace StdOttFramework.Converters.Specialized
+namespace StdOttFramework.Converters
 {
-    public class CollapsedVisibleConverter : IsTrueToValueConverter
+    public class CollapsedVisibleConverter : TruthyConverter
     {
         public CollapsedVisibleConverter()
         {
