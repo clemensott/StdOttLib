@@ -116,6 +116,7 @@
   <ItemGroup>
     <Compile Include="ApplicationDataObjects\AppDataContainerObject.cs" />
     <Compile Include="ApplicationDataObjects\PrefixAppDataContainerObject.cs" />
+    <Compile Include="BackPressHandler.cs" />
     <Compile Include="Controls\ColorPicker.xaml.cs">
       <DependentUpon>ColorPicker.xaml</DependentUpon>
     </Compile>
