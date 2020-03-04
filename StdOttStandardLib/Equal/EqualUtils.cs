@@ -27,16 +27,16 @@ namespace StdOttStandard.Equal
                     return EqualsEnum(compareValue, value);
 
                 case TwoValueDecideType.Bool:
-                    return (bool)compareValue == (bool)value;
+                    return Convert.ToBoolean(compareValue) == Convert.ToBoolean(value);
 
                 case TwoValueDecideType.Int:
-                    return (int)compareValue == (int)value;
+                    return Convert.ToInt32(compareValue) == Convert.ToInt32(value);
 
                 case TwoValueDecideType.Long:
-                    return (long)compareValue == (long)value;
+                    return Convert.ToInt64(compareValue) == Convert.ToInt64(value);
 
                 case TwoValueDecideType.Double:
-                    return (double)compareValue == (double)value;
+                    return Convert.ToDouble(compareValue) == Convert.ToDouble(value);
 
                 case TwoValueDecideType.String:
                     return compareValue?.ToString() == value?.ToString();
