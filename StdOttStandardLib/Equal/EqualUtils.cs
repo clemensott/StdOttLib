@@ -2,9 +2,9 @@
 
 namespace StdOttStandard.Equal
 {
-    public static class CompareUtils
+    public static class EqualUtils
     {
-        public static bool Compare(object value, object compareValue, TwoValueDecideType type)
+        public static bool Equals(object value, object compareValue, TwoValueDecideType type)
         {
             switch (type)
             {
@@ -81,7 +81,7 @@ namespace StdOttStandard.Equal
 
             if (obj1 is Enum && obj2 is Enum) return obj1.Equals(obj2);
             if (obj1 is Enum && TryParseEnum(obj2, obj1.GetType(), out enumValue)) return enumValue.Equals(obj1);
-            if (obj2 is Enum && TryParseEnum(obj1, obj2.GetType(), out enumValue)) return enumValue.Equals(obj1);
+            if (obj2 is Enum && TryParseEnum(obj1, obj2.GetType(), out enumValue)) return enumValue.Equals(obj2);
 
             return ReferenceEqualsOrEquals(obj1, obj2);
         }
@@ -90,14 +90,14 @@ namespace StdOttStandard.Equal
         {
             try
             {
-                value = (Enum)Enum.ToObject(type, obj);
+                value = (Enum)Enum.Parse(type, obj?.ToString());
                 return true;
             }
             catch { }
 
             try
             {
-                value = (Enum)Enum.Parse(type, obj?.ToString());
+                value = (Enum)Enum.ToObject(type, obj);
                 return true;
             }
             catch { }

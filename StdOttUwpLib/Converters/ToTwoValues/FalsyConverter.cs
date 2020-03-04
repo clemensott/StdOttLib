@@ -2,11 +2,11 @@
 
 namespace StdOttUwp.Converters
 {
-    class FalsyConverter : IsValueToTwoValueConverter
+    public class FalsyConverter : IsValueToTwoValueConverter
     {
         public FalsyConverter()
         {
-            DecideType = TwoValueDecideType.Falsy;
+            DecideType = TwoValueDecideType.Truthy;
             EqualsValue = false;
             NotEqualsValue = true;
         }

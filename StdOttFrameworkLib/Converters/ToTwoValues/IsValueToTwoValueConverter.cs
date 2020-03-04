@@ -57,7 +57,7 @@ namespace StdOttFramework.Converters
 
         protected virtual bool IsValue(object input, Type targetType, object parameter, CultureInfo culture)
         {
-            return CompareUtils.Compare(input, CompareValue, DecideType);
+            return EqualUtils.Equals(input, CompareValue, DecideType);
         }
     }
 }

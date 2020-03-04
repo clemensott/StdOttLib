@@ -59,7 +59,7 @@ namespace StdOttUwp.Converters
 
         protected virtual bool IsValue(object input, Type targetType, object parameter, string language)
         {
-            return CompareUtils.Compare(input, CompareValue, DecideType);
+            return EqualUtils.Equals(input, CompareValue, DecideType);
         }
     }
 }

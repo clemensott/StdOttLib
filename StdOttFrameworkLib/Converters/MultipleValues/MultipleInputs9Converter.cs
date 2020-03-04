@@ -216,15 +216,15 @@ namespace StdOttFramework.Converters
 
             Output = convertRefs.Last()(ref input0, ref input1, ref input2, ref input3, ref input4, ref input5, ref input6, ref input7, ref input8, changedIndex);
 
-            if (!CompareUtils.ReferenceEqualsOrEquals(Input0, input0)) Input0 = input0;
-            if (!CompareUtils.ReferenceEqualsOrEquals(Input1, input1)) Input1 = input1;
-            if (!CompareUtils.ReferenceEqualsOrEquals(Input2, input2)) Input2 = input2;
-            if (!CompareUtils.ReferenceEqualsOrEquals(Input3, input3)) Input3 = input3;
-            if (!CompareUtils.ReferenceEqualsOrEquals(Input4, input4)) Input4 = input4;
-            if (!CompareUtils.ReferenceEqualsOrEquals(Input5, input5)) Input5 = input5;
-            if (!CompareUtils.ReferenceEqualsOrEquals(Input6, input6)) Input6 = input6;
-            if (!CompareUtils.ReferenceEqualsOrEquals(Input7, input7)) Input7 = input7;
-            if (!CompareUtils.ReferenceEqualsOrEquals(Input8, input8)) Input8 = input8;
+            if (!EqualUtils.ReferenceEqualsOrEquals(Input0, input0)) Input0 = input0;
+            if (!EqualUtils.ReferenceEqualsOrEquals(Input1, input1)) Input1 = input1;
+            if (!EqualUtils.ReferenceEqualsOrEquals(Input2, input2)) Input2 = input2;
+            if (!EqualUtils.ReferenceEqualsOrEquals(Input3, input3)) Input3 = input3;
+            if (!EqualUtils.ReferenceEqualsOrEquals(Input4, input4)) Input4 = input4;
+            if (!EqualUtils.ReferenceEqualsOrEquals(Input5, input5)) Input5 = input5;
+            if (!EqualUtils.ReferenceEqualsOrEquals(Input6, input6)) Input6 = input6;
+            if (!EqualUtils.ReferenceEqualsOrEquals(Input7, input7)) Input7 = input7;
+            if (!EqualUtils.ReferenceEqualsOrEquals(Input8, input8)) Input8 = input8;
 
             isUpdating = false;
         }
