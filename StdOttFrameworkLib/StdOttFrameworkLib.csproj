@@ -94,7 +94,7 @@
     <Compile Include="Hotkey\KeyModifier.cs" />
     <Compile Include="Hotkey\KeyPressedEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils.cs" />
+    <Compile Include="FrameworkUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StdOttStandardLib\StdOttStandardLib.csproj">
@@ -102,5 +102,6 @@
       <Name>StdOttStandardLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -6,7 +6,7 @@ using System.Windows.Threading;
 
 namespace StdOttFramework
 {
-    public static class Utils
+    public static class FrameworkUtils
     {
         public static void InvokeSafe(Delegate method, params object[] args)
         {
