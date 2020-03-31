@@ -450,17 +450,17 @@ namespace StdOttStandard
             }
         }
 
-        public static void RemoveLastWhile(this IList list, Func<IList, bool> predicate)
+        public static void RemoveLastWhile(this IList list, Func<object, bool> predicate)
         {
-            while (predicate(list))
+            while (list.Count > 0 && predicate(list[list.Count - 1]))
             {
                 list.RemoveAt(list.Count - 1);
             }
         }
 
-        public static void RemoveLastWhile<T>(this IList<T> list, Func<IList<T>, bool> predicate)
+        public static void RemoveLastWhile<T>(this IList<T> list, Func<T, bool> predicate)
         {
-            while (predicate(list))
+            while (list.Count > 0 && predicate(list[list.Count - 1]))
             {
                 list.RemoveAt(list.Count - 1);
             }
