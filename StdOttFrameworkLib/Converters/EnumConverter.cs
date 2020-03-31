@@ -20,7 +20,7 @@ namespace StdOttFramework.Converters
 
         private static bool ValidateExample(object value)
         {
-            return value?.GetType().IsEnum == true;
+            return value?.GetType().IsEnum ?? true;
         }
 
         private Enum currentValue;
