@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace StdOttStandard.CommendlinePaser
+namespace StdOttStandard.CommandlineParser
 {
     public class Option
     {
@@ -11,7 +11,7 @@ namespace StdOttStandard.CommendlinePaser
 
         public int MaxValuesCount { get; set; }
 
-        public string Distription { get; set; }
+        public string Description { get; set; }
 
         public List<string> ShortOpts { get; private set; }
 
@@ -23,24 +23,24 @@ namespace StdOttStandard.CommendlinePaser
             LongOpts = new List<string>();
         }
 
-        public Option(string shortOpt, string longOpt, string discription = "",
+        public Option(string shortOpt, string longOpt, string description = "",
             bool required = false, int maxValuesCount = -1, int minValuesCount = 0) : this()
         {
             ShortOpts.Add(shortOpt);
             LongOpts.Add(longOpt);
-            Distription = discription;
+            Description = description;
             Required = required;
             MaxValuesCount = maxValuesCount;
             MinValuesCount = minValuesCount;
         }
 
-        public static Option GetLongOnly(string longOpt, string discription = "",
+        public static Option GetLongOnly(string longOpt, string description = "",
             bool required = false, int maxValuesCount = -1, int minValuesCount = 0)
         {
             Option option = new Option();
 
             option.LongOpts.Add(longOpt);
-            option.Distription = discription;
+            option.Description = description;
             option.Required = required;
             option.MaxValuesCount = maxValuesCount;
             option.MinValuesCount = minValuesCount;

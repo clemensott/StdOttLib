@@ -9,20 +9,20 @@ namespace StdOttStandard
     {
         public const char DefaultAddChar = '&';
 
-        public static IEnumerable<string> Deserialize(string dataString, char seperator, char addChar = DefaultAddChar)
+        public static IEnumerable<string> Deserialize(string dataString, char separator, char addChar = DefaultAddChar)
         {
-            return Deserialize(new StringBuilder(dataString), seperator, addChar);
+            return Deserialize(new StringBuilder(dataString), separator, addChar);
         }
 
-        public static IEnumerable<string> Deserialize(StringBuilder dataString, char seperator, char addChar = DefaultAddChar)
+        public static IEnumerable<string> Deserialize(StringBuilder dataString, char separator, char addChar = DefaultAddChar)
         {
             while (dataString.Length > 0)
             {
-                yield return GetUntil(ref dataString, seperator, addChar);
+                yield return GetUntil(ref dataString, separator, addChar);
             }
         }
 
-        public static string GetUntil(ref StringBuilder text, char seperator, char addChar = DefaultAddChar)
+        public static string GetUntil(ref StringBuilder text, char separator, char addChar = DefaultAddChar)
         {
             int index = 0;
             StringBuilder part = new StringBuilder(text.Length);
@@ -34,7 +34,7 @@ namespace StdOttStandard
             {
                 char c = text[index];
 
-                if (c == seperator && IsSeperator(text.ToString(), index++, addChar)) break;
+                if (c == separator && IsSeparator(text.ToString(), index++, addChar)) break;
 
                 part.Append(c);
             }
@@ -44,24 +44,24 @@ namespace StdOttStandard
             return part.ToString();
         }
 
-        private static bool IsSeperator(string text, int index, char addChar)
+        private static bool IsSeparator(string text, int index, char addChar)
         {
             return text.Skip(index + 1).TakeWhile(c => c == addChar).Count() % 2 == 0;
         }
 
-        public static string Serialize(IEnumerable items, char seperator, char addChar = DefaultAddChar)
+        public static string Serialize(IEnumerable items, char separator, char addChar = DefaultAddChar)
         {
-            return Serialize(items.Cast<object>().Select(o => o.ToString()), seperator, addChar);
+            return Serialize(items.Cast<object>().Select(o => o.ToString()), separator, addChar);
         }
 
-        public static string Serialize(IEnumerable<string> items, char seperator, char addChar = DefaultAddChar)
+        public static string Serialize(IEnumerable<string> items, char separator, char addChar = DefaultAddChar)
         {
-            string spt = seperator.ToString();
+            string spt = separator.ToString();
 
-            return string.Join(spt, items.Select(i => AddAddChar(i, seperator, addChar)));
+            return string.Join(spt, items.Select(i => AddAddChar(i, separator, addChar)));
         }
 
-        private static string AddAddChar(string item, char seperator, char addChar)
+        private static string AddAddChar(string item, char separator, char addChar)
         {
             int addCharsAtBeginning = item.TakeWhile(c => c == addChar).Count();
 
@@ -69,7 +69,7 @@ namespace StdOttStandard
 
             for (int i = item.Length - 1; i >= 0; i--)
             {
-                if (item[i] == seperator) item = item.Insert(i, addChar.ToString());
+                if (item[i] == separator) item = item.Insert(i, addChar.ToString());
             }
 
             return item;

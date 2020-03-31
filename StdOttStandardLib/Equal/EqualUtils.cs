@@ -40,6 +40,8 @@ namespace StdOttStandard.Equal
 
                 case TwoValueDecideType.String:
                     return compareValue?.ToString() == value?.ToString();
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
 
             throw new ArgumentException("TwoValueDecideType is not implemented.");
@@ -49,25 +51,34 @@ namespace StdOttStandard.Equal
         {
             if (ReferenceEquals(obj1, obj2)) return true;
             if (!ReferenceEquals(obj1, null)) return obj1.Equals(obj2);
-            if (!ReferenceEquals(obj2, null)) return obj2.Equals(obj1);
 
-            throw new NotImplementedException();
+            return obj2.Equals(obj1);
         }
 
         public static bool Truphy(object obj)
         {
             if (ReferenceEquals(obj, null)) return false;
             if (obj.Equals(true)) return true;
-            if (obj is string) return !string.IsNullOrEmpty((string)obj);
+            if (obj is string) return ((string)obj).Length > 0;
 
-            try
+            bool value;
+            return !TryToBoolean(obj, out value) || value;
+        }
+
+        private static bool TryToBoolean(object obj, out bool result)
+        {
+            if (obj is IConvertible)
             {
-                return Convert.ToBoolean(obj);
+                try
+                {
+                    result = Convert.ToBoolean(obj);
+                    return true;
+                }
+                catch { }
             }
-            catch
-            {
-                return true;
-            }
+
+            result = false;
+            return true;
         }
 
         public static bool Falsy(object obj)
@@ -78,10 +89,12 @@ namespace StdOttStandard.Equal
         public static bool EqualsEnum(object obj1, object obj2)
         {
             Enum enumValue;
+            bool isObj1Enum = obj1 is Enum;
+            bool isObj2Enum = obj2 is Enum;
 
-            if (obj1 is Enum && obj2 is Enum) return obj1.Equals(obj2);
-            if (obj1 is Enum && TryParseEnum(obj2, obj1.GetType(), out enumValue)) return enumValue.Equals(obj1);
-            if (obj2 is Enum && TryParseEnum(obj1, obj2.GetType(), out enumValue)) return enumValue.Equals(obj2);
+            if (isObj1Enum && isObj2Enum) return obj1.Equals(obj2);
+            if (isObj1Enum && TryParseEnum(obj2, obj1.GetType(), out enumValue)) return enumValue.Equals(obj1);
+            if (isObj2Enum && TryParseEnum(obj1, obj2.GetType(), out enumValue)) return enumValue.Equals(obj2);
 
             return ReferenceEqualsOrEquals(obj1, obj2);
         }
@@ -90,7 +103,7 @@ namespace StdOttStandard.Equal
         {
             try
             {
-                value = (Enum)Enum.Parse(type, obj?.ToString());
+                value = (Enum)Enum.Parse(type, obj?.ToString() ?? string.Empty);
                 return true;
             }
             catch { }

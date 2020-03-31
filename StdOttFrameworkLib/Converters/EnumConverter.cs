@@ -7,20 +7,21 @@ namespace StdOttFramework.Converters
 {
     public class EnumConverter : DependencyObject, IValueConverter
     {
-        public static readonly DependencyProperty EnumTypeProperty =
-            DependencyProperty.Register("EnumType", typeof(Type), typeof(EnumConverter));
+        public static readonly DependencyProperty EnumTypeProperty = DependencyProperty.Register("EnumType",
+            typeof(Type), typeof(EnumConverter), new PropertyMetadata(), ValidateEnumType);
 
-        private static void OnEnumTypePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        private static bool ValidateEnumType(object value)
         {
-            var s = (EnumConverter)sender;
-            var newValue = (Type)e.NewValue;
-            var oldValue = (Type)e.OldValue;
-
-            if (!newValue.IsEnum) s.EnumType = oldValue;
+            return value == null || ((Type)value).IsEnum;
         }
 
-        public static readonly DependencyProperty ExampleProperty =
-            DependencyProperty.Register("Example", typeof(Enum), typeof(EnumConverter));
+        public static readonly DependencyProperty ExampleProperty = DependencyProperty.Register("Example",
+            typeof(Enum), typeof(EnumConverter), new PropertyMetadata(), ValidateExample);
+
+        private static bool ValidateExample(object value)
+        {
+            return value?.GetType().IsEnum == true;
+        }
 
         private Enum currentValue;
 

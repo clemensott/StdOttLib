@@ -92,6 +92,8 @@ namespace StdOttStandard.CollectionSubscriber
 
             INotifyPropertyChanged changedItem = item as INotifyPropertyChanged;
             if (changedItem != null) changedItem.PropertyChanged -= Item_PropertyChanged;
+
+            Removed?.Invoke(this, new ChangedEventArgs<T>(index, item));
         }
 
         private void OnMove(NotifyCollectionChangedEventArgs e)

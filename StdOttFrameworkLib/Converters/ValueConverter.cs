@@ -10,16 +10,16 @@ namespace StdOttFramework.Converters
     public class ValueConverter : IValueConverter
     {
         public event ConvertEventHandler ConvertEvent;
-        public event ConvertBackEventHandler ConvertEventHandler;
+        public event ConvertBackEventHandler ConvertBackEvent;
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return ConvertEvent(value, targetType, parameter, culture);
+            return ConvertEvent?.Invoke(value, targetType, parameter, culture);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return ConvertBack(value, targetType, parameter, culture);
+            return ConvertBackEvent?.Invoke(value, targetType, parameter, culture);
         }
     }
 }

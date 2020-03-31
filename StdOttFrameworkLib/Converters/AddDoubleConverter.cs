@@ -8,33 +8,38 @@ namespace StdOttFramework.Converters
     public class AddDoubleConverter : DependencyObject, IValueConverter
     {
         public static readonly DependencyProperty AddProperty =
-            DependencyProperty.Register("Add", typeof(double?), typeof(AddDoubleConverter),
-                new PropertyMetadata(null, new PropertyChangedCallback(OnAddPropertyChanged)));
-
-        private static void OnAddPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            var s = (AddDoubleConverter)sender;
-            var value = (double?)e.NewValue;
-        }
+            DependencyProperty.Register("Add", typeof(double?), typeof(AddDoubleConverter));
 
         public double? Add
         {
-            get => (double?)GetValue(AddProperty);
+            get => (double?) GetValue(AddProperty);
             set => SetValue(AddProperty, value);
         }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            double add = Add ?? (double)parameter;
+            double add = Add ?? ToDouble(parameter);
 
-            return (double)value + add;
+            return ToDouble(value) + add;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            double add = Add ?? (double)parameter;
+            double add = Add ?? ToDouble(parameter);
 
-            return (double)value - (double)parameter;
+            return ToDouble(value) - add;
+        }
+
+        private static double ToDouble(object obj, double defaultValue = 0)
+        {
+            try
+            {
+                return obj is double value ? value : System.Convert.ToDouble(obj);
+            }
+            catch
+            {
+                return defaultValue;
+            }
         }
     }
 }

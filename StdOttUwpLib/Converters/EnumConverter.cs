@@ -6,19 +6,11 @@ namespace StdOttUwp.Converters
 {
     public abstract class EnumConverter : DependencyObject, IValueConverter
     {
+        public static readonly DependencyProperty EnumTypeProperty = DependencyProperty.Register("EnumType",
+            typeof(Type), typeof(EnumConverter), new PropertyMetadata(null));
 
-        public static readonly DependencyProperty EnumTypeProperty =
-            DependencyProperty.Register("EnumType", typeof(Type), typeof(EnumConverter),new PropertyMetadata(null));
-
-        private static void OnEnumTypePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            var s = (EnumConverter)sender;
-            var newValue = (Type)e.NewValue;
-            var oldValue = (Type)e.OldValue;
-        }
-
-        public static readonly DependencyProperty ExampleProperty =
-            DependencyProperty.Register("Example", typeof(Enum), typeof(EnumConverter),new PropertyMetadata(null));
+        public static readonly DependencyProperty ExampleProperty = DependencyProperty.Register("Example",
+            typeof(Enum), typeof(EnumConverter), new PropertyMetadata(null));
 
         private Enum currentValue;
 

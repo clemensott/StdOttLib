@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace StdOttStandard.CommendlinePaser
+namespace StdOttStandard.CommandlineParser
 {
     public class Options : List<Option>
     {

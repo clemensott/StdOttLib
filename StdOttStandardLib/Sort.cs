@@ -310,19 +310,22 @@ namespace StdOttStandard
 
         private static void Heapify<TSource, TKey>(IList<TSource> items, IList<TKey> keys, int count, int i, IComparer<TKey> comparer)
         {
-            int e = i;
-            int l = Left(i);
-            int r = Right(i);
+            while (true)
+            {
+                int e = i;
+                int l = Left(i);
+                int r = Right(i);
 
-            if (l < count && comparer.Compare(keys[e], keys[l]) > 0) e = l;
-            if (r < count && comparer.Compare(keys[e], keys[r]) > 0) e = r;
+                if (l < count && comparer.Compare(keys[e], keys[l]) > 0) e = l;
+                if (r < count && comparer.Compare(keys[e], keys[r]) > 0) e = r;
 
-            if (e == i) return;
+                if (e == i) return;
 
-            items.Swap(i, e);
-            keys.Swap(i, e);
+                items.Swap(i, e);
+                keys.Swap(i, e);
 
-            Heapify(items, keys, count, e, comparer);
+                i = e;
+            }
         }
 
         public static IEnumerable<TSource> HeapSortDesc<TSource>(IEnumerable<TSource> items, Comparison<TSource> comparison = null)
