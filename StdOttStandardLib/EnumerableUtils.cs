@@ -471,5 +471,43 @@ namespace StdOttStandard
             int index = 0;
             return source.Select(item => (index++, item));
         }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> CreatePairs<TKey, TValue>(TKey key, TValue value)
+        {
+            yield return new KeyValuePair<TKey, TValue>(key, value);
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> CreatePairs<TKey, TValue>(TKey key1, TValue value1, TKey key2, TValue value2)
+        {
+            yield return new KeyValuePair<TKey, TValue>(key1, value1);
+            yield return new KeyValuePair<TKey, TValue>(key2, value2);
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> CreatePairs<TKey, TValue>(TKey key1, TValue value1,
+            TKey key2, TValue value2, TKey key3, TValue value3)
+        {
+            yield return new KeyValuePair<TKey, TValue>(key1, value1);
+            yield return new KeyValuePair<TKey, TValue>(key2, value2);
+            yield return new KeyValuePair<TKey, TValue>(key3, value3);
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> CreatePairs<TKey, TValue>(TKey key1, TValue value1,
+            TKey key2, TValue value2, TKey key3, TValue value3, TKey key4, TValue value4)
+        {
+            yield return new KeyValuePair<TKey, TValue>(key1, value1);
+            yield return new KeyValuePair<TKey, TValue>(key2, value2);
+            yield return new KeyValuePair<TKey, TValue>(key3, value3);
+            yield return new KeyValuePair<TKey, TValue>(key4, value4);
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> CreatePairs<TKey, TValue>(TKey key1, TValue value1,
+            TKey key2, TValue value2, TKey key3, TValue value3, TKey key4, TValue value4, TKey key5, TValue value5)
+        {
+            yield return new KeyValuePair<TKey, TValue>(key1, value1);
+            yield return new KeyValuePair<TKey, TValue>(key2, value2);
+            yield return new KeyValuePair<TKey, TValue>(key3, value3);
+            yield return new KeyValuePair<TKey, TValue>(key4, value4);
+            yield return new KeyValuePair<TKey, TValue>(key5, value5);
+        }
     }
 }
