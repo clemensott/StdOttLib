@@ -17,41 +17,44 @@ namespace StdOttStandard
 
         private static bool BinarySearch<T>(IList<T> items, int begin, int end, Func<T, int> comparer, out int index)
         {
-            if (begin == end)
+            while (true)
             {
-                index = begin;
-                return false;
-            }
+                if (begin == end)
+                {
+                    index = begin;
+                    return false;
+                }
 
-            int middle = (begin + end) / 2;
-            int compareMiddle = comparer(items[middle]);
+                int middle = (begin + end) / 2;
+                int compareMiddle = comparer(items[middle]);
 
-            if (compareMiddle == 0)
-            {
-                index = middle;
-                return true;
-            }
+                if (compareMiddle == 0)
+                {
+                    index = middle;
+                    return true;
+                }
 
-            if (begin == middle)
-            {
-                index = begin + (compareMiddle < 0 ? 1 : 0);
-                return false;
-            }
+                if (begin == middle)
+                {
+                    index = begin + (compareMiddle < 0 ? 1 : 0);
+                    return false;
+                }
 
-            int nextBegin, nextEnd;
-            if (compareMiddle > 0)
-            {
-                nextBegin = begin;
-                nextEnd = middle;
-            }
-            else
-            {
-                nextBegin = middle + 1;
-                nextEnd = end;
-            }
+                int nextBegin, nextEnd;
+                if (compareMiddle > 0)
+                {
+                    nextBegin = begin;
+                    nextEnd = middle;
+                }
+                else
+                {
+                    nextBegin = middle + 1;
+                    nextEnd = end;
+                }
 
-            return BinarySearch(items, nextBegin, nextEnd, comparer, out index);
+                begin = nextBegin;
+                end = nextEnd;
+            }
         }
-
     }
 }

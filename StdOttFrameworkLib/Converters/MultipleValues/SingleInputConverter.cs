@@ -15,7 +15,7 @@ namespace StdOttFramework.Converters
 
         public static readonly DependencyProperty InputProperty =
             DependencyProperty.Register("Input", typeof(object), typeof(SingleInputConverter),
-                new PropertyMetadata(null, new PropertyChangedCallback(OnInputPropertyChanged)));
+                new PropertyMetadata(null, OnInputPropertyChanged));
 
 
         private static void OnInputPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)

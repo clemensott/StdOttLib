@@ -1,4 +1,6 @@
-﻿namespace StdOttFramework.RestoreWindow
+﻿using System.Windows;
+
+namespace StdOttFramework.RestoreWindow
 {
     public struct RestoreWindowSettings
     {
@@ -9,6 +11,10 @@
         public bool RestoreWidth { get; set; }
 
         public bool RestoreHeight { get; set; }
+
+        public bool RestoreWindowState { get; set; }
+
+        public WindowState? OverrideMinimized { get; set; }
 
         public StorePropertiesTriggerType StoreTriggerType { get; set; }
 
@@ -22,6 +28,8 @@
                 RestoreTop = true,
                 RestoreWidth = true,
                 RestoreHeight = true,
+                RestoreWindowState = true,
+                OverrideMinimized = WindowState.Normal,
                 StoreTriggerType = StorePropertiesTriggerType.Close,
                 FilePath = null,
             };

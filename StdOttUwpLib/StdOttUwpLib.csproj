@@ -125,7 +125,6 @@
     <Compile Include="Converters\ColorToSolidColorBrushConverter.cs" />
     <Compile Include="Converters\EnumConverter.cs" />
     <Compile Include="Converters\EnumConverterT.cs" />
-    <Compile Include="Converters\InvertConverter.cs" />
     <Compile Include="Converters\MultipleValues\SingleInputConverter.cs" />
     <Compile Include="Converters\MultipleValues\MultipleInputs2Converter.cs" />
     <Compile Include="Converters\MultipleValues\MultipleInputs3Converter.cs" />

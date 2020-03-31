@@ -15,7 +15,7 @@ namespace StdOttFramework.Converters
 
         public static readonly DependencyProperty Input0Property =
             DependencyProperty.Register("Input0", typeof(object), typeof(MultipleInputs7Converter),
-                new PropertyMetadata(null, new PropertyChangedCallback(OnInput0PropertyChanged)));
+                new PropertyMetadata(null, OnInput0PropertyChanged));
 
 
         private static void OnInput0PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
@@ -25,7 +25,7 @@ namespace StdOttFramework.Converters
 
         public static readonly DependencyProperty Input1Property =
             DependencyProperty.Register("Input1", typeof(object), typeof(MultipleInputs7Converter),
-                new PropertyMetadata(null, new PropertyChangedCallback(OnInput1PropertyChanged)));
+                new PropertyMetadata(null, OnInput1PropertyChanged));
 
 
         private static void OnInput1PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
@@ -35,7 +35,7 @@ namespace StdOttFramework.Converters
 
         public static readonly DependencyProperty Input2Property =
             DependencyProperty.Register("Input2", typeof(object), typeof(MultipleInputs7Converter),
-                new PropertyMetadata(null, new PropertyChangedCallback(OnInput2PropertyChanged)));
+                new PropertyMetadata(null, OnInput2PropertyChanged));
 
 
         private static void OnInput2PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
@@ -45,7 +45,7 @@ namespace StdOttFramework.Converters
 
         public static readonly DependencyProperty Input3Property =
             DependencyProperty.Register("Input3", typeof(object), typeof(MultipleInputs7Converter),
-                new PropertyMetadata(null, new PropertyChangedCallback(OnInput3PropertyChanged)));
+                new PropertyMetadata(null, OnInput3PropertyChanged));
 
 
         private static void OnInput3PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
@@ -55,7 +55,7 @@ namespace StdOttFramework.Converters
 
         public static readonly DependencyProperty Input4Property =
             DependencyProperty.Register("Input4", typeof(object), typeof(MultipleInputs7Converter),
-                new PropertyMetadata(null, new PropertyChangedCallback(OnInput4PropertyChanged)));
+                new PropertyMetadata(null, OnInput4PropertyChanged));
 
 
         private static void OnInput4PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
@@ -65,7 +65,7 @@ namespace StdOttFramework.Converters
 
         public static readonly DependencyProperty Input5Property =
             DependencyProperty.Register("Input5", typeof(object), typeof(MultipleInputs7Converter),
-                new PropertyMetadata(null, new PropertyChangedCallback(OnInput5PropertyChanged)));
+                new PropertyMetadata(null, OnInput5PropertyChanged));
 
 
         private static void OnInput5PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
@@ -75,7 +75,7 @@ namespace StdOttFramework.Converters
 
         public static readonly DependencyProperty Input6Property =
             DependencyProperty.Register("Input6", typeof(object), typeof(MultipleInputs7Converter),
-                new PropertyMetadata(null, new PropertyChangedCallback(OnInput6PropertyChanged)));
+                new PropertyMetadata(null, OnInput6PropertyChanged));
 
 
         private static void OnInput6PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)

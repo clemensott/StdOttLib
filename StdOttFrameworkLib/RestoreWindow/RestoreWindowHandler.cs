@@ -7,7 +7,7 @@ namespace StdOttFramework.RestoreWindow
 {
     public class RestoreWindowHandler
     {
-        private readonly static IDictionary<Window, RestoreWindowHandler> handlers = new Dictionary<Window, RestoreWindowHandler>();
+        private static readonly IDictionary<Window, RestoreWindowHandler> handlers = new Dictionary<Window, RestoreWindowHandler>();
 
         public static RestoreWindowHandler Activate(Window window, RestoreWindowSettings settings)
         {
@@ -115,19 +115,30 @@ namespace StdOttFramework.RestoreWindow
 
             FitRestoreData(data);
 
-            window.WindowState = WindowState.Minimized;
-            window.Left = data.Left;
-            window.Top = data.Top;
-            window.Width = data.Width;
-            window.Height = data.Height;
+            WindowState restoreState = settings.OverrideMinimized.HasValue && data.WindowState == WindowState.Minimized ?
+                settings.OverrideMinimized.Value : data.WindowState;
 
-            window.Loaded += Window_Loaded;
+            if (settings.RestoreWindowState && !window.IsLoaded)
+            {
+                window.WindowState = restoreState == WindowState.Normal ? WindowState.Normal : WindowState.Minimized;
+            }
+
+            if (settings.RestoreLeft) window.Left = data.Left;
+            if (settings.RestoreTop) window.Top = data.Top;
+            if (settings.RestoreWidth) window.Width = data.Width;
+            if (settings.RestoreHeight) window.Height = data.Height;
+
+            if (settings.RestoreWindowState)
+            {
+                if (!window.IsLoaded) window.Loaded += Window_Loaded;
+                else window.WindowState = restoreState;
+            }
 
             void Window_Loaded(object sender, RoutedEventArgs e)
             {
                 window.Loaded -= Window_Loaded;
 
-                window.WindowState = data.WindowState;
+                window.WindowState = restoreState;
             }
         }
 

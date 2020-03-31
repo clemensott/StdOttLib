@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace StdOttStandard.CommendlinePaser
+namespace StdOttStandard.CommandlineParser
 {
     public class OptionParsed
     {

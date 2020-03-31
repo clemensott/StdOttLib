@@ -14,16 +14,16 @@ namespace StdOttStandard
             string text = string.Empty;
             int hours = (int)Math.Floor(span.TotalHours);
 
-            if (hours >= 1) text += string.Format("{0,2}:", hours);
+            if (hours >= 1) text += $"{hours,2}:";
 
-            text += string.Format("{0,2}:{1,2}", span.Minutes, span.Seconds);
+            text += $"{span.Minutes,2}:{span.Seconds,2}";
 
-            if (includeMillis) text += string.Format(":{0,2}", span.Milliseconds);
+            if (includeMillis) text += $":{span.Milliseconds,2}";
 
             return text.Replace(' ', '0');
         }
 
-        public static IEnumerable<string> Split(this string text, params string[] seperators)
+        public static IEnumerable<string> Split(this string text, params string[] separators)
         {
             string value = string.Empty;
 
@@ -31,15 +31,15 @@ namespace StdOttStandard
             {
                 bool matched = false;
 
-                foreach (string seperator in seperators)
+                foreach (string separator in separators)
                 {
-                    if (!ContinuesWith(text, i, seperator)) continue;
+                    if (!ContinuesWith(text, i, separator)) continue;
 
                     matched = true;
                     yield return value;
 
                     value = string.Empty;
-                    i += seperator.Length - 1;
+                    i += separator.Length - 1;
 
                     break;
                 }
