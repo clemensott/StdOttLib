@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StdOttStandard
 {
@@ -11,9 +12,11 @@ namespace StdOttStandard
 
         public IEnumerable<T> Source { get; }
 
-        public IEnumerator<T> Enumerator => enumerator ?? (enumerator = Source.GetEnumerator());
+        internal IEnumerator<T> Enumerator => enumerator ?? (enumerator = Source.GetEnumerator());
 
-        public IList<T> Buffer { get; }
+        internal IList<T> Buffer { get; }
+
+        public IEnumerable<T> CurrentData => Buffer.Cast<T>();
 
         public OnRequestBuffer(IEnumerable<T> src)
         {

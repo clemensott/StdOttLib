@@ -9,7 +9,7 @@ namespace StdOttStandard.Equal
             switch (type)
             {
                 case TwoValueDecideType.Equal:
-                    return ReferenceEqualsOrEquals(compareValue, value);
+                    return Equals(compareValue, value);
 
                 case TwoValueDecideType.Reference:
                     return ReferenceEquals(compareValue, value);
@@ -45,14 +45,6 @@ namespace StdOttStandard.Equal
             }
 
             throw new ArgumentException("TwoValueDecideType is not implemented.");
-        }
-
-        public static bool ReferenceEqualsOrEquals(object obj1, object obj2)
-        {
-            if (ReferenceEquals(obj1, obj2)) return true;
-            if (!ReferenceEquals(obj1, null)) return obj1.Equals(obj2);
-
-            return obj2.Equals(obj1);
         }
 
         public static bool Truphy(object obj)
@@ -96,7 +88,7 @@ namespace StdOttStandard.Equal
             if (isObj1Enum && TryParseEnum(obj2, obj1.GetType(), out enumValue)) return enumValue.Equals(obj1);
             if (isObj2Enum && TryParseEnum(obj1, obj2.GetType(), out enumValue)) return enumValue.Equals(obj2);
 
-            return ReferenceEqualsOrEquals(obj1, obj2);
+            return Equals(obj1, obj2);
         }
 
         public static bool TryParseEnum(object obj, Type type, out Enum value)

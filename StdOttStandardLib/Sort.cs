@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StdOttStandard.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -222,12 +223,12 @@ namespace StdOttStandard
 
         public static IEnumerable<TSource> HeapSort<TSource>(IEnumerable<TSource> items, Comparison<TSource> comparison = null)
         {
-            return HeapSort(items.CastOrToArray(), CreateComparer(comparison));
+            return HeapSort(items.ToIList(), CreateComparer(comparison));
         }
 
         public static IEnumerable<TSource> HeapSort<TSource>(IEnumerable<TSource> items, IComparer<TSource> comparer)
         {
-            return HeapSort(items.CastOrToArray(), comparer);
+            return HeapSort(items.ToIList(), comparer);
         }
 
         public static IEnumerable<TSource> HeapSort<TSource>(IList<TSource> items, IComparer<TSource> comparer)
@@ -277,7 +278,7 @@ namespace StdOttStandard
 
         public static IEnumerable<TSource> HeapSort<TSource, TKey>(IEnumerable<TSource> items, Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
         {
-            IList<TSource> array = items.CastOrToArray();
+            IList<TSource> array = items.ToIList();
             TKey[] keys = array.Select(keySelector).ToArray();
 
             return HeapSort(array, keys, comparer);
@@ -330,12 +331,12 @@ namespace StdOttStandard
 
         public static IEnumerable<TSource> HeapSortDesc<TSource>(IEnumerable<TSource> items, Comparison<TSource> comparison = null)
         {
-            return HeapSortDesc(items.CastOrToArray(), CreateComparer(comparison));
+            return HeapSortDesc(items.ToIList(), CreateComparer(comparison));
         }
 
         public static IEnumerable<TSource> HeapSortDesc<TSource>(IEnumerable<TSource> items, IComparer<TSource> comparer)
         {
-            return HeapSortDesc(items.CastOrToArray(), comparer);
+            return HeapSortDesc(items.ToIList(), comparer);
         }
 
         public static IEnumerable<TSource> HeapSortDesc<TSource>(IList<TSource> items, IComparer<TSource> comparer)
@@ -385,7 +386,7 @@ namespace StdOttStandard
 
         public static IEnumerable<TSource> HeapSortDesc<TSource, TKey>(IEnumerable<TSource> items, Func<TSource, TKey> keySelector, IComparer<TKey> comparer)
         {
-            IList<TSource> array = items.CastOrToArray();
+            IList<TSource> array = items.ToIList();
             TKey[] keys = array.Select(keySelector).ToArray();
 
             return HeapSortDesc(array, keys, comparer);

@@ -104,8 +104,8 @@ namespace StdOttFramework.Converters
 
             Output = convertRefs.Last()(ref input0, ref input1, changedIndex);
 
-            if (!EqualUtils.ReferenceEqualsOrEquals(Input0, input0)) Input0 = input0;
-            if (!EqualUtils.ReferenceEqualsOrEquals(Input1, input1)) Input1 = input1;
+            if (!Equals(Input0, input0)) Input0 = input0;
+            if (!Equals(Input1, input1)) Input1 = input1;
 
             isUpdating = false;
         }

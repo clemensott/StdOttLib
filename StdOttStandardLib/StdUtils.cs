@@ -1,6 +1,9 @@
-﻿using System;
+﻿using StdOttStandard.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -168,6 +171,67 @@ namespace StdOttStandard
                 destX = (wouldWidth - destWidth) / 2;
                 destY = 0;
             }
+        }
+
+        /// <summary>
+        /// Normalizes the given YouTube URL to the format http://youtube.com/watch?v={youtube-id}
+        /// and returns whether the normalization was successful or not.
+        /// Copied from https://github.com/flagbug/YoutubeExtractor
+        /// </summary>
+        /// <param name="url">The YouTube URL to normalize.</param>
+        /// <param name="normalizedUrl">The normalized YouTube URL.</param>
+        /// <returns>
+        /// <c>true</c>, if the normalization was successful; <c>false</c>, if the URL is invalid.
+        /// </returns>
+        public static bool TryNormalizeYoutubeUrl(string url, out string normalizedUrl)
+        {
+            url = url.Trim();
+
+            url = url.Replace("youtu.be/", "youtube.com/watch?v=");
+            url = url.Replace("www.youtube", "youtube");
+            url = url.Replace("youtube.com/embed/", "youtube.com/watch?v=");
+
+            if (url.Contains("/v/"))
+            {
+                url = "http://youtube.com" + new Uri(url).AbsolutePath.Replace("/v/", "/watch?v=");
+            }
+
+            url = url.Replace("/watch#", "/watch?");
+
+            IDictionary<string, string> query = ParseQueryString(url);
+
+            string v;
+
+            if (!query.TryGetValue("v", out v))
+            {
+                normalizedUrl = null;
+                return false;
+            }
+
+            normalizedUrl = "http://youtube.com/watch?v=" + v;
+
+            return true;
+        }
+
+        public static IDictionary<string, string> ParseQueryString(string url)
+        {
+            int index;
+            if (!url.TryIndexOf('?', out index) ||
+                index + 1 == url.Length) return new Dictionary<string, string>(0);
+
+            string query = url.Substring(index + 1);
+            string[] rawParts = query.Split('&');
+
+            return rawParts.Select(p =>
+            {
+                string[] pairParts = p.Split('=');
+                if (pairParts.Length != 2) throw new ArgumentException("Query part is not valid", nameof(url));
+
+                string key = Uri.UnescapeDataString(pairParts[0]);
+                string value = Uri.UnescapeDataString(pairParts[1]);
+
+                return (key: key, value: value);
+            }).ToDictionary(p => p.key, p => p.value);
         }
     }
 }

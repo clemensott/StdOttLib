@@ -88,7 +88,7 @@ namespace StdOttUwp.Converters
 
             Output = convertRefs.Last()(ref input, changedIndex);
 
-            if (!EqualUtils.ReferenceEqualsOrEquals(Input, input)) Input = input;
+            if (!Equals(Input, input)) Input = input;
 
             isUpdating = false;
         }
