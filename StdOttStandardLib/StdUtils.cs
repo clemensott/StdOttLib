@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -232,6 +231,13 @@ namespace StdOttStandard
 
                 return (key: key, value: value);
             }).ToDictionary(p => p.key, p => p.value);
+        }
+
+        public static void Swap<T>(ref T a, ref T b)
+        {
+            T tmp = a;
+            a = b;
+            b = tmp;
         }
     }
 }
