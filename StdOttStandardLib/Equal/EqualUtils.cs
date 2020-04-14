@@ -24,13 +24,13 @@ namespace StdOttStandard.Equal
                     return Truphy(value);
 
                 case TwoValueDecideType.True:
-                    return Truphy(value);
+                    return value is bool && (bool)value == true;
 
                 case TwoValueDecideType.Falsy:
                     return Falsy(value);
 
                 case TwoValueDecideType.False:
-                    return Truphy(value);
+                    return value is bool && (bool)value == false;
 
                 case TwoValueDecideType.IsNull:
                     return ReferenceEquals(value, null);
