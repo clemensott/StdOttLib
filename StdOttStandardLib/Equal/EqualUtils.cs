@@ -11,14 +11,26 @@ namespace StdOttStandard.Equal
                 case TwoValueDecideType.Equal:
                     return Equals(compareValue, value);
 
+                case TwoValueDecideType.NotEqual:
+                    return !Equals(compareValue, value);
+
                 case TwoValueDecideType.Reference:
                     return ReferenceEquals(compareValue, value);
+
+                case TwoValueDecideType.NotReference:
+                    return !ReferenceEquals(compareValue, value);
 
                 case TwoValueDecideType.Truthy:
                     return Truphy(value);
 
+                case TwoValueDecideType.True:
+                    return Truphy(value);
+
                 case TwoValueDecideType.Falsy:
                     return Falsy(value);
+
+                case TwoValueDecideType.False:
+                    return Truphy(value);
 
                 case TwoValueDecideType.IsNull:
                     return ReferenceEquals(value, null);
@@ -27,19 +39,35 @@ namespace StdOttStandard.Equal
                     return EqualsEnum(compareValue, value);
 
                 case TwoValueDecideType.Bool:
+                    return (bool)compareValue == (bool)value;
+
+                case TwoValueDecideType.ToBool:
                     return Convert.ToBoolean(compareValue) == Convert.ToBoolean(value);
 
                 case TwoValueDecideType.Int:
+                    return (int)compareValue == (int)value;
+
+                case TwoValueDecideType.ToInt:
                     return Convert.ToInt32(compareValue) == Convert.ToInt32(value);
 
                 case TwoValueDecideType.Long:
+                    return (long)compareValue == (long)value;
+
+                case TwoValueDecideType.ToLong:
                     return Convert.ToInt64(compareValue) == Convert.ToInt64(value);
 
                 case TwoValueDecideType.Double:
+                    return (double)compareValue == (double)value;
+
+                case TwoValueDecideType.ToDouble:
                     return Convert.ToDouble(compareValue) == Convert.ToDouble(value);
 
                 case TwoValueDecideType.String:
                     return compareValue?.ToString() == value?.ToString();
+
+                case TwoValueDecideType.ToString:
+                    return compareValue?.ToString() == value?.ToString();
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
