@@ -108,9 +108,9 @@ namespace StdOttStandard.Linq
             return list.Skip(1);
         }
 
-        public static IEnumerable<Source> ExtractOrDefault<Source>(this IEnumerable<Source> items, out Source first)
+        public static IEnumerable<TSource> ExtractOrDefault<TSource>(this IEnumerable<TSource> items, out TSource first)
         {
-            IEnumerable<Source> list = items.ToBuffer();
+            IEnumerable<TSource> list = items.ToBuffer();
 
             first = list.FirstOrDefault();
             return list.Skip(1);

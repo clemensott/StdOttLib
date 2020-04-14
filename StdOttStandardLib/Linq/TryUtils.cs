@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StdOttStandard.Linq
 {
@@ -211,6 +212,22 @@ namespace StdOttStandard.Linq
                 element = maxItem;
                 return true;
             }
+        }
+
+        public static bool TryExtract<TSource>(this IEnumerable<TSource> items,
+            out IEnumerable<TSource> remaining, out TSource first)
+        {
+            IEnumerable<TSource> list = items.ToBuffer();
+
+            if (list.TryFirst(out first))
+            {
+                remaining = list.Skip(1);
+                return true;
+            }
+
+            first = default(TSource);
+            remaining = Enumerable.Empty<TSource>();
+            return false;
         }
     }
 }
