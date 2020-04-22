@@ -13,8 +13,8 @@
             else yield return "namespace StdOttFramework.Converters";
 
             yield return "{";
-            yield return string.Format("\tpublic delegate object ConvertInputs{0}EventHandler(", c) + Join(", ", "object input{0}", c) + ", int changedInput);";
-            yield return string.Format("\tpublic delegate object ConvertInputs{0}RefEventHandler(", c) + Join(", ", "ref object input{0}", c) + ", int changedInput);";
+            yield return string.Format("\tpublic delegate object ConvertInputs{0}EventHandler(object sender, ", c) + Join(", ", "object input{0}", c) + ", int changedInput, object oldValue);";
+            yield return string.Format("\tpublic delegate object ConvertInputs{0}RefEventHandler(object sender, ", c) + Join(", ", "ref object input{0}", c) + ", int changedInput, object oldValue);";
             yield return "";
             yield return string.Format("\tpublic class MultipleInputs{0}Converter : FrameworkElement", c);
             yield return "\t{";

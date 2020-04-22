@@ -5,8 +5,8 @@ using Windows.UI.Xaml;
 
 namespace StdOttUwp.Converters
 {
-    public delegate object ConvertInputs1EventHandler(object input, int changedInput);
-    public delegate object ConvertInputs1RefEventHandler(ref object input, int changedInput);
+    public delegate object ConvertInputs1EventHandler(object sender, object input, int changedInput, object oldValue);
+    public delegate object ConvertInputs1RefEventHandler(object sender, ref object input, int changedInput, object oldValue);
 
     public class SingleInputConverter : FrameworkElement
     {

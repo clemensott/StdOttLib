@@ -5,8 +5,8 @@ using System.Windows;
 
 namespace StdOttFramework.Converters
 {
-    public delegate object ConvertInputs5EventHandler(object input0, object input1, object input2, object input3, object input4, int changedInput);
-    public delegate object ConvertInputs5RefEventHandler(ref object input0, ref object input1, ref object input2, ref object input3, ref object input4, int changedInput);
+    public delegate object ConvertInputs5EventHandler(object sender, object input0, object input1, object input2, object input3, object input4, int changedInput, object oldValue);
+    public delegate object ConvertInputs5RefEventHandler(object sender, ref object input0, ref object input1, ref object input2, ref object input3, ref object input4, int changedInput, object oldValue);
 
     public class MultipleInputs5Converter : FrameworkElement
     {

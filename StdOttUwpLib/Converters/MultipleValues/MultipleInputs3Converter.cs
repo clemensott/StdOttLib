@@ -5,8 +5,8 @@ using Windows.UI.Xaml;
 
 namespace StdOttUwp.Converters
 {
-    public delegate object ConvertInputs3EventHandler(object input0, object input1, object input2, int changedInput);
-    public delegate object ConvertInputs3RefEventHandler(ref object input0, ref object input1, ref object input2, int changedInput);
+    public delegate object ConvertInputs3EventHandler(object sender, object input0, object input1, object input2, int changedInput, object oldValue);
+    public delegate object ConvertInputs3RefEventHandler(object sender, ref object input0, ref object input1, ref object input2, int changedInput, object oldValue);
 
     public class MultipleInputs3Converter : FrameworkElement
     {
