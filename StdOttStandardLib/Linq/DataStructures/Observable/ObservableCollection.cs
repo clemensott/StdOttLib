@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 
 namespace StdOttStandard.Linq.DataStructures.Observable
 {
@@ -104,8 +103,9 @@ namespace StdOttStandard.Linq.DataStructures.Observable
             if (oldItem is INotifyPropertyChanged oldNotify) oldNotify.PropertyChanged -= Item_PropertyChanged;
 
             base.SetItem(index, newItem);
+            Set?.Invoke(this, new SetItemEventArgs<T>(index, oldItem, newItem));
 
-            if(newItem is INotifyPropertyChanged newNotify) newNotify.PropertyChanged += Item_PropertyChanged;
+            if (newItem is INotifyPropertyChanged newNotify) newNotify.PropertyChanged += Item_PropertyChanged;
 
             RemovedAny?.Invoke(this, new SingleChangeEventArgs<T>(index, oldItem, SingleChangeType.Removed));
             AddedAny?.Invoke(this, new SingleChangeEventArgs<T>(index, newItem, SingleChangeType.Added));
