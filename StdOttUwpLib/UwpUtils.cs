@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 
 namespace StdOttUwp
@@ -41,6 +43,14 @@ namespace StdOttUwp
             if (result == cmdDefault) return true;
             if (result == cmdSecond) return false;
             return null;
+        }
+
+        public static async Task RunSafe(this DispatchedHandler handler, CoreDispatcherPriority priority = CoreDispatcherPriority.Normal)
+        {
+            CoreDispatcher dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+
+            if (dispatcher.HasThreadAccess) handler();
+            else await dispatcher.RunAsync(priority, handler);
         }
     }
 }
