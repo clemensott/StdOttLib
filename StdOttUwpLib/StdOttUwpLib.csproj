@@ -120,6 +120,9 @@
     <Compile Include="Controls\ColorPicker.xaml.cs">
       <DependentUpon>ColorPicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\EnumComboBox.xaml.cs">
+      <DependentUpon>EnumComboBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\IconButton.cs" />
     <Compile Include="Converters\AddDoubleConverter.cs" />
     <Compile Include="Converters\ColorToSolidColorBrushConverter.cs" />
@@ -180,6 +183,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\ColorPicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\EnumComboBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
