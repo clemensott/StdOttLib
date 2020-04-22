@@ -1,17 +1,10 @@
-using System.Collections.Generic;
-using System.Linq;
+using StdOttStandard.Converter.MultipleInputs;
 using Windows.UI.Xaml;
 
 namespace StdOttUwp.Converters
 {
-    public delegate object ConvertInputs5EventHandler(object sender, object input0, object input1, object input2, object input3, object input4, int changedInput, object oldValue);
-    public delegate object ConvertInputs5RefEventHandler(object sender, ref object input0, ref object input1, ref object input2, ref object input3, ref object input4, int changedInput, object oldValue);
-
-    public class MultipleInputs5Converter : FrameworkElement
+    public class MultipleInputs5Converter : MultipleInputsConverter<MultiplesInputsConvert5EventArgs>
     {
-        public static readonly DependencyProperty OutputProperty = DependencyProperty.Register("Output",
-            typeof(object), typeof(MultipleInputs5Converter), new PropertyMetadata(null));
-
         public static readonly DependencyProperty Input0Property =
             DependencyProperty.Register("Input0", typeof(object), typeof(MultipleInputs5Converter),
                 new PropertyMetadata(null, OnInput0PropertyChanged));
@@ -61,45 +54,7 @@ namespace StdOttUwp.Converters
         {
             ((MultipleInputs5Converter)sender).SetOutput(4, e.OldValue);
         }
-
-        private bool isUpdating;
-        private readonly List<ConvertInputs5EventHandler> converts = new List<ConvertInputs5EventHandler>();
-        private readonly List<ConvertInputs5RefEventHandler> convertRefs = new List<ConvertInputs5RefEventHandler>();
-
-        public event ConvertInputs5EventHandler Convert
-        {
-            add
-            {
-                converts.Add(value);
-                SetOutput(-1, null);
-            }
-            remove
-            {
-                converts.Remove(value);
-                SetOutput(-1, null);
-            }
-        }
-
-        public event ConvertInputs5RefEventHandler ConvertRef
-        {
-            add
-            {
-                convertRefs.Add(value);
-                SetOutput(-1, null);
-            }
-            remove
-            {
-                convertRefs.Remove(value);
-                SetOutput(-1, null);
-            }
-        }
-
-        public object Output
-        {
-            get => GetValue(OutputProperty);
-            set => SetValue(OutputProperty, value);
-        }
-
+        
         public object Input0
         {
             get => GetValue(Input0Property);
@@ -129,35 +84,39 @@ namespace StdOttUwp.Converters
             get => GetValue(Input4Property);
             set => SetValue(Input4Property, value);
         }
-
-        private void SetOutput(int changedIndex, object oldValue)
+        
+        protected override void SetOutputNonRef(int changedIndex, object oldValue)
         {
-            if (converts.Count > 0) SetOutputNonRef(changedIndex, oldValue);
-            else if (convertRefs.Count > 0) SetOutputRef(changedIndex, oldValue);
-            else Output = null;
+            MultiplesInputsConvert5EventArgs args = new MultiplesInputsConvert5EventArgs(changedIndex, oldValue)
+            {
+                Input0 = Input0,
+                Input1 = Input1,
+                Input2 = Input2,
+                Input3 = Input3,
+                Input4 = Input4,
+            };
+
+            Output = GetLastConvert()(this, args); 
         }
 
-        private void SetOutputNonRef(int changedIndex, object oldValue)
+        protected override void SetOutputRef(int changedIndex, object oldValue)
         {
-            Output = converts.Last()(this, Input0, Input1, Input2, Input3, Input4, changedIndex, oldValue);
-        }
+            MultiplesInputsConvert5EventArgs args = new MultiplesInputsConvert5EventArgs(changedIndex, oldValue)
+            {
+                Input0 = Input0,
+                Input1 = Input1,
+                Input2 = Input2,
+                Input3 = Input3,
+                Input4 = Input4,
+            };
 
-        private void SetOutputRef(int changedIndex, object oldValue)
-        {
-            if (isUpdating) return;
-            isUpdating = true;
+            Output = GetLastConvertRef()(this, args);
 
-            object input0 = Input0, input1 = Input1, input2 = Input2, input3 = Input3, input4 = Input4;
-
-            Output = convertRefs.Last()(this, ref input0, ref input1, ref input2, ref input3, ref input4, changedIndex, oldValue);
-
-            if (!Equals(Input0, input0)) Input0 = input0;
-            if (!Equals(Input1, input1)) Input1 = input1;
-            if (!Equals(Input2, input2)) Input2 = input2;
-            if (!Equals(Input3, input3)) Input3 = input3;
-            if (!Equals(Input4, input4)) Input4 = input4;
-
-            isUpdating = false;
+            if (!Equals(Input0, args.Input0)) Input0 = args.Input0;
+            if (!Equals(Input1, args.Input1)) Input1 = args.Input1;
+            if (!Equals(Input2, args.Input2)) Input2 = args.Input2;
+            if (!Equals(Input3, args.Input3)) Input3 = args.Input3;
+            if (!Equals(Input4, args.Input4)) Input4 = args.Input4;
         }
     }
 }
