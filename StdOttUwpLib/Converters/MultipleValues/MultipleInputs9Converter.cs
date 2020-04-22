@@ -1,4 +1,3 @@
-using StdOttStandard.Equal;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
@@ -20,7 +19,7 @@ namespace StdOttUwp.Converters
 
         private static void OnInput0PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((MultipleInputs9Converter)sender).SetOutput(0);
+            ((MultipleInputs9Converter)sender).SetOutput(0, e.OldValue);
         }
 
         public static readonly DependencyProperty Input1Property =
@@ -30,7 +29,7 @@ namespace StdOttUwp.Converters
 
         private static void OnInput1PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((MultipleInputs9Converter)sender).SetOutput(1);
+            ((MultipleInputs9Converter)sender).SetOutput(1, e.OldValue);
         }
 
         public static readonly DependencyProperty Input2Property =
@@ -40,7 +39,7 @@ namespace StdOttUwp.Converters
 
         private static void OnInput2PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((MultipleInputs9Converter)sender).SetOutput(2);
+            ((MultipleInputs9Converter)sender).SetOutput(2, e.OldValue);
         }
 
         public static readonly DependencyProperty Input3Property =
@@ -50,7 +49,7 @@ namespace StdOttUwp.Converters
 
         private static void OnInput3PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((MultipleInputs9Converter)sender).SetOutput(3);
+            ((MultipleInputs9Converter)sender).SetOutput(3, e.OldValue);
         }
 
         public static readonly DependencyProperty Input4Property =
@@ -60,7 +59,7 @@ namespace StdOttUwp.Converters
 
         private static void OnInput4PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((MultipleInputs9Converter)sender).SetOutput(4);
+            ((MultipleInputs9Converter)sender).SetOutput(4, e.OldValue);
         }
 
         public static readonly DependencyProperty Input5Property =
@@ -70,7 +69,7 @@ namespace StdOttUwp.Converters
 
         private static void OnInput5PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((MultipleInputs9Converter)sender).SetOutput(5);
+            ((MultipleInputs9Converter)sender).SetOutput(5, e.OldValue);
         }
 
         public static readonly DependencyProperty Input6Property =
@@ -80,7 +79,7 @@ namespace StdOttUwp.Converters
 
         private static void OnInput6PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((MultipleInputs9Converter)sender).SetOutput(6);
+            ((MultipleInputs9Converter)sender).SetOutput(6, e.OldValue);
         }
 
         public static readonly DependencyProperty Input7Property =
@@ -90,7 +89,7 @@ namespace StdOttUwp.Converters
 
         private static void OnInput7PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((MultipleInputs9Converter)sender).SetOutput(7);
+            ((MultipleInputs9Converter)sender).SetOutput(7, e.OldValue);
         }
 
         public static readonly DependencyProperty Input8Property =
@@ -100,7 +99,7 @@ namespace StdOttUwp.Converters
 
         private static void OnInput8PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((MultipleInputs9Converter)sender).SetOutput(8);
+            ((MultipleInputs9Converter)sender).SetOutput(8, e.OldValue);
         }
 
         private bool isUpdating;
@@ -112,12 +111,12 @@ namespace StdOttUwp.Converters
             add
             {
                 converts.Add(value);
-                SetOutput(-1);
+                SetOutput(-1, null);
             }
             remove
             {
                 converts.Remove(value);
-                SetOutput(-1);
+                SetOutput(-1, null);
             }
         }
 
@@ -126,12 +125,12 @@ namespace StdOttUwp.Converters
             add
             {
                 convertRefs.Add(value);
-                SetOutput(-1);
+                SetOutput(-1, null);
             }
             remove
             {
                 convertRefs.Remove(value);
-                SetOutput(-1);
+                SetOutput(-1, null);
             }
         }
 
@@ -195,26 +194,26 @@ namespace StdOttUwp.Converters
             set => SetValue(Input8Property, value);
         }
 
-        private void SetOutput(int changedIndex)
+        private void SetOutput(int changedIndex, object oldValue)
         {
-            if (converts.Count > 0) SetOutputNonRef(changedIndex);
-            else if (convertRefs.Count > 0) SetOutputRef(changedIndex);
+            if (converts.Count > 0) SetOutputNonRef(changedIndex, oldValue);
+            else if (convertRefs.Count > 0) SetOutputRef(changedIndex, oldValue);
             else Output = null;
         }
 
-        private void SetOutputNonRef(int changedIndex)
+        private void SetOutputNonRef(int changedIndex, object oldValue)
         {
-            Output = converts.Last()(Input0, Input1, Input2, Input3, Input4, Input5, Input6, Input7, Input8, changedIndex);
+            Output = converts.Last()(this, Input0, Input1, Input2, Input3, Input4, Input5, Input6, Input7, Input8, changedIndex, oldValue);
         }
 
-        private void SetOutputRef(int changedIndex)
+        private void SetOutputRef(int changedIndex, object oldValue)
         {
             if (isUpdating) return;
             isUpdating = true;
 
             object input0 = Input0, input1 = Input1, input2 = Input2, input3 = Input3, input4 = Input4, input5 = Input5, input6 = Input6, input7 = Input7, input8 = Input8;
 
-            Output = convertRefs.Last()(ref input0, ref input1, ref input2, ref input3, ref input4, ref input5, ref input6, ref input7, ref input8, changedIndex);
+            Output = convertRefs.Last()(this, ref input0, ref input1, ref input2, ref input3, ref input4, ref input5, ref input6, ref input7, ref input8, changedIndex, oldValue);
 
             if (!Equals(Input0, input0)) Input0 = input0;
             if (!Equals(Input1, input1)) Input1 = input1;

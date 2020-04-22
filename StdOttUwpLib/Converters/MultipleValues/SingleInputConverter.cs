@@ -1,4 +1,3 @@
-using StdOttStandard.Equal;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
@@ -20,7 +19,7 @@ namespace StdOttUwp.Converters
 
         private static void OnInputPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((SingleInputConverter)sender).SetOutput(0);
+            ((SingleInputConverter)sender).SetOutput(0, e.OldValue);
         }
 
         private bool isUpdating;
@@ -32,12 +31,12 @@ namespace StdOttUwp.Converters
             add
             {
                 converts.Add(value);
-                SetOutput(-1);
+                SetOutput(-1, null);
             }
             remove
             {
                 converts.Remove(value);
-                SetOutput(-1);
+                SetOutput(-1, null);
             }
         }
 
@@ -46,12 +45,12 @@ namespace StdOttUwp.Converters
             add
             {
                 convertRefs.Add(value);
-                SetOutput(-1);
+                SetOutput(-1, null);
             }
             remove
             {
                 convertRefs.Remove(value);
-                SetOutput(-1);
+                SetOutput(-1, null);
             }
         }
 
@@ -67,26 +66,26 @@ namespace StdOttUwp.Converters
             set => SetValue(InputProperty, value);
         }
 
-        private void SetOutput(int changedIndex)
+        private void SetOutput(int changedIndex, object oldValue)
         {
-            if (converts.Count > 0) SetOutputNonRef(changedIndex);
-            else if (convertRefs.Count > 0) SetOutputRef(changedIndex);
+            if (converts.Count > 0) SetOutputNonRef(changedIndex, oldValue);
+            else if (convertRefs.Count > 0) SetOutputRef(changedIndex, oldValue);
             else Output = null;
         }
 
-        private void SetOutputNonRef(int changedIndex)
+        private void SetOutputNonRef(int changedIndex, object oldValue)
         {
-            Output = converts.Last()(Input, changedIndex);
+            Output = converts.Last()(this, Input, changedIndex, oldValue);
         }
 
-        private void SetOutputRef(int changedIndex)
+        private void SetOutputRef(int changedIndex, object oldValue)
         {
             if (isUpdating) return;
             isUpdating = true;
 
             object input = Input;
 
-            Output = convertRefs.Last()(ref input, changedIndex);
+            Output = convertRefs.Last()(this, ref input, changedIndex, oldValue);
 
             if (!Equals(Input, input)) Input = input;
 

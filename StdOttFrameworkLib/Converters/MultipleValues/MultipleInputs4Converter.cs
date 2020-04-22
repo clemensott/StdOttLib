@@ -1,4 +1,3 @@
-using StdOttStandard.Equal;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -20,7 +19,7 @@ namespace StdOttFramework.Converters
 
         private static void OnInput0PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((MultipleInputs4Converter)sender).SetOutput(0);
+            ((MultipleInputs4Converter)sender).SetOutput(0, e.OldValue);
         }
 
         public static readonly DependencyProperty Input1Property =
@@ -30,7 +29,7 @@ namespace StdOttFramework.Converters
 
         private static void OnInput1PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((MultipleInputs4Converter)sender).SetOutput(1);
+            ((MultipleInputs4Converter)sender).SetOutput(1, e.OldValue);
         }
 
         public static readonly DependencyProperty Input2Property =
@@ -40,7 +39,7 @@ namespace StdOttFramework.Converters
 
         private static void OnInput2PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((MultipleInputs4Converter)sender).SetOutput(2);
+            ((MultipleInputs4Converter)sender).SetOutput(2, e.OldValue);
         }
 
         public static readonly DependencyProperty Input3Property =
@@ -50,7 +49,7 @@ namespace StdOttFramework.Converters
 
         private static void OnInput3PropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            ((MultipleInputs4Converter)sender).SetOutput(3);
+            ((MultipleInputs4Converter)sender).SetOutput(3, e.OldValue);
         }
 
         private bool isUpdating;
@@ -62,12 +61,12 @@ namespace StdOttFramework.Converters
             add
             {
                 converts.Add(value);
-                SetOutput(-1);
+                SetOutput(-1, null);
             }
             remove
             {
                 converts.Remove(value);
-                SetOutput(-1);
+                SetOutput(-1, null);
             }
         }
 
@@ -76,12 +75,12 @@ namespace StdOttFramework.Converters
             add
             {
                 convertRefs.Add(value);
-                SetOutput(-1);
+                SetOutput(-1, null);
             }
             remove
             {
                 convertRefs.Remove(value);
-                SetOutput(-1);
+                SetOutput(-1, null);
             }
         }
 
@@ -115,26 +114,26 @@ namespace StdOttFramework.Converters
             set => SetValue(Input3Property, value);
         }
 
-        private void SetOutput(int changedIndex)
+        private void SetOutput(int changedIndex, object oldValue)
         {
-            if (converts.Count > 0) SetOutputNonRef(changedIndex);
-            else if (convertRefs.Count > 0) SetOutputRef(changedIndex);
+            if (converts.Count > 0) SetOutputNonRef(changedIndex, oldValue);
+            else if (convertRefs.Count > 0) SetOutputRef(changedIndex, oldValue);
             else Output = null;
         }
 
-        private void SetOutputNonRef(int changedIndex)
+        private void SetOutputNonRef(int changedIndex, object oldValue)
         {
-            Output = converts.Last()(Input0, Input1, Input2, Input3, changedIndex);
+            Output = converts.Last()(this, Input0, Input1, Input2, Input3, changedIndex, oldValue);
         }
 
-        private void SetOutputRef(int changedIndex)
+        private void SetOutputRef(int changedIndex, object oldValue)
         {
             if (isUpdating) return;
             isUpdating = true;
 
             object input0 = Input0, input1 = Input1, input2 = Input2, input3 = Input3;
 
-            Output = convertRefs.Last()(ref input0, ref input1, ref input2, ref input3, changedIndex);
+            Output = convertRefs.Last()(this, ref input0, ref input1, ref input2, ref input3, changedIndex, oldValue);
 
             if (!Equals(Input0, input0)) Input0 = input0;
             if (!Equals(Input1, input1)) Input1 = input1;
