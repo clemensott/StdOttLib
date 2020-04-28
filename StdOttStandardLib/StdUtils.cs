@@ -11,6 +11,10 @@ namespace StdOttStandard
 {
     public static class StdUtils
     {
+        private static Random rnd;
+
+        public static Random Random => rnd ?? (rnd = new Random());
+
         public static string ToString(TimeSpan span, bool includeMillis = false)
         {
             string text = string.Empty;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StdOttStandard.Linq.Sort;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -133,6 +134,12 @@ namespace StdOttStandard.Linq
                     queue.Enqueue(subItem);
                 }
             }
+        }
+
+        public static IEnumerable<TSource> Shuffle<TSource>(this IEnumerable<TSource> src)
+        {
+            Random rnd = StdUtils.Random;
+            return src.MergeSort(item => rnd.Next());
         }
     }
 }
