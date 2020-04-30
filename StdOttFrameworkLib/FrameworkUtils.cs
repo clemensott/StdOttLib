@@ -18,9 +18,9 @@ namespace StdOttFramework
             return Dispatcher.CurrentDispatcher.Invoke(func);
         }
 
-        public static string GetFullPath(string fileName)
+        public static string GetFullPathToExe(string relativePathToExe)
         {
-            return Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), fileName);
+            return Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), relativePathToExe);
         }
 
         public static CroppedBitmap CropImage(BitmapSource bmp, double ratio)

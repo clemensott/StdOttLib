@@ -148,7 +148,7 @@ namespace StdOttFramework.RestoreWindow
 
             string windowName = window.GetType().FullName;
 
-            return FrameworkUtils.GetFullPath(windowName.Replace('.', '_') + ".xml");
+            return FrameworkUtils.GetFullPathToExe(windowName.Replace('.', '_') + ".xml");
         }
 
         private static void FitRestoreData(RestoreWindowData data)
