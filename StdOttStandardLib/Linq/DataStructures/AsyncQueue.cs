@@ -46,7 +46,7 @@ namespace StdOttStandard.Linq.DataStructures
 
         public async Task Enqueue(IEnumerable<T> items)
         {
-            await semSem.WaitAsync();
+            await semSem.WaitAsync().ConfigureAwait(false);
 
             IsEnd = false;
             foreach (T item in items) queue.Enqueue(item);
@@ -61,7 +61,7 @@ namespace StdOttStandard.Linq.DataStructures
             {
                 try
                 {
-                    await semSem.WaitAsync();
+                    await semSem.WaitAsync().ConfigureAwait(false);
 
                     if (queue.Count > 0) return (false, queue.Dequeue());
                     if (IsEnd) return (true, default(T));
@@ -71,7 +71,7 @@ namespace StdOttStandard.Linq.DataStructures
                     semSem.Release();
                 }
 
-                await semQueue.WaitAsync();
+                await semQueue.WaitAsync().ConfigureAwait(false);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StdOttStandard.AsyncResult
@@ -13,6 +14,8 @@ namespace StdOttStandard.AsyncResult
 
         public bool HasResult { get; private set; }
 
+        public Exception Exception { get; private set; }
+
         public AsyncResult()
         {
             sem = new SemaphoreSlim(0);
@@ -21,7 +24,9 @@ namespace StdOttStandard.AsyncResult
 
         private async Task<TOut> GetValue()
         {
-            await sem.WaitAsync();
+            await sem.WaitAsync().ConfigureAwait(false);
+
+            if (Exception != null) throw Exception;
 
             return Result;
         }
@@ -30,6 +35,13 @@ namespace StdOttStandard.AsyncResult
         {
             Result = value;
             HasResult = true;
+
+            sem.Release();
+        }
+
+        public void ThrowException(Exception exception)
+        {
+            Exception = exception;
 
             sem.Release();
         }
