@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Data;
 
 namespace StdOttUwp.Converters
 {
-    public abstract class EnumConverter : DependencyObject, IValueConverter
+    public class EnumConverter : DependencyObject, IValueConverter
     {
         public static readonly DependencyProperty EnumTypeProperty = DependencyProperty.Register("EnumType",
             typeof(Type), typeof(EnumConverter), new PropertyMetadata(null));
@@ -42,7 +42,10 @@ namespace StdOttUwp.Converters
 
         protected virtual Enum GetValue(string name)
         {
-            return (Enum)(EnumType != null ? Enum.Parse(EnumType, name) : Enum.Parse(Example.GetType(), name));
+            if (EnumType != null) return (Enum)Enum.Parse(EnumType, name, true);
+            if (Example != null) return (Enum)Enum.Parse(Example.GetType(), name, true);
+
+            return (Enum)Enum.Parse(currentValue.GetType(), name, true);
         }
     }
 }
