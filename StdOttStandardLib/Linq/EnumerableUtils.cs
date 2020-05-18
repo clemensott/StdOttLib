@@ -15,12 +15,23 @@ namespace StdOttStandard.Linq
             return enum1.SequenceEqual(enum2);
         }
 
-        public static bool BothNullOrSequenceEqual<T>(this IEnumerable<T> enum1, IEnumerable<T> enum2, IEqualityComparer<T> comparer)
+        public static bool BothNullOrSequenceEqual<T>(this IEnumerable<T> enum1, IEnumerable<T> enum2,
+            IEqualityComparer<T> comparer)
         {
             if (ReferenceEquals(enum1, enum2)) return true;
             if (enum1 == null || enum2 == null) return false;
 
             return enum1.SequenceEqual(enum2, comparer);
+        }
+
+        public static string Join(this IEnumerable<string> src, string separator = "\r\n")
+        {
+            return string.Join(separator, src);
+        }
+
+        public static string Join<T>(this IEnumerable<T> src, string separator = "\r\n")
+        {
+            return string.Join(separator, src);
         }
 
         public static int IndexOf(this IEnumerable enumerable, object searchItem)
