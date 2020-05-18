@@ -29,25 +29,26 @@ namespace StdOttStandard
             return text.Replace(' ', '0');
         }
 
-        public static string GetFormattedFileSize(long totalSize, int digits = 4, int maxValue = 1024)
+        public static string GetFormattedFileSize(long totalBytes, int digits = 4, int maxValue = 1024)
         {
             string[] endings = new string[] {"B", "kB", "MB", "GB", "TB", "PB", "EB"};
-            double unitSize = Convert.ToDouble(totalSize);
+            double size = Convert.ToDouble(totalBytes);
             string ending = endings.Last();
 
             foreach (string end in endings)
             {
-                if (unitSize < maxValue)
+                if (size < maxValue)
                 {
                     ending = end;
                     break;
                 }
 
-                unitSize /= 1024.0;
+                size /= 1024.0;
             }
 
-            int beforeDigits = (int)Math.Ceiling(Math.Log10(unitSize));
-            double roundedSize = Math.Round(unitSize, beforeDigits < digits ? digits - beforeDigits : 0);
+            int beforeDigits = (int)Math.Ceiling(Math.Log10(size));
+            int roundDigits = beforeDigits < digits ? digits - beforeDigits : 0;
+            double roundedSize = Math.Round(size, roundDigits, MidpointRounding.ToEven);
 
             return $"{roundedSize} {ending}";
         }
@@ -83,12 +84,7 @@ namespace StdOttStandard
         {
             if (text.Length < startIndex + with.Length) return false;
 
-            for (int i = 0; i < with.Length; i++)
-            {
-                if (text[startIndex + i] != with[i]) return false;
-            }
-
-            return true;
+            return !with.Where((t, i) => text[startIndex + i] != t).Any();
         }
 
         public static (int index, bool overflow, bool underflow) OffsetIndex(int index, int count, int offset)
