@@ -98,7 +98,7 @@ namespace StdOttStandard.Equal
             }
 
             result = false;
-            return true;
+            return false;
         }
 
         public static bool Falsy(object obj)
