@@ -29,6 +29,29 @@ namespace StdOttStandard
             return text.Replace(' ', '0');
         }
 
+        public static string GetFormattedFileSize(long totalSize, int digits = 4, int maxValue = 1024)
+        {
+            string[] endings = new string[] {"B", "kB", "MB", "GB", "TB", "PB", "EB"};
+            double unitSize = Convert.ToDouble(totalSize);
+            string ending = endings.Last();
+
+            foreach (string end in endings)
+            {
+                if (unitSize < maxValue)
+                {
+                    ending = end;
+                    break;
+                }
+
+                unitSize /= 1024.0;
+            }
+
+            int beforeDigits = (int)Math.Ceiling(Math.Log10(unitSize));
+            double roundedSize = Math.Round(unitSize, beforeDigits < digits ? digits - beforeDigits : 0);
+
+            return $"{roundedSize} {ending}";
+        }
+
         public static IEnumerable<string> Split(this string text, params string[] separators)
         {
             string value = string.Empty;
