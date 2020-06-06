@@ -31,7 +31,7 @@ namespace StdOttStandard
 
         public static string GetFormattedFileSize(long totalBytes, int digits = 4, int maxValue = 1024)
         {
-            string[] endings = new string[] {"B", "kB", "MB", "GB", "TB", "PB", "EB"};
+            string[] endings = new string[] { "B", "kB", "MB", "GB", "TB", "PB", "EB" };
             double size = Convert.ToDouble(totalBytes);
             string ending = endings.Last();
 
@@ -193,6 +193,39 @@ namespace StdOttStandard
                 destX = (wouldWidth - destWidth) / 2;
                 destY = 0;
             }
+        }
+
+        public static Task ToNotNull(this Task task)
+        {
+            return task ?? Task.CompletedTask;
+        }
+
+        public static Task<TResult> ToNotNull<TResult>(this Task<TResult> task, TResult fallbackValue = default(TResult))
+        {
+            return task ?? Task.FromResult(fallbackValue);
+        }
+
+        public static async Task CopyToAsync(this Stream src, Stream dest, int bufferSize, Action<long> onProgress)
+        {
+            int read;
+            long progress = 0;
+            Task writeTask = Task.CompletedTask;
+            byte[] buffer = new byte[bufferSize];
+            Task<int> readTask = src.ReadAsync(buffer, 0, buffer.Length);
+
+            do
+            {
+                await writeTask;
+                read = await readTask;
+
+                if (read == 0) return;
+                
+                writeTask = dest.WriteAsync(buffer, 0, read);
+                readTask = src.ReadAsync(buffer, 0, buffer.Length);
+
+                progress += read;
+                onProgress(progress);
+            } while (read > 0);
         }
 
         /// <summary>

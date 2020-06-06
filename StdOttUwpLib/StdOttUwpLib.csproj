@@ -167,6 +167,7 @@
     <Compile Include="Converters\ToTwoValues\FalsyConverter.cs" />
     <Compile Include="Converters\ToTwoValues\TruthyConverter.cs" />
     <Compile Include="Converters\ValueConverter.cs" />
+    <Compile Include="MessageDialogUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ApplicationDataObjects\StringTreeComparer.cs" />
     <Compile Include="UwpUtils.cs" />
