@@ -67,12 +67,18 @@ namespace StdOttUwp
 
         public static Task<ContentDialogResult> ShowContentAsync(object content, string title = null,
             string closeButtonText = "Close", string primaryButtonText = null, string secondaryButtonText = null,
-            ContentDialogButton defaultButton = ContentDialogButton.Close)
+            ContentDialogButton? defaultButton = null)
         {
+            ContentDialogButton button;
+            if (defaultButton.HasValue) button = defaultButton.Value;
+            else if (!string.IsNullOrWhiteSpace(primaryButtonText)) button = ContentDialogButton.Primary;
+            else if (!string.IsNullOrWhiteSpace(secondaryButtonText)) button = ContentDialogButton.Secondary;
+            else button = ContentDialogButton.Close;
+
             ContentDialog dialog = new ContentDialog()
             {
                 Content = content,
-                DefaultButton = defaultButton,
+                DefaultButton =  button,
             };
 
             if (!string.IsNullOrWhiteSpace(title)) dialog.Title = title;
