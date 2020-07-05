@@ -5,7 +5,6 @@ using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.Core;
-using Windows.UI.Popups;
 
 namespace StdOttUwp
 {

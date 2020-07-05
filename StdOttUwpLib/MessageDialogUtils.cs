@@ -2,10 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Popups;
+using Windows.UI.Xaml.Controls;
 
 namespace StdOttUwp
 {
-    public static class MessageDialogUtils
+    public static class DialogUtils
     {
         private static readonly SemaphoreSlim showDialogSem = new SemaphoreSlim(1);
 
@@ -23,22 +24,33 @@ namespace StdOttUwp
             }
         }
 
-        public static Task ShowSafeAsync(string content)
+        public static async Task<ContentDialogResult> ShowSafeAsync(this ContentDialog dialog)
         {
-            return new MessageDialog(content).ShowSafeAsync();
+            await showDialogSem.WaitAsync();
+
+            try
+            {
+                return await dialog.ShowAsync();
+            }
+            finally
+            {
+                showDialogSem.Release();
+            }
         }
 
-        public static Task ShowSafeAsync(string content, string title)
+        public static Task ShowSafeAsync(string content, string title = null)
         {
-            return new MessageDialog(content, title).ShowSafeAsync();
+            return string.IsNullOrWhiteSpace(title) ?
+                new MessageDialog(content).ShowSafeAsync() :
+                new MessageDialog(content, title).ShowSafeAsync();
         }
 
-        public static Task ShowSafeAsync(object obj, string title)
+        public static Task ShowSafeAsync(object obj, string title = null)
         {
-            return ShowSafeAsync(obj.ToString(), title);
+            return ShowSafeAsync(obj?.ToString() ?? "<Null>", title);
         }
 
-        public static async Task<bool> Binary(string message, string title, string defaultOptionText, string cancelOptionText)
+        public static async Task<bool> ShowTwoOptionsAsync(string message, string title, string defaultOptionText, string cancelOptionText)
         {
             MessageDialog dialog = new MessageDialog(message, title);
             IUICommand cmdDefault = new UICommand(defaultOptionText);
@@ -53,32 +65,37 @@ namespace StdOttUwp
             return result == cmdDefault;
         }
 
-        /// <summary>
-        /// Return values: default = true , cancel = default and third option = null.
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="title"></param>
-        /// <param name="defaultOptionText"></param>
-        /// <param name="cancelOptionText"></param>
-        /// <param name="thirdOptionText"></param>
-        /// <returns></returns>
-        public static async Task<bool?> Threestate(string message, string title, string defaultOptionText, string cancelOptionText, string thirdOptionText)
+        public static Task<ContentDialogResult> ShowContentAsync(object content, string title = null,
+            string closeButtonText = "Close", string primaryButtonText = null, string secondaryButtonText = null,
+            ContentDialogButton defaultButton = ContentDialogButton.Close)
         {
-            MessageDialog dialog = new MessageDialog(message, title);
-            IUICommand cmdDefault = new UICommand(defaultOptionText);
-            IUICommand cmdSecond = new UICommand(cancelOptionText);
-            IUICommand cmdThird = new UICommand(thirdOptionText);
-            dialog.Commands.Add(cmdDefault);
-            dialog.Commands.Add(cmdSecond);
-            dialog.Commands.Add(cmdThird);
-            dialog.DefaultCommandIndex = 0;
-            dialog.CancelCommandIndex = 1;
+            ContentDialog dialog = new ContentDialog()
+            {
+                Content = content,
+                DefaultButton = defaultButton,
+            };
 
-            IUICommand result = await dialog.ShowSafeAsync();
+            if (!string.IsNullOrWhiteSpace(title)) dialog.Title = title;
+            if (!string.IsNullOrWhiteSpace(primaryButtonText))
+            {
+                dialog.PrimaryButtonText = primaryButtonText;
+                dialog.IsPrimaryButtonEnabled = true;
+            }
+            if (!string.IsNullOrWhiteSpace(secondaryButtonText))
+            {
+                dialog.SecondaryButtonText = secondaryButtonText;
+                dialog.IsSecondaryButtonEnabled = true;
+            }
+            if (!string.IsNullOrWhiteSpace(closeButtonText)) dialog.CloseButtonText = closeButtonText;
 
-            if (result == cmdDefault) return true;
-            if (result == cmdSecond) return false;
-            return null;
+            return dialog.ShowSafeAsync();
+        }
+
+        public static Task<ContentDialogResult> ShowYesNoCancelContentAsync(object content, string title = null,
+            string closeButtonText = "Cancel", string primaryButtonText = "Yes", string secondaryButtonText = "No",
+            ContentDialogButton defaultButton = ContentDialogButton.Primary)
+        {
+            return ShowContentAsync(content, title, closeButtonText, primaryButtonText, secondaryButtonText, defaultButton);
         }
     }
 }
