@@ -10,6 +10,12 @@ namespace StdOttStandard.Linq
             return pairs.Select(p => (p.Key, p.Value));
         }
 
+        public static IEnumerable<(int index, TKey key, TValue value)> ToTuplesWithIndex<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> pairs)
+        {
+            int index = 0;
+            return pairs.Select(p => (index++, p.Key, p.Value));
+        }
+
         public static IEnumerable<KeyValuePair<TKey, TValue>> CreatePairs<TKey, TValue>(TKey key, TValue value)
         {
             yield return new KeyValuePair<TKey, TValue>(key, value);
