@@ -5,6 +5,7 @@ using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
 
 namespace StdOttUwp
 {
@@ -38,6 +39,29 @@ namespace StdOttUwp
         public static IAsyncOperation<TResult> ToNotNull<TResult>(this IAsyncOperation<TResult> task, TResult fallbackValue = default(TResult))
         {
             return task ?? AsyncInfo.Run((_) => Task.FromResult(fallbackValue));
+        }
+
+        public static T GetDataContext<T>(object sender)
+        {
+            return (T)((FrameworkElement)sender).DataContext;
+        }
+
+        public static bool TryGetDataContext<T>(object sender, out T dataContext)
+        {
+            if (sender is FrameworkElement element && element.DataContext is T)
+            {
+                dataContext = (T)element.DataContext;
+                return true;
+            }
+
+            dataContext = default(T);
+            return false;
+        }
+
+        public static T GetDataContextOrDefault<T>(object sender)
+        {
+            TryGetDataContext(sender, out T dataContext);
+            return dataContext;
         }
     }
 }
