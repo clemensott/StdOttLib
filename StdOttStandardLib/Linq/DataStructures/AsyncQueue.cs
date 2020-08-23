@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace StdOttStandard.Linq.DataStructures
 {
-    public class AsyncQueue<T>
+    public class AsyncQueue<T> : IEnumerable<T>
     {
         private readonly SemaphoreSlim semSem, semQueue;
         private readonly Queue<T> queue;
@@ -73,6 +74,16 @@ namespace StdOttStandard.Linq.DataStructures
 
                 await semQueue.WaitAsync().ConfigureAwait(false);
             }
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return queue.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
