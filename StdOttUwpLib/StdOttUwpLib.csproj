@@ -139,6 +139,7 @@
     <Compile Include="Converters\MultipleInputs\MultipleInputs7Converter.cs" />
     <Compile Include="Converters\MultipleInputs\MultipleInputs8Converter.cs" />
     <Compile Include="Converters\MultipleInputs\MultipleInputs9Converter.cs" />
+    <Compile Include="Converters\StringsToLinesConverter.cs" />
     <Compile Include="Converters\ToTwoValues\Visibility\CollapsedVisibleConverter.cs" />
     <Compile Include="Converters\ToTwoValues\Visibility\VisibleCollapsedConverter.cs" />
     <Compile Include="Converters\TimeSpanToStringConverter.cs" />
