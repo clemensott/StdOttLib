@@ -176,6 +176,25 @@ namespace StdOttStandard
             }
         }
 
+        public static void Crop(uint srcWidth, uint srcHeight, double destRatio,
+            out uint destX, out uint destY, out uint destWidth, out uint destHeight)
+        {
+            if (srcWidth < srcHeight * destRatio)
+            {
+                destWidth = srcWidth;
+                destHeight = (uint)(srcWidth / destRatio);
+                destX = 0;
+                destY = (srcHeight - destHeight) / 2;
+            }
+            else
+            {
+                destWidth = (uint)(srcHeight * destRatio);
+                destHeight = srcHeight;
+                destX = (srcWidth - destWidth) / 2;
+                destY = 0;
+            }
+        }
+
         public static void Crop(uint srcWidth, uint srcHeight, uint destWidth, uint destHeight,
             out uint destX, out uint destY, out uint wouldWidth, out uint wouldHeight)
         {
@@ -219,7 +238,7 @@ namespace StdOttStandard
                 read = await readTask;
 
                 if (read == 0) return;
-                
+
                 writeTask = dest.WriteAsync(buffer, 0, read);
                 readTask = src.ReadAsync(buffer, 0, buffer.Length);
 
