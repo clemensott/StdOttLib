@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace StdOttStandard
+namespace StdOttStandard.Linq.DataStructures
 {
     public class DistinctCollection<T> : ObservableCollection<T>
     {
