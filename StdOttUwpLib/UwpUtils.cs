@@ -43,14 +43,24 @@ namespace StdOttUwp
 
         public static T GetDataContext<T>(object sender)
         {
-            return (T)((FrameworkElement)sender).DataContext;
+            return ((FrameworkElement)sender).GetDataContext<T>();
+        }
+
+        public static T GetDataContext<T>(this FrameworkElement sender)
+        {
+            return (T)sender.DataContext;
         }
 
         public static bool TryGetDataContext<T>(object sender, out T dataContext)
         {
-            if (sender is FrameworkElement element && element.DataContext is T)
+            return TryGetDataContext<T>(sender as FrameworkElement, out dataContext);
+        }
+
+        public static bool TryGetDataContext<T>(this FrameworkElement sender, out T dataContext)
+        {
+            if (sender?.DataContext is T)
             {
-                dataContext = (T)element.DataContext;
+                dataContext = (T)sender.DataContext;
                 return true;
             }
 
@@ -60,8 +70,12 @@ namespace StdOttUwp
 
         public static T GetDataContextOrDefault<T>(object sender)
         {
-            TryGetDataContext(sender, out T dataContext);
-            return dataContext;
+            return TryGetDataContext(sender, out T dataContext) ? dataContext : default(T);
+        }
+
+        public static T GetDataContextOrDefault<T>(this FrameworkElement sender)
+        {
+            return TryGetDataContext(sender, out T dataContext) ? dataContext : default(T);
         }
     }
 }
