@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace StdOttStandard.Linq.DataStructures.Observable
 {
-    public class ObservableCollection<T> : System.Collections.ObjectModel.ObservableCollection<T>
+    public class ObservableCollection<T> : System.Collections.ObjectModel.ObservableCollection<T>, IReadOnlyObservableCollection<T>
     {
         private readonly IDictionary<string, IList<EventHandler<ItemPropertyChangedEventArgs<T>>>> itemPropertyChangedEventHandlers;
 
@@ -123,6 +123,11 @@ namespace StdOttStandard.Linq.DataStructures.Observable
             {
                 handler?.Invoke(this, args);
             }
+        }
+
+        public ReadonlyObservableCollection<T> AsReadonly()
+        {
+            return new ReadonlyObservableCollection<T>(this);
         }
     }
 }
