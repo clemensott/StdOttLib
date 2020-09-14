@@ -314,5 +314,17 @@ namespace StdOttStandard
             a = b;
             b = tmp;
         }
+
+        public static int LeastCommonDenominator(int a, int b)
+        {
+            return (a * b) / GreatestCommonDivisor(a, b);
+        }
+
+        public static int GreatestCommonDivisor(int a, int b)
+        {
+            if (a == 0) return b;
+
+            return GreatestCommonDivisor(b % a, a);
+        }
     }
 }

@@ -201,5 +201,27 @@ namespace StdOttStandard.Linq
 
             return value;
         }
+
+        public static int LeastCommonDenominator(IEnumerable<int> src)
+        {
+            int lcd;
+            foreach (int no in src.Extract(out lcd))
+            {
+                lcd = StdUtils.LeastCommonDenominator(lcd, no);
+            }
+
+            return lcd;
+        }
+
+        public static int GreatestCommonDivisor(IEnumerable<int> src)
+        {
+            int gcd;
+            foreach (int no in src.Extract(out gcd))
+            {
+                gcd = StdUtils.GreatestCommonDivisor(gcd, no);
+            }
+
+            return gcd;
+        }
     }
 }
