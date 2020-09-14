@@ -56,6 +56,26 @@ namespace StdOttStandard.Linq.DataStructures
             semSem.Release();
         }
 
+        public async Task<T> DequeueOrDefault()
+        {
+            while (true)
+            {
+                try
+                {
+                    await semSem.WaitAsync().ConfigureAwait(false);
+
+                    if (queue.Count > 0) return queue.Dequeue();
+                    if (IsEnd) return default(T);
+                }
+                finally
+                {
+                    semSem.Release();
+                }
+
+                await semQueue.WaitAsync().ConfigureAwait(false);
+            }
+        }
+
         public async Task<(bool isEnd, T item)> Dequeue()
         {
             while (true)
