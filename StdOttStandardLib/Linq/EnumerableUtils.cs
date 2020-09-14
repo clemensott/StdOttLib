@@ -164,5 +164,42 @@ namespace StdOttStandard.Linq
                 yield return array[i];
             }
         }
+
+        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key) where TValue : new()
+        {
+            TValue value;
+            if (!dict.TryGetValue(key, out value))
+            {
+                value = new TValue();
+                dict.Add(key, value);
+            }
+
+            return value;
+        }
+
+        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Action<TValue> initAction) where TValue : new()
+        {
+            TValue value;
+            if (!dict.TryGetValue(key, out value))
+            {
+                value = new TValue();
+                initAction?.Invoke(value);
+                dict.Add(key, value);
+            }
+
+            return value;
+        }
+
+        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, Func<TValue> createFunc)
+        {
+            TValue value;
+            if (!dict.TryGetValue(key, out value))
+            {
+                value = createFunc();
+                dict.Add(key, value);
+            }
+
+            return value;
+        }
     }
 }
