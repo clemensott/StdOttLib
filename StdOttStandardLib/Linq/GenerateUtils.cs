@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using StdOttStandard.Linq.DataStructures;
 
 namespace StdOttStandard.Linq
 {
@@ -140,6 +141,23 @@ namespace StdOttStandard.Linq
         {
             Random rnd = StdUtils.Random;
             return src.MergeSort(item => rnd.Next());
+        }
+
+        public static IEnumerable<IList<TSource>> ToGroupsOf<TSource>(this IEnumerable<TSource> src, int groupSize)
+        {
+            List<TSource> group = new List<TSource>();
+
+            foreach (TSource item in src)
+            {
+                group.Add(item);
+
+                if (group.Count != groupSize) continue;
+
+                yield return group;
+                group = new List<TSource>();
+            }
+
+            if (group.Count > 0) yield return group;
         }
     }
 }
