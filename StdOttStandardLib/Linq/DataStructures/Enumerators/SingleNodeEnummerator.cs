@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace StdOttStandard.Linq.DataStructures
+namespace StdOttStandard.Linq.DataStructures.Enumerators
 {
     internal class SingleNodeEnummerator<T> : IEnumerator<T>
     {

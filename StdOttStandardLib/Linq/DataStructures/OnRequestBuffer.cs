@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace StdOttStandard
+namespace StdOttStandard.Linq.DataStructures
 {
     public class OnRequestBuffer<T> : IEnumerable<T>
     {

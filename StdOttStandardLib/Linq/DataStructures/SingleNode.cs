@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace StdOttStandard.Linq.DataStructures
+﻿namespace StdOttStandard.Linq.DataStructures
 {
     class SingleNode<T>
     {
