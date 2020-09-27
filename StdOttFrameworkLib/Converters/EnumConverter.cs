@@ -41,7 +41,7 @@ namespace StdOttFramework.Converters
         {
             currentValue = (Enum)value;
 
-            return currentValue.Equals(GetValue(parameter?.ToString()));
+            return currentValue.Equals(GetValue(parameter.ToString()));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -53,7 +53,10 @@ namespace StdOttFramework.Converters
 
         protected virtual Enum GetValue(string name)
         {
-            return (Enum)(EnumType != null ? Enum.Parse(EnumType, name) : Enum.Parse(Example.GetType(), name));
+            if (EnumType != null) return (Enum)Enum.Parse(EnumType, name, true);
+            if (Example != null) return (Enum)Enum.Parse(Example.GetType(), name, true);
+
+            return (Enum)Enum.Parse(currentValue.GetType(), name, true);
         }
     }
 }

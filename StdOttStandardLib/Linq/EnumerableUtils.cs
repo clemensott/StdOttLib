@@ -7,6 +7,14 @@ namespace StdOttStandard.Linq
 {
     public static class EnumerableUtils
     {
+        public static void ForEach<TSource>(this IEnumerable<TSource> src, Action<TSource> action)
+        {
+            foreach (TSource item in src)
+            {
+                action(item);
+            }
+        }
+
         public static bool BothNullOrSequenceEqual<T>(this IEnumerable<T> enum1, IEnumerable<T> enum2)
         {
             if (ReferenceEquals(enum1, enum2)) return true;

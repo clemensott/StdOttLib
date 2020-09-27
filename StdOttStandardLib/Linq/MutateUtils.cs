@@ -1,12 +1,21 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace StdOttStandard.Linq
 {
     public static class MutateUtils
     {
+        public static void RemoveLastToCount(this IList list, int count)
+        {
+            while (list.Count > count) list.RemoveAt(list.Count - 1);
+        }
+
+        public static void RemoveLastToCount<T>(this IList<T> list, int count)
+        {
+            while (list.Count > count) list.RemoveAt(list.Count - 1);
+        }
+
         public static void RemoveLast(this IList list, int count = 1)
         {
             for (int i = 0; i < count && list.Count > 0; i++)
