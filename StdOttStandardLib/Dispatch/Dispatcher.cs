@@ -52,7 +52,14 @@ namespace StdOttStandard.Dispatch
             return (TResult)handle.Result;
         }
 
-        public async Task<TResult> Run<TResult>(Func<Task<TResult>> func)
+        public async Task RunTask(Func<Task> func)
+        {
+            DispatcherHandle handle = new DispatcherHandle(func);
+            await Run(handle);
+            await (Task)handle.Result;
+        }
+
+        public async Task<TResult> RunTask<TResult>(Func<Task<TResult>> func)
         {
             DispatcherHandle handle = new DispatcherHandle(() => func());
             await Run(handle);
