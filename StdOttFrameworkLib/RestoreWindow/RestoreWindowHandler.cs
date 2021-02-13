@@ -1,6 +1,7 @@
 ﻿using StdOttStandard;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 
 namespace StdOttFramework.RestoreWindow
@@ -113,7 +114,7 @@ namespace StdOttFramework.RestoreWindow
             string filePath = GetFilePath(settings, window);
             RestoreWindowData data = StdUtils.XmlDeserializeFile<RestoreWindowData>(filePath);
 
-            data = FitRestoreData(data);
+            FitRestoreData(data);
 
             WindowState restoreState = settings.OverrideMinimized.HasValue && data.WindowState == WindowState.Minimized ?
                 settings.OverrideMinimized.Value : data.WindowState;
@@ -151,7 +152,7 @@ namespace StdOttFramework.RestoreWindow
             return FrameworkUtils.GetFullPathToExe(windowName.Replace('.', '_') + ".xml");
         }
 
-        private static RestoreWindowData FitRestoreData(RestoreWindowData data)
+        private static void FitRestoreData(RestoreWindowData data)
         {
             if (data.Width > SystemParameters.VirtualScreenWidth) data.Width = SystemParameters.VirtualScreenWidth;
             if (data.Height > SystemParameters.VirtualScreenHeight) data.Height = SystemParameters.VirtualScreenHeight;
@@ -167,8 +168,6 @@ namespace StdOttFramework.RestoreWindow
             {
                 data.Top = SystemParameters.VirtualScreenTop + SystemParameters.VirtualScreenHeight - data.Height;
             }
-
-            return data;
         }
 
         private void TryStore()
@@ -177,7 +176,15 @@ namespace StdOttFramework.RestoreWindow
             {
                 Store();
             }
-            catch { }
+            catch (Exception e)
+            {
+                try
+                {
+                    string filePath = $"Error_{GetFilePath(settings, window)}.txt";
+                    File.WriteAllText(filePath, e.ToString());
+                }
+                catch { }
+            }
         }
 
         public void Store()
