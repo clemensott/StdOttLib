@@ -68,7 +68,7 @@ namespace StdOttUwp.ApplicationDataObjects
                 string xml;
                 if (TryGetValue(propertyName, out xml))
                 {
-                    value = StdUtils.XmlDeserializeText<T>(xml);
+                    value = xml.Length > 0 ? StdUtils.XmlDeserializeText<T>(xml) : default(T);
                     return true;
                 }
 
@@ -92,7 +92,7 @@ namespace StdOttUwp.ApplicationDataObjects
         {
             try
             {
-                return SetValue(propertyName, StdUtils.XmlSerialize(value));
+                return SetValue(propertyName, value != null ? StdUtils.XmlSerialize(value) : string.Empty);
             }
             catch
             {
