@@ -115,6 +115,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ApplicationDataObjects\AppDataContainerObject.cs" />
+    <Compile Include="ApplicationDataObjects\AppDataExceptionObject.cs" />
     <Compile Include="ApplicationDataObjects\PrefixAppDataContainerObject.cs" />
     <Compile Include="BackPress\BackPressAction.cs" />
     <Compile Include="BackPress\BackPressEventArgs.cs" />
