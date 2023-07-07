@@ -117,6 +117,8 @@
     <Compile Include="ApplicationDataObjects\AppDataContainerObject.cs" />
     <Compile Include="ApplicationDataObjects\AppDataExceptionObject.cs" />
     <Compile Include="ApplicationDataObjects\PrefixAppDataContainerObject.cs" />
+    <Compile Include="ProcessCommunication\FileProcessCmdPersisting.cs" />
+    <Compile Include="ProcessCommunication\AppDataContainerProcessCmdPersisting.cs" />
     <Compile Include="BackPress\BackPressAction.cs" />
     <Compile Include="BackPress\BackPressEventArgs.cs" />
     <Compile Include="BackPress\BackPressHandler.cs" />
