@@ -11,21 +11,24 @@ namespace StdOttStandard.ProcessCommunication
         private const string receivedCmdName = "cmd_received";
 
         protected readonly IProcessComandPersisting persisting;
+        private readonly int maxCmdCount;
         private readonly List<ProcessCommandInfo> sendCMDs;
+        private readonly Dictionary<string, string> keysDict;
         private readonly HashSet<string> receivedCMDs;
         private readonly Timer timer;
-        private readonly SemaphoreSlim semLoop, semMessageCount, semWriteCommands;
+        private readonly SemaphoreSlim semWrite, semLoop;
 
-        public ProcessCommunicator(IProcessComandPersisting persisting)
+        public ProcessCommunicator(IProcessComandPersisting persisting, int maxCmdCount = 100)
         {
             this.persisting = persisting;
+            this.maxCmdCount = maxCmdCount;
 
             sendCMDs = new List<ProcessCommandInfo>();
+            keysDict = new Dictionary<string, string>();
             receivedCMDs = new HashSet<string>();
             timer = new Timer(new TimerCallback(Loop), null, Timeout.Infinite, 1);
+            semWrite = new SemaphoreSlim(1);
             semLoop = new SemaphoreSlim(1);
-            semMessageCount = new SemaphoreSlim(10);
-            semWriteCommands = new SemaphoreSlim(1);
         }
 
         private static string ToString(ProcessCommandInfo cmd)
@@ -37,12 +40,18 @@ namespace StdOttStandard.ProcessCommunication
 
         private async Task WriteCommands()
         {
-            await semWriteCommands.WaitAsync();
+            await semWrite.WaitAsync();
             try
             {
-                System.Diagnostics.Debug.WriteLine($"write cmd1: per={persisting.GetHashCode()} count={sendCMDs.Count}{string.Concat(sendCMDs.Select(cmd => $"\n{ToString(cmd)}"))}");
-                await persisting.WriteCommands(sendCMDs.ToArray());
-                System.Diagnostics.Debug.WriteLine($"write cmd2: per={persisting.GetHashCode()} count={sendCMDs.Count}");
+                ProcessCommandInfo[] writeCMDs;
+                lock (sendCMDs)
+                {
+                    System.Diagnostics.Debug.WriteLine($"write cmd1: per={persisting.GetHashCode()} sendCount={sendCMDs.Count}{string.Concat(sendCMDs.Select(cmd => $"\n{ToString(cmd)}"))}");
+                    writeCMDs = (maxCmdCount > 0 ? sendCMDs.Take(maxCmdCount) : sendCMDs).ToArray();
+                }
+
+                await persisting.WriteCommands(writeCMDs.ToArray());
+                System.Diagnostics.Debug.WriteLine($"write cmd2: per={persisting.GetHashCode()} writeCount={writeCMDs.Length}");
             }
             catch (Exception e)
             {
@@ -50,17 +59,27 @@ namespace StdOttStandard.ProcessCommunication
             }
             finally
             {
-                semWriteCommands.Release(1);
+                semWrite.Release();
             }
         }
 
-        private async Task AppendCommand(string name, string data)
+        private void AppendCommand(string name, string data, string key)
         {
             ProcessCommandInfo cmd = new ProcessCommandInfo(name, data);
-            System.Diagnostics.Debug.WriteLine($"append cmd1: per={persisting.GetHashCode()} semMessageCount={semMessageCount.CurrentCount} {ToString(cmd)}");
-            await semMessageCount.WaitAsync(1);
+            System.Diagnostics.Debug.WriteLine($"append cmd1: per={persisting.GetHashCode()} {ToString(cmd)} key={key}");
             lock (sendCMDs)
             {
+                if (key != null)
+                {
+                    string keyCmdId;
+                    if (keysDict.TryGetValue(key, out keyCmdId))
+                    {
+                        System.Diagnostics.Debug.WriteLine($"append cmd2: per={persisting.GetHashCode()} keyCmdId={keyCmdId}");
+                        RemoveCommand(keyCmdId);
+                    }
+
+                    keysDict[key] = cmd.ID;
+                }
                 sendCMDs.Add(cmd);
             }
         }
@@ -70,12 +89,9 @@ namespace StdOttStandard.ProcessCommunication
             lock (sendCMDs)
             {
                 int index = sendCMDs.FindIndex(cmd => cmd.ID == id);
-                System.Diagnostics.Debug.WriteLine($"remove cmd index: per={persisting.GetHashCode()} index={index} semMessageCount={semMessageCount.CurrentCount}");
-                if (index != -1)
-                {
-                    sendCMDs.RemoveAt(index);
-                    semMessageCount.Release(1);
-                }
+                System.Diagnostics.Debug.WriteLine($"remove cmd index: per={persisting.GetHashCode()} index={index}");
+                if (index != -1) sendCMDs.RemoveAt(index);
+                if (keysDict.ContainsKey(id)) keysDict.Remove(id);
             }
         }
 
@@ -109,7 +125,7 @@ namespace StdOttStandard.ProcessCommunication
                         continue;
                     }
 
-                    AppendCommand(receivedCmdName, cmd.ID);
+                    AppendCommand(receivedCmdName, cmd.ID, null);
                     try
                     {
                         ReceiveCommand(new ReceivedProcessCommand(cmd.Name, cmd.Data));
@@ -159,15 +175,25 @@ namespace StdOttStandard.ProcessCommunication
             timer.Change(Timeout.Infinite, 100);
         }
 
-        protected void SendCommand(string name, object data)
+        protected void SendKeyCommand(string name)
         {
-            string xml = StdUtils.XmlSerialize(data);
-            SendCommand(name, xml);
+            SendCommand(name, name);
         }
 
-        protected async void SendCommand(string name, string data = "")
+        protected void SendCommand(string name, string key = null)
         {
-            await AppendCommand(name, data);
+            SendDataCommand(name, "", key);
+        }
+
+        protected void SendDataCommand(string name, object data, string key = null)
+        {
+            string xml = StdUtils.XmlSerialize(data);
+            SendDataCommand(name, xml, key);
+        }
+
+        protected async void SendDataCommand(string name, string data, string key = null)
+        {
+            AppendCommand(name, data, key);
             await WriteCommands();
         }
 
