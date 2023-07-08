@@ -8,6 +8,7 @@ namespace StdOttStandard.ProcessCommunication
 {
     public abstract class ProcessCommunicator : IDisposable
     {
+        private const int timerIntervall = 100;
         private const string receivedCmdName = "cmd_received";
 
         protected readonly IProcessComandPersisting persisting;
@@ -15,8 +16,9 @@ namespace StdOttStandard.ProcessCommunication
         private readonly List<ProcessCommandInfo> sendCMDs;
         private readonly Dictionary<string, string> keysDict;
         private readonly HashSet<string> receivedCMDs;
-        private readonly Timer timer;
-        private readonly SemaphoreSlim semWrite, semLoop;
+        private readonly Timer writeTime, readTimer;
+        private readonly SemaphoreSlim semWriteLoop, semReadLoop;
+        private string[] lastWriteCommandIds;
 
         public ProcessCommunicator(IProcessComandPersisting persisting, int maxCmdCount = 100)
         {
@@ -26,9 +28,11 @@ namespace StdOttStandard.ProcessCommunication
             sendCMDs = new List<ProcessCommandInfo>();
             keysDict = new Dictionary<string, string>();
             receivedCMDs = new HashSet<string>();
-            timer = new Timer(new TimerCallback(Loop), null, Timeout.Infinite, 1);
-            semWrite = new SemaphoreSlim(1);
-            semLoop = new SemaphoreSlim(1);
+            writeTime = new Timer(new TimerCallback(WriteLoop), null, Timeout.Infinite, 1);
+            readTimer = new Timer(new TimerCallback(ReadLoop), null, Timeout.Infinite, 1);
+            semWriteLoop = new SemaphoreSlim(1);
+            semReadLoop = new SemaphoreSlim(1);
+            lastWriteCommandIds = new string[0];
         }
 
         private static string ToString(ProcessCommandInfo cmd)
@@ -38,35 +42,10 @@ namespace StdOttStandard.ProcessCommunication
             return $"id={cmd.ID} name={cmd.Name} data={data}";
         }
 
-        private async Task WriteCommands()
-        {
-            await semWrite.WaitAsync();
-            try
-            {
-                ProcessCommandInfo[] writeCMDs;
-                lock (sendCMDs)
-                {
-                    System.Diagnostics.Debug.WriteLine($"write cmd1: per={persisting.GetHashCode()} sendCount={sendCMDs.Count}{string.Concat(sendCMDs.Select(cmd => $"\n{ToString(cmd)}"))}");
-                    writeCMDs = (maxCmdCount > 0 ? sendCMDs.Take(maxCmdCount) : sendCMDs).ToArray();
-                }
-
-                await persisting.WriteCommands(writeCMDs.ToArray());
-                System.Diagnostics.Debug.WriteLine($"write cmd2: per={persisting.GetHashCode()} writeCount={writeCMDs.Length}");
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine($"write cmd error: per={persisting.GetHashCode()} e={e}");
-            }
-            finally
-            {
-                semWrite.Release();
-            }
-        }
-
         private void AppendCommand(string name, string data, string key)
         {
             ProcessCommandInfo cmd = new ProcessCommandInfo(name, data);
-            System.Diagnostics.Debug.WriteLine($"append cmd1: per={persisting.GetHashCode()} {ToString(cmd)} key={key}");
+            //System.Diagnostics.Debug.WriteLine($"append cmd1: per={persisting.GetHashCode()} {ToString(cmd)} key={key}");
             lock (sendCMDs)
             {
                 if (key != null)
@@ -74,8 +53,8 @@ namespace StdOttStandard.ProcessCommunication
                     string keyCmdId;
                     if (keysDict.TryGetValue(key, out keyCmdId))
                     {
-                        System.Diagnostics.Debug.WriteLine($"append cmd2: per={persisting.GetHashCode()} keyCmdId={keyCmdId}");
-                        RemoveCommand(keyCmdId);
+                        //System.Diagnostics.Debug.WriteLine($"append cmd2: per={persisting.GetHashCode()} keyCmdId={keyCmdId}");
+                        RemoveCommandById(keyCmdId);
                     }
 
                     keysDict[key] = cmd.ID;
@@ -84,44 +63,86 @@ namespace StdOttStandard.ProcessCommunication
             }
         }
 
-        private void RemoveCommand(string id)
+        private void RemoveCommandById(string id)
         {
             lock (sendCMDs)
             {
                 int index = sendCMDs.FindIndex(cmd => cmd.ID == id);
-                System.Diagnostics.Debug.WriteLine($"remove cmd index: per={persisting.GetHashCode()} index={index}");
+                //System.Diagnostics.Debug.WriteLine($"remove cmd index: per={persisting.GetHashCode()} index={index}");
                 if (index != -1) sendCMDs.RemoveAt(index);
-                if (keysDict.ContainsKey(id)) keysDict.Remove(id);
             }
         }
 
-        private async void Loop(object state)
+        private void CleanKeysDict()
+        {
+            lock (sendCMDs)
+            {
+                foreach (KeyValuePair<string, string> pair in keysDict.Where(p => !sendCMDs.Any(c => c.ID == p.Value)).ToArray())
+                {
+                    keysDict.Remove(pair.Key);
+                }
+            }
+        }
+
+        private async void WriteLoop(object state)
+        {
+            if (semWriteLoop.CurrentCount == 0) return;
+            await semWriteLoop.WaitAsync();
+
+            try
+            {
+                ProcessCommandInfo[] writeCMDs;
+                lock (sendCMDs)
+                {
+                    //System.Diagnostics.Debug.WriteLine($"write cmd1: per={persisting.GetHashCode()} sendCount={sendCMDs.Count}{string.Concat(sendCMDs.Select(cmd => $"\n{ToString(cmd)}"))}");
+                    writeCMDs = (maxCmdCount > 0 ? sendCMDs.Take(maxCmdCount) : sendCMDs).ToArray();
+                }
+
+                string[] writeCmdIds = writeCMDs.Select(c => c.ID).ToArray();
+                if (!writeCmdIds.SequenceEqual(lastWriteCommandIds))
+                {
+                    await persisting.WriteCommands(writeCMDs.ToArray());
+                    lastWriteCommandIds = writeCmdIds;
+                }
+                //System.Diagnostics.Debug.WriteLine($"write cmd2: per={persisting.GetHashCode()} writeCount={writeCMDs.Length}");
+
+                CleanKeysDict();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine($"write loop error: per={persisting.GetHashCode()} e={e}");
+            }
+            finally
+            {
+                semWriteLoop.Release();
+            }
+        }
+
+        private async void ReadLoop(object state)
         {
             //System.Diagnostics.Debug.WriteLine($"loop0: per={persisting.GetHashCode()} semLoop={semLoop.CurrentCount}");
-            if (semLoop.CurrentCount == 0) return;
-            await semLoop.WaitAsync();
+            if (semReadLoop.CurrentCount == 0) return;
+            await semReadLoop.WaitAsync();
             try
             {
                 //System.Diagnostics.Debug.WriteLine($"loop1: per={persisting.GetHashCode()}");
                 ProcessCommandInfo[] cmds = await persisting.ReadCommands();
                 if (cmds == null) return;
 
-                bool changedCommands = false;
-                System.Diagnostics.Debug.WriteLine($"loop3: per={persisting.GetHashCode()} cmds={cmds.Length}");
+                //System.Diagnostics.Debug.WriteLine($"loop3: per={persisting.GetHashCode()} cmds={cmds.Length}");
                 foreach (ProcessCommandInfo cmd in cmds)
                 {
-                    System.Diagnostics.Debug.WriteLine($"loop cmd: per={persisting.GetHashCode()} {ToString(cmd)}");
+                    //System.Diagnostics.Debug.WriteLine($"loop cmd: per={persisting.GetHashCode()} {ToString(cmd)}");
                     if (receivedCMDs.Contains(cmd.ID)) continue;
 
                     receivedCMDs.Add(cmd.ID);
-                    changedCommands = true;
 
-                    System.Diagnostics.Debug.WriteLine($"process cmd: per={persisting.GetHashCode()} {ToString(cmd)}");
+                    //System.Diagnostics.Debug.WriteLine($"process cmd: per={persisting.GetHashCode()} {ToString(cmd)}");
 
                     if (cmd.Name == receivedCmdName)
                     {
-                        System.Diagnostics.Debug.WriteLine($"remove cmd: per={persisting.GetHashCode()} {ToString(cmd)}");
-                        RemoveCommand(cmd.Data);
+                        //System.Diagnostics.Debug.WriteLine($"remove cmd: per={persisting.GetHashCode()} {ToString(cmd)}");
+                        RemoveCommandById(cmd.Data);
                         continue;
                     }
 
@@ -133,7 +154,7 @@ namespace StdOttStandard.ProcessCommunication
                     catch { }
                 }
 
-                System.Diagnostics.Debug.WriteLine($"loop6: per={persisting.GetHashCode()}");
+                //System.Diagnostics.Debug.WriteLine($"loop6: per={persisting.GetHashCode()}");
 
                 ProcessCommandInfo[] removedCMDs;
                 lock (sendCMDs)
@@ -143,13 +164,9 @@ namespace StdOttStandard.ProcessCommunication
                 }
                 foreach (ProcessCommandInfo cmd in removedCMDs)
                 {
-                    System.Diagnostics.Debug.WriteLine($"remove received cmd: per={persisting.GetHashCode()} {ToString(cmd)}");
-                    RemoveCommand(cmd.ID);
-                    changedCommands = true;
+                    //System.Diagnostics.Debug.WriteLine($"remove received cmd: per={persisting.GetHashCode()} {ToString(cmd)}");
+                    RemoveCommandById(cmd.ID);
                 }
-
-                System.Diagnostics.Debug.WriteLine($"loop9: per={persisting.GetHashCode()} changedCommands={changedCommands} semLoop={semLoop.CurrentCount}");
-                if (changedCommands) await WriteCommands();
             }
             catch (Exception e)
             {
@@ -157,8 +174,7 @@ namespace StdOttStandard.ProcessCommunication
             }
             finally
             {
-                semLoop.Release(1);
-                //System.Diagnostics.Debug.WriteLine($"loop10 per={persisting.GetHashCode()} semLoop={semLoop.CurrentCount}");
+                semReadLoop.Release(1);
             }
         }
 
@@ -167,12 +183,14 @@ namespace StdOttStandard.ProcessCommunication
         protected void StartTimer()
         {
             System.Diagnostics.Debug.WriteLine($"StartTimer per={persisting.GetHashCode()} now={DateTime.Now.TimeOfDay}");
-            timer.Change(0, 100);
+            writeTime.Change(0, 100);
+            readTimer.Change(0, 100);
         }
 
         protected void StopTimer()
         {
-            timer.Change(Timeout.Infinite, 100);
+            writeTime.Change(Timeout.Infinite, 100);
+            readTimer.Change(Timeout.Infinite, 100);
         }
 
         protected void SendKeyCommand(string name)
@@ -191,15 +209,34 @@ namespace StdOttStandard.ProcessCommunication
             SendDataCommand(name, xml, key);
         }
 
-        protected async void SendDataCommand(string name, string data, string key = null)
+        protected void SendDataCommand(string name, string data, string key = null)
         {
             AppendCommand(name, data, key);
-            await WriteCommands();
+        }
+
+        protected void RemoveCommandByKey(string key)
+        {
+            lock (sendCMDs)
+            {
+                string cmdId;
+                if (keysDict.TryGetValue(key, out cmdId))
+                {
+                    RemoveCommandById(cmdId);
+                    keysDict.Remove(key);
+                }
+            }
+        }
+
+        protected Task FlushAllCommands()
+        {
+            //WriteCommands(true);
+            return Task.CompletedTask;
         }
 
         public void Dispose()
         {
-            timer.Dispose();
+            writeTime.Dispose();
+            readTimer.Dispose();
         }
     }
 }

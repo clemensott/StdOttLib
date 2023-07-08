@@ -8,14 +8,15 @@ namespace StdOttUwp.ProcessCommunication
     public class FileProcessCmdPersisting : ProcessCommandXmlPersisting
     {
         private readonly StorageFolder folder;
-        private readonly string readCmdsFileName, writeCmdsFileName;
-        private StorageFile readFile, writeFile;
+        private readonly string readCmdsFileName, writeCmdsFileName, writeTmpCmdsFileName;
+        private StorageFile readFile, writeFile, writeTmpFile;
 
-        public FileProcessCmdPersisting(StorageFolder folder, string readCmdsFileName, string writeCmdsFileName)
+        public FileProcessCmdPersisting(StorageFolder folder, string readCmdsFileName, string writeCmdsFileName, string writeTmpCmdsFileName)
         {
             this.folder = folder;
             this.readCmdsFileName = readCmdsFileName;
             this.writeCmdsFileName = writeCmdsFileName;
+            this.writeTmpCmdsFileName = writeTmpCmdsFileName;
         }
 
         protected override async Task<string> ReadCommandsXML()
@@ -30,11 +31,12 @@ namespace StdOttUwp.ProcessCommunication
 
         protected override async Task WriteCommandsXML(string xml)
         {
-            if (writeFile == null)
+            if (writeTmpFile == null || writeTmpFile.Name != writeTmpCmdsFileName)
             {
-                writeFile = await folder.CreateFileAsync(writeCmdsFileName, CreationCollisionOption.OpenIfExists);
+                writeTmpFile = await folder.CreateFileAsync(writeTmpCmdsFileName, CreationCollisionOption.ReplaceExisting);
             }
-            await FileIO.WriteTextAsync(writeFile, xml);
+            await FileIO.WriteTextAsync(writeTmpFile, xml);
+            await writeTmpFile.MoveAsync(folder, writeCmdsFileName, NameCollisionOption.ReplaceExisting);
         }
     }
 }
