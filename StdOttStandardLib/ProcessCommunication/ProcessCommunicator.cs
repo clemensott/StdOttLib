@@ -10,15 +10,35 @@ namespace StdOttStandard.ProcessCommunication
     {
         private const int timerIntervall = 100;
         private const string receivedCmdName = "cmd_received";
+        public const string PingCmdName = "ping";
 
+        private bool isRunning, isPingEnabled, isForwardingPings;
         protected readonly IProcessComandPersisting persisting;
         private readonly int maxCmdCount;
         private readonly List<ProcessCommandInfo> sendCMDs;
         private readonly Dictionary<string, string> keysDict;
         private readonly HashSet<string> receivedCMDs;
-        private readonly Timer writeTime, readTimer;
+        private readonly Timer writeTime, readTimer, pingTimer;
         private readonly SemaphoreSlim semWriteLoop, semReadLoop;
         private string[] lastWriteCommandIds;
+
+        public bool IsPingEnabled
+        {
+            get => isPingEnabled;
+            set
+            {
+                if (value == isPingEnabled) return;
+
+                isPingEnabled = value;
+                UpdatePingTimer();
+            }
+        }
+
+        public bool IsForwardingPings
+        {
+            get => isForwardingPings;
+            set => isForwardingPings = value;
+        }
 
         public ProcessCommunicator(IProcessComandPersisting persisting, int maxCmdCount = 100)
         {
@@ -30,6 +50,7 @@ namespace StdOttStandard.ProcessCommunication
             receivedCMDs = new HashSet<string>();
             writeTime = new Timer(new TimerCallback(WriteLoop), null, Timeout.Infinite, 1);
             readTimer = new Timer(new TimerCallback(ReadLoop), null, Timeout.Infinite, 1);
+            pingTimer = new Timer(new TimerCallback(ReadLoop), null, Timeout.Infinite, 1);
             semWriteLoop = new SemaphoreSlim(1);
             semReadLoop = new SemaphoreSlim(1);
             lastWriteCommandIds = new string[0];
@@ -150,9 +171,12 @@ namespace StdOttStandard.ProcessCommunication
                     AppendCommand(receivedCmdName, cmd.ID, null);
                     try
                     {
-                        ReceivedProcessCommand receiveCmd = new ReceivedProcessCommand(cmd.Name, cmd.Data);
-                        receiveCmds.Add(receiveCmd);
-                        ReceiveCommand(receiveCmd);
+                        if (cmd.Name != PingCmdName || IsForwardingPings)
+                        {
+                            ReceivedProcessCommand receiveCmd = new ReceivedProcessCommand(cmd.Name, cmd.Data);
+                            receiveCmds.Add(receiveCmd);
+                            ReceiveCommand(receiveCmd);
+                        }
                     }
                     catch { }
                 }
@@ -160,7 +184,7 @@ namespace StdOttStandard.ProcessCommunication
                 //System.Diagnostics.Debug.WriteLine($"loop6: per={persisting.GetHashCode()}");
                 try
                 {
-                    ReceiveCommands(receiveCmds);
+                    if (receiveCmds.Count > 0) ReceiveCommands(receiveCmds);
                 }
                 catch { }
 
@@ -186,6 +210,11 @@ namespace StdOttStandard.ProcessCommunication
             }
         }
 
+        private void PingLoop(object state)
+        {
+            SendKeyCommand(PingCmdName);
+        }
+
         protected virtual void ReceiveCommand(ReceivedProcessCommand cmd) { }
 
         protected virtual void ReceiveCommands(ICollection<ReceivedProcessCommand> cmds) { }
@@ -193,14 +222,25 @@ namespace StdOttStandard.ProcessCommunication
         protected void StartTimer()
         {
             System.Diagnostics.Debug.WriteLine($"StartTimer per={persisting.GetHashCode()} now={DateTime.Now.TimeOfDay}");
+            isRunning = true;
             writeTime.Change(0, 100);
             readTimer.Change(0, 100);
+            UpdatePingTimer();
         }
 
         protected void StopTimer()
         {
+            System.Diagnostics.Debug.WriteLine($"StopTimer per={persisting.GetHashCode()} now={DateTime.Now.TimeOfDay}");
+            isRunning = false;
             writeTime.Change(Timeout.Infinite, 100);
             readTimer.Change(Timeout.Infinite, 100);
+            UpdatePingTimer();
+        }
+
+        private void UpdatePingTimer()
+        {
+            if (isRunning && IsPingEnabled) pingTimer.Change(0, 500);
+            else pingTimer.Change(Timeout.Infinite, 100);
         }
 
         protected void SendKeyCommand(string name)
@@ -237,16 +277,11 @@ namespace StdOttStandard.ProcessCommunication
             }
         }
 
-        protected Task FlushAllCommands()
-        {
-            //WriteCommands(true);
-            return Task.CompletedTask;
-        }
-
         public void Dispose()
         {
             writeTime.Dispose();
             readTimer.Dispose();
+            pingTimer.Dispose();
         }
     }
 }
