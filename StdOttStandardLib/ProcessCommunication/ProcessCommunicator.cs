@@ -130,6 +130,7 @@ namespace StdOttStandard.ProcessCommunication
                 if (cmds == null) return;
 
                 //System.Diagnostics.Debug.WriteLine($"loop3: per={persisting.GetHashCode()} cmds={cmds.Length}");
+                List<ReceivedProcessCommand> receiveCmds = new List<ReceivedProcessCommand>();
                 foreach (ProcessCommandInfo cmd in cmds)
                 {
                     //System.Diagnostics.Debug.WriteLine($"loop cmd: per={persisting.GetHashCode()} {ToString(cmd)}");
@@ -149,12 +150,19 @@ namespace StdOttStandard.ProcessCommunication
                     AppendCommand(receivedCmdName, cmd.ID, null);
                     try
                     {
-                        ReceiveCommand(new ReceivedProcessCommand(cmd.Name, cmd.Data));
+                        ReceivedProcessCommand receiveCmd = new ReceivedProcessCommand(cmd.Name, cmd.Data);
+                        receiveCmds.Add(receiveCmd);
+                        ReceiveCommand(receiveCmd);
                     }
                     catch { }
                 }
 
                 //System.Diagnostics.Debug.WriteLine($"loop6: per={persisting.GetHashCode()}");
+                try
+                {
+                    ReceiveCommands(receiveCmds);
+                }
+                catch { }
 
                 ProcessCommandInfo[] removedCMDs;
                 lock (sendCMDs)
@@ -170,7 +178,7 @@ namespace StdOttStandard.ProcessCommunication
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine($"loop error: per={persisting.GetHashCode()} e={e}");
+                System.Diagnostics.Debug.WriteLine($"read loop error: per={persisting.GetHashCode()} e={e}");
             }
             finally
             {
@@ -178,7 +186,9 @@ namespace StdOttStandard.ProcessCommunication
             }
         }
 
-        protected abstract void ReceiveCommand(ReceivedProcessCommand cmd);
+        protected virtual void ReceiveCommand(ReceivedProcessCommand cmd) { }
+
+        protected virtual void ReceiveCommands(ICollection<ReceivedProcessCommand> cmds) { }
 
         protected void StartTimer()
         {

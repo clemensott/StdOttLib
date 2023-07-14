@@ -9,7 +9,7 @@ namespace StdOttUwp.ProcessCommunication
     {
         private readonly StorageFolder folder;
         private readonly string readCmdsFileName, writeCmdsFileName, writeTmpCmdsFileName;
-        private StorageFile readFile, writeFile, writeTmpFile;
+        private StorageFile readFile;
 
         public FileProcessCmdPersisting(StorageFolder folder, string readCmdsFileName, string writeCmdsFileName, string writeTmpCmdsFileName)
         {
@@ -31,10 +31,7 @@ namespace StdOttUwp.ProcessCommunication
 
         protected override async Task WriteCommandsXML(string xml)
         {
-            if (writeTmpFile == null || writeTmpFile.Name != writeTmpCmdsFileName)
-            {
-                writeTmpFile = await folder.CreateFileAsync(writeTmpCmdsFileName, CreationCollisionOption.ReplaceExisting);
-            }
+            StorageFile writeTmpFile = await folder.CreateFileAsync(writeTmpCmdsFileName, CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteTextAsync(writeTmpFile, xml);
             await writeTmpFile.MoveAsync(folder, writeCmdsFileName, NameCollisionOption.ReplaceExisting);
         }
