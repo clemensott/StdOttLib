@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Windows.Foundation;
 
-namespace StdOttStandard
+namespace StdOttUwp
 {
     public class DeferralProvider
     {
