@@ -76,13 +76,18 @@ namespace StdOttStandard.Linq.DataStructures
             }
         }
 
-        public async Task<(bool isEnd, T item)> Dequeue()
+        public Task<(bool isEnd, T item)> Dequeue()
+        {
+            return Dequeue(CancellationToken.None);
+        }
+
+        public async Task<(bool isEnd, T item)> Dequeue(CancellationToken cancellationToken)
         {
             while (true)
             {
                 try
                 {
-                    await semSem.WaitAsync().ConfigureAwait(false);
+                    await semSem.WaitAsync(cancellationToken).ConfigureAwait(false);
 
                     if (queue.Count > 0) return (false, queue.Dequeue());
                     if (IsEnd) return (true, default(T));

@@ -15,7 +15,17 @@ namespace StdOttStandard
             return BinarySearch(items, 0, items.Count, comparer, out index);
         }
 
-        private static bool BinarySearch<T>(IList<T> items, int begin, int end, Func<T, int> comparer, out int index)
+        /// <summary>
+        /// Search for matching item in list with binary search.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="items">list of items to search in</param>
+        /// <param name="begin">Inclusvie value of min index</param>
+        /// <param name="end">Exclusive value of max index</param>
+        /// <param name="comparer">Function that compares the current element with searched item</param>
+        /// <param name="index">The index of the found item</param>
+        /// <returns>Returns true if found and false if not</returns>
+        public static bool BinarySearch<T>(IList<T> items, int begin, int end, Func<T, int> comparer, out int index)
         {
             while (true)
             {

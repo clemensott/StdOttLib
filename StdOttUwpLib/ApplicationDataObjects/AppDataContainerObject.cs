@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StdOttStandard;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Windows.Storage;
@@ -53,6 +54,45 @@ namespace StdOttUwp.ApplicationDataObjects
 
                 OnPropertyChanged(propertyName);
                 return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        protected virtual bool TryDeserialzeObject<T>(string propertyName, out T value)
+        {
+            try
+            {
+                string xml;
+                if (TryGetValue(propertyName, out xml))
+                {
+                    value = xml.Length > 0 ? StdUtils.XmlDeserializeText<T>(xml) : default(T);
+                    return true;
+                }
+
+                value = default(T);
+                return false;
+            }
+            catch
+            {
+                value = default(T);
+                return false;
+            }
+        }
+
+        protected T DeserialzeObject<T>(string propertyName, T defaultValue = default(T))
+        {
+            T value;
+            return TryDeserialzeObject(propertyName, out value) ? value : defaultValue;
+        }
+
+        protected virtual bool SerialzeObject(string propertyName, object value)
+        {
+            try
+            {
+                return SetValue(propertyName, value != null ? StdUtils.XmlSerialize(value) : string.Empty);
             }
             catch
             {

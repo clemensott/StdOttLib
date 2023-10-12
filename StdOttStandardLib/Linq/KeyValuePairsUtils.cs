@@ -53,5 +53,10 @@ namespace StdOttStandard.Linq
             yield return new KeyValuePair<TKey, TValue>(key4, value4);
             yield return new KeyValuePair<TKey, TValue>(key5, value5);
         }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ToPairs<TKey, TValue>(IEnumerable<(TKey key, TValue value)> tuples)
+        {
+            return tuples.Select(t => new KeyValuePair<TKey, TValue>(t.key, t.value));
+        }
     }
 }
