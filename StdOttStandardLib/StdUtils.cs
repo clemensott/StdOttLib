@@ -326,5 +326,11 @@ namespace StdOttStandard
 
             return GreatestCommonDivisor(b % a, a);
         }
+
+        public static bool TryHasValue<T>(this T? source, out T value) where T : struct
+        {
+            value = source.GetValueOrDefault();
+            return source.HasValue;
+        }
     }
 }
