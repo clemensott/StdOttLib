@@ -8,39 +8,52 @@ namespace StdOttStandard
 {
     public class ResetTimer
     {
-        private readonly SemaphoreSlim sem;
+        private CancellationTokenSource cancellationTokenSource;
 
         public event EventHandler RanDown;
 
-        public long LastCount { get; private set; }
-
         private TimeSpan Timeout { get; }
 
-        private ResetTimer(TimeSpan timeout)
+        public ResetTimer(TimeSpan timeout)
         {
-            sem = new SemaphoreSlim(0);
-
-            LastCount = 0;
             Timeout = timeout;
         }
 
         public static ResetTimer Start(TimeSpan timout)
         {
             ResetTimer timer = new ResetTimer(timout);
-            timer.Reset();
+            timer.TriggerReset();
 
             return timer;
         }
 
         public async Task<bool> Reset()
         {
-            long thisCount = ++LastCount;
-            await Task.Delay(Timeout);
+            this.cancellationTokenSource?.Cancel();
+            CancellationTokenSource cancellationTokenSource = this.cancellationTokenSource = new CancellationTokenSource();
 
-            if (thisCount != LastCount) return false;
+            try
+            {
+                await Task.Delay(Timeout, cancellationTokenSource.Token);
+            }
+            catch
+            {
+                return false;
+            }
 
             RanDown?.Invoke(this, EventArgs.Empty);
             return true;
+        }
+
+        public async void TriggerReset()
+        {
+            await Reset();
+        }
+
+        public void Cancel()
+        {
+            cancellationTokenSource?.Cancel();
+            cancellationTokenSource = null;
         }
     }
 }

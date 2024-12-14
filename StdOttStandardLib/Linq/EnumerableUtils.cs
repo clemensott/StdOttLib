@@ -42,6 +42,16 @@ namespace StdOttStandard.Linq
             return string.Join(separator, src);
         }
 
+        public static T? FirstOrNull<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate) where T: struct
+        {
+            foreach (T item in enumerable)
+            {
+                if (predicate(item)) return item;
+            }
+
+            return null;
+        }
+
         public static int IndexOf(this IEnumerable enumerable, object searchItem)
         {
             if (enumerable is IList list) return list.IndexOf(searchItem);
