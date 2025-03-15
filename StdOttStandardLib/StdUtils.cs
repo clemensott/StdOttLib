@@ -219,7 +219,8 @@ namespace StdOttStandard
             return task ?? Task.CompletedTask;
         }
 
-        public static Task<TResult> ToNotNull<TResult>(this Task<TResult> task, TResult fallbackValue = default(TResult))
+        public static Task<TResult> ToNotNull<TResult>(this Task<TResult> task,
+            TResult fallbackValue = default(TResult))
         {
             return task ?? Task.FromResult(fallbackValue);
         }
@@ -331,6 +332,102 @@ namespace StdOttStandard
         {
             value = source.GetValueOrDefault();
             return source.HasValue;
+        }
+
+        public static string GetMimeType(string extension)
+        {
+            switch (extension.ToLower())
+            {
+                case ".js":
+                    return "text/javascript";
+                case ".json":
+                    return "text/json";
+                case ".xml":
+                    return "text/xml";
+                case ".css":
+                    return "text/css";
+                case ".htm":
+                case ".html":
+                    return "text/html";
+                case ".txt":
+                case ".log":
+                case ".ini":
+                    return "text/plain";
+                case ".rtx":
+                    return "text/richtext";
+                case ".rtf":
+                    return "text/rtf";
+                case ".tsv":
+                    return "text/tab-separated-values";
+                case ".csv":
+                    return "text/csv";
+                case ".zip":
+                    return "application/zip";
+                case ".pdf":
+                    return "application/pdf";
+                case ".aac":
+                    return "audio/aac";
+                case ".mp3":
+                    return "audio/mpeg";
+                case ".mp2":
+                    return "audio/x-mpeg";
+                case ".wav":
+                    return "audio/wav";
+                case ".oga":
+                    return "audio/ogg";
+                case ".mpeg":
+                case ".mpg":
+                case ".mpe":
+                    return "video/mpeg";
+                case ".mp4":
+                    return "video/mp4";
+                case ".ogg":
+                case ".ogv":
+                    return "video/ogg";
+                case ".qt":
+                case ".mov":
+                    return "video/quicktime";
+                case ".viv":
+                case ".vivo":
+                    return "video/vnd.vivo";
+                case ".webm":
+                case ".mkv":
+                    return "video/webm";
+                case ".avi":
+                    return "video/x-msvideo";
+                case ".movie":
+                    return "video/x-sgi-movie";
+                case ".3gp":
+                    return "video/3gp";
+                case ".3g2":
+                    return "video/3gpp2";
+                case ".apng":
+                    return "image/apng";
+                case ".bmp":
+                    return "image/bmp";
+                case ".gif":
+                    return "image/gif";
+                case ".ico":
+                case ".cur":
+                    return "image/x-ico";
+                case ".jpg":
+                case ".jpeg":
+                case ".jfif":
+                case ".pjpeg":
+                case ".pjp":
+                    return "image/jpeg";
+                case ".png":
+                    return "image/png";
+                case ".svg":
+                    return "image/svg+xml";
+                case ".tif":
+                case ".tiff":
+                    return "image/tiff";
+                case ".webp":
+                    return "image/webp";
+            }
+
+            return "application/octet-stream";
         }
     }
 }
