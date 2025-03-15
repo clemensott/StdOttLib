@@ -101,10 +101,10 @@ namespace StdOttStandard.CollectionSubscriber
         {
             if (e.NewItems.Count != 1 || e.OldItems.Count != 1)
             {
-                throw new NotImplementedException("Moving more than one item at a time is not implemented");
+                throw new NotSupportedException("Moving more than one item at a time is not implemented");
             }
 
-            int lowerIndex, upperIndex, offset = e.NewStartingIndex > e.OldStartingIndex ? 1 : -1;
+            int lowerIndex, upperIndex, offset;
             if (e.NewStartingIndex > e.OldStartingIndex)
             {
                 lowerIndex = e.OldStartingIndex;
