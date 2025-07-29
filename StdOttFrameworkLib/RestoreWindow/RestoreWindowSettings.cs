@@ -21,7 +21,7 @@ namespace StdOttFramework.RestoreWindow
         public string FilePath { get; set; }
 
         public static RestoreWindowSettings GetDefault(bool restoreLeft = true, bool restoreTop = true,
-            bool RestoreWidth = true, bool restoreHeight = true, bool restoreWindowState = true,
+            bool restoreWidth = true, bool restoreHeight = true, bool restoreWindowState = true,
             WindowState overrideMinimized = WindowState.Normal,
             StorePropertiesTriggerType triggerType = StorePropertiesTriggerType.Close,
             string filePath = null)
@@ -30,7 +30,7 @@ namespace StdOttFramework.RestoreWindow
             {
                 RestoreLeft = restoreLeft,
                 RestoreTop = restoreTop,
-                RestoreWidth = RestoreWidth,
+                RestoreWidth = restoreWidth,
                 RestoreHeight = restoreHeight,
                 RestoreWindowState = restoreWindowState,
                 OverrideMinimized = overrideMinimized,
