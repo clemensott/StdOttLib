@@ -76,6 +76,25 @@ namespace StdOttStandard.Linq.DataStructures
             return (isEnd, item);
         }
 
+        public (bool isEnd, T[] items) DequeueBatch()
+        {
+            lock (queue)
+            {
+                if (IsEnd && queue.Count == 0) return (true, new T[0]);
+
+                while (queue.Count == 0)
+                {
+                    if (IsEnd) break;
+
+                    Monitor.Wait(queue);
+                }
+
+                List<T> batch = new List<T>();
+                while (queue.Count > 0) batch.Add(queue.Dequeue());
+                return (false, batch.ToArray());
+            }
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
             return queue.GetEnumerator();
