@@ -95,6 +95,14 @@ namespace StdOttStandard.Linq.DataStructures
             }
         }
 
+        public T[] ToArray()
+        {
+            lock (queue)
+            {
+                return queue.ToArray();
+            }
+        }   
+
         public IEnumerator<T> GetEnumerator()
         {
             return queue.GetEnumerator();
