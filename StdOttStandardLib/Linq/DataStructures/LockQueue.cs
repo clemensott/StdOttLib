@@ -91,7 +91,7 @@ namespace StdOttStandard.Linq.DataStructures
 
                 List<T> batch = new List<T>();
                 while (queue.Count > 0) batch.Add(queue.Dequeue());
-                return (false, batch.ToArray());
+                return (IsEnd, batch.ToArray());
             }
         }
 
